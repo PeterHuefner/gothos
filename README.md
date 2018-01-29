@@ -1,0 +1,2 @@
+# gothos
+Wettkampfverwaltung
