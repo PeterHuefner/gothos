@@ -1,5 +1,7 @@
 package gothos.DatabaseCore;
 
+import gothos.Start;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -68,5 +70,19 @@ public class SqliteConnection {
         }
 
         return result;
+    }
+
+    public boolean execute(String sql){
+        boolean success = true;
+
+        try{
+            Statement statement = this.connection.createStatement();
+            statement.execute(sql);
+        }catch (SQLException e){
+            success = false;
+            System.out.println(e.getMessage());
+        }
+
+        return success;
     }
 }

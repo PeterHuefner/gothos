@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 public class Start {
     public static JFrame mainFrame;
     public static SqliteConnection database;
+    public static String selectedCompetition = "";
 
     private JPanel startPanel;
     private JLabel titleLabel;
