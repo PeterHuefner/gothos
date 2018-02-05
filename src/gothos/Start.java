@@ -1,5 +1,6 @@
 package gothos;
 
+import gothos.DatabaseCore.DatabaseAnalyse;
 import gothos.DatabaseCore.DatabaseStructure;
 import gothos.DatabaseCore.SqliteConnection;
 
@@ -78,8 +79,8 @@ public class Start {
         try {
             Start.database = new SqliteConnection(file);
             selectedDatabaseFileLabel.setText("verbundene Datenbank: " + file);
-            DatabaseStructure structure = new DatabaseStructure();
-            structure.checkDatabase();
+            DatabaseAnalyse analyse = new DatabaseAnalyse();
+            analyse.checkDatabase();
         }catch (Exception e){
             System.out.println("keine Verbindung hergestellt");
             JOptionPane.showConfirmDialog(Start.mainFrame, "Datenbank könnte nicht geöffnet werden");
@@ -96,5 +97,13 @@ public class Start {
         Start.mainFrame.pack();
         Start.mainFrame.setVisible(true);
         Start.mainFrame.setLocationRelativeTo(null);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(){
+            @Override public void run(){
+                if(Start.database != null){
+                    Start.database.close();
+                }
+            }
+        });
     }
 }

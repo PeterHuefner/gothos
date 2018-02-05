@@ -1,5 +1,6 @@
 package gothos.DatabaseCore;
 
+import gothos.Common;
 import gothos.Start;
 
 import java.sql.*;
@@ -31,6 +32,17 @@ public class SqliteConnection {
         }
 
         return this.connection;
+    }
+
+    public void close(){
+        if(this.connection != null){
+            try{
+                this.connection.close();
+            }catch (Exception e){
+                Common.printError(e);
+            }
+            this.connection = null;
+        }
     }
 
     public ResultSet query(String sql){
