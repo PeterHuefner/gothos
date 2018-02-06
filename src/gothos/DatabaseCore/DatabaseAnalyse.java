@@ -36,6 +36,10 @@ public class DatabaseAnalyse {
 
 	}
 
+	public void checkCompetition(String competition){
+
+	}
+
 	public ArrayList<String> listTables(){
 		return this.listTables("");
 	}
@@ -61,7 +65,11 @@ public class DatabaseAnalyse {
 	}
 
 	public ArrayList<String> listApparatiInCompetition(){
-		ArrayList<String> tables = this.listTables("^" + Start.selectedCompetition + "_apparati_.+$");
+		return this.listApparatiInCompetition(Start.selectedCompetition);
+	}
+
+	public ArrayList<String> listApparatiInCompetition(String competition){
+		ArrayList<String> tables = this.listTables("^" + competition + "_apparati_.+$");
 		ArrayList<String> apparati = new ArrayList<String>();
 
 		for(String table: tables){

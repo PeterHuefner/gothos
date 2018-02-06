@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Start {
+    public static Start instance;
     public static JFrame mainFrame;
     public static SqliteConnection database;
     public static String selectedCompetition = "";
@@ -27,13 +28,9 @@ public class Start {
     public Start() {
         Start.database = null;
 
-        createCompetitionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showConfirmDialog(null, "Hallo Welt");
-            }
-        });
-
+        this.createCompetitionButton.setEnabled(false);
+        this.loadSelectedCompetitionButton.setEnabled(false);
+        this.deleteSelectedCompetitionButton.setEnabled(false);
 
         selectDatabaseFileButton.addActionListener(new ActionListener() {
             @Override
@@ -64,6 +61,13 @@ public class Start {
                 }
             }
         });
+
+        createCompetitionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showCreateCompetition();
+            }
+        });
     }
 
     private JFileChooser findDatabaseDialog(){
@@ -81,6 +85,8 @@ public class Start {
             selectedDatabaseFileLabel.setText("verbundene Datenbank: " + file);
             DatabaseAnalyse analyse = new DatabaseAnalyse();
             analyse.checkDatabase();
+
+            this.createCompetitionButton.setEnabled(true);
         }catch (Exception e){
             System.out.println("keine Verbindung hergestellt");
             JOptionPane.showConfirmDialog(Start.mainFrame, "Datenbank könnte nicht geöffnet werden");
@@ -90,9 +96,29 @@ public class Start {
         return (Start.database != null);
     }
 
+    public static void showCreateCompetition(){
+        CompetitionForm competitionForm = new CompetitionForm();
+        showPanel(competitionForm.getPanel());
+    }
+
+    public static void showPanel(JPanel panel){
+        Start.mainFrame.setContentPane(panel);
+        Start.mainFrame.pack();
+        Start.mainFrame.setVisible(true);
+        Start.mainFrame.setLocationRelativeTo(null);
+    }
+
+    public static void showStartPanel(){
+
+        showPanel(Start.instance.startPanel);
+
+    }
+
     public static void main(String[] args) {
-        Start.mainFrame = new JFrame("Gothos");
-        Start.mainFrame.setContentPane(new Start().startPanel);
+        Start.mainFrame = new JFrame("Gothos - dev state");
+        Start.instance = new Start();
+
+        Start.mainFrame.setContentPane(Start.instance.startPanel);
         Start.mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Start.mainFrame.pack();
         Start.mainFrame.setVisible(true);
