@@ -15,7 +15,7 @@ public class CompetitionForm extends DataForm{
 	private JButton cancelButton;
 
 	public CompetitionForm(){
-		super();
+		super("competitions");
 
 		connectPanel();
 		defineColumns();
