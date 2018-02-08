@@ -1,6 +1,9 @@
 package gothos.FormCore;
 
+import gothos.Common;
 import gothos.DatabaseCore.DatabaseParameter;
+import gothos.DatabaseCore.SqliteConnection;
+import gothos.Start;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -36,10 +39,14 @@ abstract public class DataForm {
 
 		for(Map.Entry<String, HashMap<String, DatabaseParameter>> tableParams: params.entrySet()){
 			String sql = "";
-			if(this.primaryKey.isEmpty()){
-				sql = this.createInsertStatement(tableParams.getKey(), tableParams.getValue());
+			if(this.primaryKey == null || this.primaryKey.isEmpty()){
+				long key = Start.database.insertData(tableParams.getKey(), tableParams.getValue());
+				if(key != 0){
+					this.primaryKey = Long.toString(key);
+				}
 			}else{
-
+				//Common.printError("No Update Feature available");
+				Start.database.updateData(tableParams.getKey(), tableParams.getValue(), this.primaryKey, "ROWID");
 			}
 
 			System.out.println(sql);
@@ -79,30 +86,6 @@ abstract public class DataForm {
 		}
 
 		return params;
-	}
-
-	protected String createInsertStatement(String table, HashMap<String, DatabaseParameter> params){
-		String sql = "INSERT INTO `" + table + "`";
-		StringBuilder columns = new StringBuilder();
-		StringBuilder values = new StringBuilder();
-		String comma = "";
-
-		for(Map.Entry<String, DatabaseParameter> param: params.entrySet()){
-			String columnName = param.getKey();
-			//DatabaseParameter val = param.getValue();
-
-			columns.append(comma);
-			columns.append(columnName);
-
-			values.append(comma);
-			values.append("?");
-
-			comma = ", ";
-		}
-
-		sql += " (" + columns.toString() + ") VALUES (" + values + ");";
-
-		return sql;
 	}
 
 	abstract protected void connectPanel();
