@@ -5,7 +5,7 @@ import gothos.Start;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SqliteConnection {
@@ -100,6 +100,25 @@ public class SqliteConnection {
         return result;
     }
 
+    public String fetchFirstColumn(ResultSet result){
+        try {
+            while (result.next()) {
+                return result.getString(1);
+            }
+        }catch (SQLException e){}
+        return null;
+    }
+
+    public String fetchFirstColumn(String sql){
+        ResultSet result = this.query(sql);
+        return this.fetchFirstColumn(result);
+    }
+
+    public String fetchFirstColumn(String sql, ArrayList<DatabaseParameter> paramters){
+        ResultSet result = this.query(sql, paramters);
+        return this.fetchFirstColumn(result);
+    }
+
     public boolean execute(String sql, ArrayList<DatabaseParameter> parameters){
         boolean success = true;
 
@@ -147,7 +166,7 @@ public class SqliteConnection {
         return id;
     }
 
-    public long insertData(String table, HashMap<String, DatabaseParameter> params){
+    public long insertData(String table, LinkedHashMap<String, DatabaseParameter> params){
         String sql = "INSERT INTO `" + table + "`";
         StringBuilder columns = new StringBuilder();
         StringBuilder values = new StringBuilder();
@@ -179,7 +198,7 @@ public class SqliteConnection {
         return this.getLastInsertId();
     }
 
-    public boolean updateData(String table, HashMap<String, DatabaseParameter> params, String primaryKey, String primaryColumn){
+    public boolean updateData(String table, LinkedHashMap<String, DatabaseParameter> params, String primaryKey, String primaryColumn){
         String sql = "UPDATE `" + table + "` SET ";
         StringBuilder columns = new StringBuilder();
         String comma = "";

@@ -1,7 +1,7 @@
 package gothos.DatabaseCore;
 
 import gothos.Common;
-import gothos.Start;
+import gothos.Application;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -47,10 +47,10 @@ public class DatabaseAnalyse {
 	public ArrayList<String> listTables(String matchRegex){
 		ArrayList<String> tables = new ArrayList<String>();
 
-		ResultSet rs = Start.database.query("SELECT name FROM sqlite_master WHERE type = 'table';");
+		ResultSet rs = Application.database.query("SELECT name FROM sqlite_master WHERE type = 'table';");
 
-		try{
-			while (rs.next()){
+			try{
+				while (rs.next()){
 				if(matchRegex.isEmpty()){
 					tables.add(rs.getString("name"));
 				}else if(rs.getString("name").matches(matchRegex)){
@@ -65,7 +65,7 @@ public class DatabaseAnalyse {
 	}
 
 	public ArrayList<String> listApparatiInCompetition(){
-		return this.listApparatiInCompetition(Start.selectedCompetition);
+		return this.listApparatiInCompetition(Application.selectedCompetition);
 	}
 
 	public ArrayList<String> listApparatiInCompetition(String competition){

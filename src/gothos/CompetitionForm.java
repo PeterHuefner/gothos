@@ -1,11 +1,13 @@
 package gothos;
 
+import gothos.DatabaseCore.DatabaseParameter;
 import gothos.FormCore.DataForm;
 import gothos.FormCore.DataFormElement;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class CompetitionForm extends DataForm{
 	private JPanel competitionFormPanel;
@@ -29,7 +31,7 @@ public class CompetitionForm extends DataForm{
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Start.showStartPanel();
+				WindowManager.showStartPanel();
 			}
 		});
 		saveDataButton.addActionListener(new ActionListener() {
@@ -49,5 +51,27 @@ public class CompetitionForm extends DataForm{
 		columns.add(new DataFormElement(this.longname, "longname"));
 		columns.add(new DataFormElement(this.description, "description"));
 		columns.add(new DataFormElement(this.competitionDay, "competitionDay"));
+	}
+
+	public boolean check(){
+		boolean status = true;
+
+		if(this.name.getText().isEmpty()){
+			status = false;
+			Common.showFormError("Der Wettkampfkenner darf nicht leer sein.");
+		}else if(this.primaryKey == null || this.primaryKey.isEmpty()){
+			ArrayList<DatabaseParameter> param = new ArrayList<>();
+			param.add(new DatabaseParameter(this.name.getText()));
+			String res = Application.database.fetchFirstColumn("SELECT COUNT(*) FROM competitions WHERE name = ?;", param);
+
+			Integer count = Integer.parseInt(res);
+
+			if(count != 0){
+				status = false;
+				Common.showFormError("Der Wettkampfkenner darf nicht mehrfach vergeben werden.");
+			}
+		}
+
+		return status;
 	}
 }

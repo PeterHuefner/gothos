@@ -8,16 +8,16 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Start {
     public static Start instance;
-    public static JFrame mainFrame;
-    public static SqliteConnection database;
-    public static String selectedCompetition = "";
+
 
     private JPanel startPanel;
-    private JLabel titleLabel;
-    private JList competitionList;
+	private JList competitionList;
     private JButton createCompetitionButton;
     private JButton loadSelectedCompetitionButton;
     private JButton deleteSelectedCompetitionButton;
@@ -26,7 +26,6 @@ public class Start {
     private JButton selectDatabaseFileButton;
 
     public Start() {
-        Start.database = null;
 
         this.createCompetitionButton.setEnabled(false);
         this.loadSelectedCompetitionButton.setEnabled(false);
@@ -37,9 +36,13 @@ public class Start {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser = findDatabaseDialog();
 
-                int chooserState = chooser.showOpenDialog(Start.mainFrame);
+                int chooserState = chooser.showOpenDialog(WindowManager.mainFrame);
                 if(chooserState == JFileChooser.APPROVE_OPTION){
-                    connectToDatabase(chooser.getSelectedFile().getAbsolutePath());
+                    if(Application.connectToDatabase(chooser.getSelectedFile().getAbsolutePath())){
+						selectedDatabaseFileLabel.setText("verbundene Datenbank: " + chooser.getSelectedFile().getAbsolutePath());
+						createCompetitionButton.setEnabled(true);
+						listCompetitions();
+					}
                 }
             }
         });
@@ -49,7 +52,7 @@ public class Start {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser = findDatabaseDialog();
 
-                int chooserState = chooser.showSaveDialog(Start.mainFrame);
+                int chooserState = chooser.showSaveDialog(WindowManager.mainFrame);
                 if(chooserState == JFileChooser.APPROVE_OPTION){
                     String file = chooser.getSelectedFile().getAbsolutePath();
 
@@ -57,7 +60,11 @@ public class Start {
                         file += ".sqlite3";
                     }
 
-                    connectToDatabase(file);
+                    if(Application.connectToDatabase(file)){
+						selectedDatabaseFileLabel.setText("verbundene Datenbank: " + file);
+						createCompetitionButton.setEnabled(true);
+						listCompetitions();
+					}
                 }
             }
         });
@@ -65,10 +72,25 @@ public class Start {
         createCompetitionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showCreateCompetition();
+                WindowManager.showCreateCompetition();
             }
         });
     }
+
+    private void listCompetitions(){
+    	ResultSet result = Application.database.query("SELECT name FROM competitions;");
+		ArrayList<String> competitions = new ArrayList<>();
+    	try{
+    		while(result.next()){
+    			competitions.add(result.getString("name"));
+			}
+		}catch (SQLException e){
+    		Common.printError(e);
+		}
+
+		competitionList.clearSelection();
+    	competitionList.setListData(competitions.toArray());
+	}
 
     private JFileChooser findDatabaseDialog(){
         JFileChooser chooser = new JFileChooser();
@@ -79,57 +101,15 @@ public class Start {
         return chooser;
     }
 
-    private boolean connectToDatabase(String file){
-        try {
-            Start.database = new SqliteConnection(file);
-            selectedDatabaseFileLabel.setText("verbundene Datenbank: " + file);
-            DatabaseAnalyse analyse = new DatabaseAnalyse();
-            analyse.checkDatabase();
-
-            this.createCompetitionButton.setEnabled(true);
-        }catch (Exception e){
-            System.out.println("keine Verbindung hergestellt");
-            JOptionPane.showConfirmDialog(Start.mainFrame, "Datenbank könnte nicht geöffnet werden");
-            JOptionPane.showMessageDialog(Start.mainFrame, "Datenbank könnte nicht geöffnet werden");
-        }
-
-        return (Start.database != null);
-    }
-
-    public static void showCreateCompetition(){
-        CompetitionForm competitionForm = new CompetitionForm();
-        showPanel(competitionForm.getPanel());
-    }
-
-    public static void showPanel(JPanel panel){
-        Start.mainFrame.setContentPane(panel);
-        Start.mainFrame.pack();
-        Start.mainFrame.setVisible(true);
-        Start.mainFrame.setLocationRelativeTo(null);
-    }
-
-    public static void showStartPanel(){
-
-        showPanel(Start.instance.startPanel);
-
-    }
+	public void panelShowed(){
+    	if(Application.database != null){
+    		listCompetitions();
+		}
+	}
 
     public static void main(String[] args) {
-        Start.mainFrame = new JFrame("Gothos - dev state");
+    	Application.initiate();
         Start.instance = new Start();
-
-        Start.mainFrame.setContentPane(Start.instance.startPanel);
-        Start.mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        Start.mainFrame.pack();
-        Start.mainFrame.setVisible(true);
-        Start.mainFrame.setLocationRelativeTo(null);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(){
-            @Override public void run(){
-                if(Start.database != null){
-                    Start.database.close();
-                }
-            }
-        });
+        WindowManager.initiateVisuals(Start.instance.startPanel);
     }
 }

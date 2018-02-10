@@ -3,16 +3,16 @@ package gothos.FormCore;
 import gothos.Common;
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.DatabaseCore.SqliteConnection;
-import gothos.Start;
+import gothos.Application;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 abstract public class DataForm {
 
-	protected String primaryKey;
+	protected String primaryKey = "";
 	protected String mainTable;
 	protected ArrayList<DataFormElement> columns;
 	protected JPanel panel;
@@ -35,29 +35,37 @@ abstract public class DataForm {
 	public boolean save(){
 		boolean status = true;
 
-		HashMap<String, HashMap<String, DatabaseParameter>> params = this.createParams();
+		if(check()){
+			LinkedHashMap<String, LinkedHashMap<String, DatabaseParameter>> params = this.createParams();
 
-		for(Map.Entry<String, HashMap<String, DatabaseParameter>> tableParams: params.entrySet()){
-			String sql = "";
-			if(this.primaryKey == null || this.primaryKey.isEmpty()){
-				long key = Start.database.insertData(tableParams.getKey(), tableParams.getValue());
-				if(key != 0){
-					this.primaryKey = Long.toString(key);
+			for(Map.Entry<String, LinkedHashMap<String, DatabaseParameter>> tableParams: params.entrySet()){
+				String sql = "";
+				if(this.primaryKey == null || this.primaryKey.isEmpty()){
+					long key = Application.database.insertData(tableParams.getKey(), tableParams.getValue());
+					if(key != 0){
+						this.primaryKey = Long.toString(key);
+					}
+				}else{
+					//Common.printError("No Update Feature available");
+					Application.database.updateData(tableParams.getKey(), tableParams.getValue(), this.primaryKey, "ROWID");
 				}
-			}else{
-				//Common.printError("No Update Feature available");
-				Start.database.updateData(tableParams.getKey(), tableParams.getValue(), this.primaryKey, "ROWID");
-			}
 
-			System.out.println(sql);
+				System.out.println(sql);
+			}
+		}else{
+			status = false;
 		}
 
 		return status;
 	}
 
-	protected HashMap<String, HashMap<String, DatabaseParameter>> createParams(){
+	public boolean check(){
+		return true;
+	}
 
-		HashMap<String, HashMap<String, DatabaseParameter>> params = new HashMap<>();
+	protected LinkedHashMap<String, LinkedHashMap<String, DatabaseParameter>> createParams(){
+
+		LinkedHashMap<String, LinkedHashMap<String, DatabaseParameter>> params = new LinkedHashMap<>();
 
 		for(DataFormElement formElement: this.columns){
 			String table = formElement.getTable();
@@ -65,9 +73,9 @@ abstract public class DataForm {
 				table = this.mainTable;
 			}
 
-			HashMap<String, DatabaseParameter> tableParams = params.get(table);
+			LinkedHashMap<String, DatabaseParameter> tableParams = params.get(table);
 			if(tableParams == null){
-				tableParams = new HashMap<>();
+				tableParams = new LinkedHashMap<>();
 				params.put(table, tableParams);
 			}
 
