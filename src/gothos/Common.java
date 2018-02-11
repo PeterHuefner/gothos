@@ -4,6 +4,10 @@ import javax.swing.*;
 
 public class Common {
 
+    public static boolean emptyString(String string){
+        return (string == null || string.isEmpty());
+    }
+
     public static void printError(String error){
         System.out.println(error);
         JOptionPane.showMessageDialog(WindowManager.mainFrame, error);

@@ -21,6 +21,11 @@ public class WindowManager {
 		showPanel(competitionForm.getPanel());
 	}
 
+	public static void showGlobalClasses(){
+		ConfigureClasses classes = new ConfigureClasses("global_classes");
+		showPanel(classes.getPanel());
+	}
+
 	public static void showPanel(JPanel panel){
 		WindowManager.mainFrame.setContentPane(panel);
 		WindowManager.mainFrame.pack();

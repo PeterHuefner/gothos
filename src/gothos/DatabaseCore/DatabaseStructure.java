@@ -8,6 +8,7 @@ public class DatabaseStructure {
         return Application.database.execute(
                 "CREATE TABLE IF NOT EXISTS global_classes (" +
                         "class TEXT PRIMARY KEY NOT NULL," +
+                        "displayName TEXT," +
                         "calculation TEXT NOT NULL," +
                         "displayColumns TEXT NOT NULL" +
                      ");"

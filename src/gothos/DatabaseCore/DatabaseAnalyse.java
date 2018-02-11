@@ -56,6 +56,7 @@ public class DatabaseAnalyse {
 				}else if(rs.getString("name").matches(matchRegex)){
 					tables.add(rs.getString("name"));
 				}
+				rs.close();
 			}
 		}catch (SQLException e){
 			Common.printError(e);

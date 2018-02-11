@@ -24,12 +24,14 @@ public class Start {
     private JLabel selectedDatabaseFileLabel;
     private JButton createDatabaseFileButton;
     private JButton selectDatabaseFileButton;
+	private JButton configureClassesButton;
 
-    public Start() {
+	public Start() {
 
         this.createCompetitionButton.setEnabled(false);
         this.loadSelectedCompetitionButton.setEnabled(false);
         this.deleteSelectedCompetitionButton.setEnabled(false);
+        this.configureClassesButton.setEnabled(false);
 
         selectDatabaseFileButton.addActionListener(new ActionListener() {
             @Override
@@ -41,6 +43,7 @@ public class Start {
                     if(Application.connectToDatabase(chooser.getSelectedFile().getAbsolutePath())){
 						selectedDatabaseFileLabel.setText("verbundene Datenbank: " + chooser.getSelectedFile().getAbsolutePath());
 						createCompetitionButton.setEnabled(true);
+	                    configureClassesButton.setEnabled(true);
 						listCompetitions();
 					}
                 }
@@ -63,6 +66,7 @@ public class Start {
                     if(Application.connectToDatabase(file)){
 						selectedDatabaseFileLabel.setText("verbundene Datenbank: " + file);
 						createCompetitionButton.setEnabled(true);
+	                    configureClassesButton.setEnabled(true);
 						listCompetitions();
 					}
                 }
@@ -75,7 +79,14 @@ public class Start {
                 WindowManager.showCreateCompetition();
             }
         });
-    }
+
+		configureClassesButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowManager.showGlobalClasses();
+			}
+		});
+	}
 
     private void listCompetitions(){
     	ResultSet result = Application.database.query("SELECT name FROM competitions;");
