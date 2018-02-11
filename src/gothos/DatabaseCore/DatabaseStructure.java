@@ -7,10 +7,10 @@ public class DatabaseStructure {
     public static boolean createGlobalClasses(){
         return Application.database.execute(
                 "CREATE TABLE IF NOT EXISTS global_classes (" +
-                        "class TEXT PRIMARY KEY NOT NULL," +
+                        "class TEXT PRIMARY KEY," +
                         "displayName TEXT," +
-                        "calculation TEXT NOT NULL," +
-                        "displayColumns TEXT NOT NULL" +
+                        "calculation TEXT," +
+                        "displayColumns TEXT" +
                      ");"
         );
     }

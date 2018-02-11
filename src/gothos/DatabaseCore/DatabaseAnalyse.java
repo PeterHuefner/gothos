@@ -13,6 +13,12 @@ public class DatabaseAnalyse {
 
 	public void checkDatabase(){
 
+		/*boolean st0 = Application.database.execute("INSERT INTO test(col1, col2) values ('one', 'two');");
+		long id = Application.database.getLastInsertId();
+		boolean st1 = Application.database.execute("INSERT OR IGNORE INTO test(ROWID,col1)values(10,\"asd\");");
+
+		long id2 = Application.database.getLastInsertId();*/
+
 		ArrayList<String> tables = this.listTables();
 
 		//Check if settings table exists

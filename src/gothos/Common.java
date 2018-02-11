@@ -20,4 +20,8 @@ public class Common {
     public static void showFormError(String error){
         JOptionPane.showMessageDialog(WindowManager.mainFrame, error);
     }
+
+    public static void showError(String error){
+        JOptionPane.showMessageDialog(WindowManager.mainFrame, error);
+    }
 }

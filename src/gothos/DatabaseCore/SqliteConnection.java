@@ -166,8 +166,8 @@ public class SqliteConnection {
         return id;
     }
 
-    public long insertData(String table, LinkedHashMap<String, DatabaseParameter> params){
-        String sql = "INSERT INTO `" + table + "`";
+    protected long _insertData(String table, LinkedHashMap<String, DatabaseParameter> params, String sqlShit) {
+        String sql = "INSERT " + sqlShit + " INTO `" + table + "`";
         StringBuilder columns = new StringBuilder();
         StringBuilder values = new StringBuilder();
         String comma = "";
@@ -196,6 +196,14 @@ public class SqliteConnection {
         this.execute(sql, databseParams);
 
         return this.getLastInsertId();
+    }
+
+    public long insertOrIgnoreData(String table, LinkedHashMap<String, DatabaseParameter> params) {
+        return _insertData(table, params, "OR IGNORE");
+    }
+
+    public long insertData(String table, LinkedHashMap<String, DatabaseParameter> params) {
+        return _insertData(table, params, "");
     }
 
     public boolean updateData(String table, LinkedHashMap<String, DatabaseParameter> params, String primaryKey, String primaryColumn){

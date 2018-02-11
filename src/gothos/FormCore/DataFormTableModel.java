@@ -50,7 +50,7 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 			while(result.next()){
 				ArrayList<DataTableCell> row = new ArrayList<>();
 				for(Integer i = 0; i < columns.size(); i++){
-					DataTableCell cell = new DataTableCell(this.getPrimaryKeyForRow(result), getTableForColumn(i), result.getObject(i));
+					DataTableCell cell = new DataTableCell(this.getPrimaryKeyForRow(result), getTableForColumn(i), result.getObject(i + 1), getDatabaseNameForColumn(i));
 					cell.setPrimaryKeyColumn(this.getPrimaryKeyColumnForColumn(i));
 					row.add(cell);
 				}
@@ -61,6 +61,35 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 			Common.printError(e);
 		}
 
+		newDataAvailable(new TableModelEvent(this));
+	}
+
+	public int addEmptyRow(){
+		ArrayList<DataTableCell> row = new ArrayList<>();
+		for(Integer i = 0; i < columns.size(); i++){
+			DataTableCell cell = new DataTableCell("", getTableForColumn(i), "", getDatabaseNameForColumn(i));
+			cell.setPrimaryKeyColumn(this.getPrimaryKeyColumnForColumn(i));
+			row.add(cell);
+		}
+		tableData.add(row);
+		newDataAvailable(new TableModelEvent(this));
+		return tableData.size() - 1;
+	}
+
+	public void deleteRow(int row){
+
+		ArrayList<String> handledTables = new ArrayList<>();
+
+		for(DataTableCell cell: tableData.get(row)){
+			if(!handledTables.contains(cell.getTable())){
+				ArrayList<DatabaseParameter> params = new ArrayList<>();
+				params.add(new DatabaseParameter(cell.getPrimaryKey()));
+				Application.database.execute("DELETE FROM `" + cell.getTable() + "` WHERE `" + cell.getPrimaryKeyColumn() + "` = ?;", params);
+				handledTables.add(cell.getTable());
+			}
+		}
+
+		tableData.remove(row);
 		newDataAvailable(new TableModelEvent(this));
 	}
 
@@ -86,6 +115,10 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 		return primaryKey;
 	}
 
+	protected String getDatabaseNameForColumn(Integer col){
+		return columns.get(col);
+	}
+
 	protected boolean editableColumn(int row, int col){
 		if(Common.emptyString(tableData.get(row).get(col).getPrimaryKey())){
 			return true;
@@ -95,11 +128,11 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 		return true;
 	}
 
-	protected String getTableForColumn(Integer i){
+	protected String getTableForColumn(Integer col){
 		return baseTable;
 	}
 
-	protected String getPrimaryKeyColumnForColumn(Integer i){
+	protected String getPrimaryKeyColumnForColumn(Integer col){
 		return "ROWID";
 	}
 
@@ -161,7 +194,16 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 		}
 
 		if(checkValue(value, row, col)){
+			DataTableCell thisCell = tableData.get(row).get(col);
+			String key = thisCell.getPrimaryKey();
 			tableData.get(row).get(col).setValue(value);
+
+			if(Common.emptyString(key)){
+				for(DataTableCell cell: tableData.get(row)){
+					cell.setPrimaryKey(thisCell.getPrimaryKey());
+				}
+			}
+
 			fireTableCellUpdated(row, updateCol);
 		}
 
