@@ -21,8 +21,7 @@ public class ConfigureClasses {
 
 	public ConfigureClasses(String databaseTable){
 		this.databaseTable = databaseTable;
-		model = new ConfigureClassesModel();
-		model.setBaseTable(databaseTable);
+		model = new ConfigureClassesModel(databaseTable);
 
 		classesTable.setModel(model);
 		backButton.addActionListener(new ActionListener() {

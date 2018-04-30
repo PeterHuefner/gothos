@@ -62,7 +62,14 @@ public class DataTableCell {
 		boolean status = true;
 
 		LinkedHashMap<String, DatabaseParameter> params = new LinkedHashMap<>();
-		params.put(columnName, new DatabaseParameter(toString()));
+
+		if(value.getClass() == Boolean.class || value.getClass() == Integer.class || value.getClass() == Long.class){
+			params.put(columnName, new DatabaseParameter(integerValue()));
+		}else if(value.getClass() == Double.class){
+			params.put(columnName, new DatabaseParameter(doubleValue()));
+		}else{
+			params.put(columnName, new DatabaseParameter(toString()));
+		}
 
 		if(Common.emptyString(primaryKey)){
 			long lastId = Application.database.insertData(table, params);
@@ -82,6 +89,48 @@ public class DataTableCell {
 
 	@Override
 	public String toString() {
-		return (String) getValue();
+		return Common.objectToString(value);
+	}
+
+	public Boolean booleanValue(){
+		Boolean bool;
+
+		if(value != null && value.getClass() != Boolean.class){
+			String val = toString();
+
+			if(val == null || val == "" || val.toLowerCase() == "false" || val == "0"){
+				bool = false;
+			}else{
+				bool = true;
+			}
+		}else{
+			bool = (Boolean) value;
+		}
+
+		return bool;
+	}
+
+	public Integer integerValue(){
+		Integer number;
+
+		if(value != null && value.getClass() != Integer.class){
+			number = Integer.parseInt(toString());
+		}else{
+			number = (Integer) value;
+		}
+
+		return number;
+	}
+
+	public Double doubleValue(){
+		Double number;
+
+		if(value != null && value.getClass() != Double.class){
+			number = Double.parseDouble(toString());
+		}else{
+			number = (Double) value;
+		}
+
+		return number;
 	}
 }

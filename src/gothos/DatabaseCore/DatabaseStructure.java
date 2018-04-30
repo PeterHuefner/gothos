@@ -10,7 +10,9 @@ public class DatabaseStructure {
                         "class TEXT PRIMARY KEY," +
                         "displayName TEXT," +
                         "calculation TEXT," +
-                        "displayColumns TEXT" +
+                        "displayColumns TEXT," +
+		                "sumAll INTEGER," +
+                        "minApparati INTEGER" +
                      ");"
         );
     }

@@ -1,5 +1,6 @@
 package gothos.FormCore;
 
+import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import gothos.Application;
 import gothos.Common;
 import gothos.DatabaseCore.DatabaseParameter;
@@ -17,6 +18,8 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 	protected String primaryKeyColumn = "ROWID";
 	protected ArrayList<ArrayList<DataTableCell>> tableData;
 	protected ArrayList<String> columns;
+
+	protected String[] displayColumns;
 
 	protected ResultSetMetaData metaData;
 
@@ -140,7 +143,18 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 		if(rowidSkipped && col >= rowidIndex){
 			col++;
 		}
-		return columns.get(col);
+
+		String name = columns.get(col);
+
+		if(this.displayColumns != null && this.displayColumns.length > 0){
+			if(rowidSkipped && col >= rowidIndex){
+				col--;
+			}
+
+			name = this.displayColumns[col];
+		}
+
+		return name;
 	}
 
 	public int getRowCount() {
@@ -166,10 +180,20 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 
 	public Object getValueAt(int row, int col) {
 		if(tableData != null) {
+			int displayCol = col;
 			if (rowidSkipped && col >= rowidIndex) {
 				col++;
 			}
-			return tableData.get(row).get(col);
+			DataTableCell cell = tableData.get(row).get(col);
+			if(getColumnClass(displayCol) == Boolean.class){
+				return cell.booleanValue();
+			}else if(getColumnClass(displayCol) == Integer.class){
+				return cell.integerValue();
+			}else if(getColumnClass(displayCol) == Double.class){
+				return cell.doubleValue();
+			}else{
+				return cell.getValue();
+			}
 		}else{
 			return 0;
 		}
