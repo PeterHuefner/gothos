@@ -1,6 +1,7 @@
 package gothos;
 
 import gothos.DatabaseCore.DatabaseParameter;
+import gothos.DatabaseCore.DatabaseStructure;
 import gothos.FormCore.DataForm;
 import gothos.FormCore.DataFormElement;
 
@@ -25,6 +26,18 @@ public class CompetitionForm extends DataForm{
 	public CompetitionForm(){
 		super("competitions");
 
+		ini();
+	}
+
+	public CompetitionForm(String competition){
+		super("competitions", competition);
+
+		ini();
+
+		load();
+	}
+
+	protected void ini(){
 		connectPanel();
 		defineColumns();
 
@@ -40,6 +53,10 @@ public class CompetitionForm extends DataForm{
 				save();
 			}
 		});
+
+		if(!Common.emptyString(primaryKey)){
+			name.setEnabled(false);
+		}
 	}
 
 	protected void connectPanel(){
@@ -70,6 +87,27 @@ public class CompetitionForm extends DataForm{
 				status = false;
 				Common.showFormError("Der Wettkampfkenner darf nicht mehrfach vergeben werden.");
 			}
+		}
+
+		return status;
+	}
+
+	@Override
+	public boolean save() {
+		Boolean addCompetition = false;
+
+		if(Common.emptyString(primaryKey)){
+			addCompetition = true;
+		}
+
+		Boolean status = super.save();
+
+		if(!Common.emptyString(primaryKey)){
+			name.setEnabled(false);
+		}
+
+		if(addCompetition && status){
+			DatabaseStructure.createCompetition(name.getText());
 		}
 
 		return status;

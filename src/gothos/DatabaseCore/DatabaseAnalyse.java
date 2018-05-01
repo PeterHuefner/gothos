@@ -55,15 +55,15 @@ public class DatabaseAnalyse {
 
 		ResultSet rs = Application.database.query("SELECT name FROM sqlite_master WHERE type = 'table';");
 
-			try{
-				while (rs.next()){
+		try{
+			while (rs.next()){
 				if(matchRegex.isEmpty()){
 					tables.add(rs.getString("name"));
 				}else if(rs.getString("name").matches(matchRegex)){
 					tables.add(rs.getString("name"));
 				}
-				rs.close();
 			}
+			rs.close();
 		}catch (SQLException e){
 			Common.printError(e);
 		}
@@ -76,13 +76,13 @@ public class DatabaseAnalyse {
 	}
 
 	public ArrayList<String> listApparatiInCompetition(String competition){
-		ArrayList<String> tables = this.listTables("^" + competition + "_apparati_.+$");
+		ArrayList<String> tables = this.listTables("^competition_" + competition + "_apparati_.+$");
 		ArrayList<String> apparati = new ArrayList<String>();
 
 		for(String table: tables){
 			Matcher matcher = Pattern.compile("^.+_apparati_(.+)$").matcher(table);
 			if(matcher.find()){
-				apparati.add(matcher.group());
+				apparati.add(matcher.group(1));
 			}
 		}
 

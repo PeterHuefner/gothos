@@ -1,6 +1,11 @@
 package gothos;
 
+import gothos.DatabaseCore.DatabaseParameter;
+
 import javax.swing.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class WindowManager {
 
@@ -18,6 +23,26 @@ public class WindowManager {
 
 	public static void showCreateCompetition(){
 		CompetitionForm competitionForm = new CompetitionForm();
+		showPanel(competitionForm.getPanel());
+	}
+
+	public static void showCreateCompetition(String competition){
+		ArrayList<DatabaseParameter> params = new ArrayList<>();
+		params.add(new DatabaseParameter(competition));
+		ResultSet result = Application.database.query("SELECT ROWID FROM competitions WHERE name = ?", params);
+
+		String primaryKey = "";
+
+		try{
+			while (result.next()){
+				primaryKey = result.getString("ROWID");
+			}
+			result.close();
+		}catch (SQLException e){
+			Common.printError(e);
+		}
+
+		CompetitionForm competitionForm = new CompetitionForm(primaryKey);
 		showPanel(competitionForm.getPanel());
 	}
 

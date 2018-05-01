@@ -41,6 +41,15 @@ public class DataFormElement {
 		return value;
 	}
 
+	public DataFormElement setValue(String value){
+
+		if(this.element.getClass() == javax.swing.JTextField.class){
+			((JTextField) this.element).setText(value);
+		}
+
+		return this;
+	}
+
 	public DataFormElement(Object element, String name) {
 		this.element = element;
 		this.name = name;

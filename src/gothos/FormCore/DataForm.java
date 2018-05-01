@@ -6,6 +6,8 @@ import gothos.DatabaseCore.SqliteConnection;
 import gothos.Application;
 
 import javax.swing.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,6 +32,31 @@ abstract public class DataForm {
 		this.columns = new ArrayList<DataFormElement>();
 		this.mainTable = table;
 		this.primaryKey = primaryKey;
+	}
+
+	public void load(){
+		ArrayList<DatabaseParameter> params = new ArrayList<>();
+		params.add(new DatabaseParameter(this.primaryKey));
+
+		String cols = "";
+		String comma = "";
+		for(DataFormElement ele: columns){
+			cols += comma + ele.name;
+			comma = ", ";
+		}
+
+		ResultSet rs = Application.database.query("SELECT " + cols + " FROM " + mainTable + " WHERE ROWID = ?", params);
+
+		try{
+			if(rs.next()){
+				for(DataFormElement ele: columns){
+					ele.setValue(rs.getString(ele.getName()));
+				}
+			}
+			rs.close();
+		}catch (SQLException e){
+			Common.printError(e);
+		}
 	}
 
 	public boolean save(){
