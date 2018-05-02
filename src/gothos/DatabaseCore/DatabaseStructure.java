@@ -2,6 +2,7 @@ package gothos.DatabaseCore;
 
 import gothos.Application;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DatabaseStructure {
@@ -34,7 +35,8 @@ public class DatabaseStructure {
 						"name TEXT PRIMARY KEY NOT NULL," +
 						"longname TEXT," +
 						"description TEXT," +
-						"competitionDay TEXT" +
+						"competitionDay TEXT," +
+						"final INTEGER" +
 					 ");"
 		);
 	}
@@ -47,7 +49,8 @@ public class DatabaseStructure {
 						"birthdate TEXT," +
 						"class TEXT," +
 						"club TEXT," +
-						"squad TEXT" +
+						"squad TEXT," +
+						"active INTEGER DEFAULT 1" +
 						");"
 		);
 
@@ -125,5 +128,24 @@ public class DatabaseStructure {
 	public static boolean removeApparatiFromCompetition(String competition, String apparatus) {
 		System.out.println("DROP TABLE IF EXISTS competition_" + competition + "_apparati_" + apparatus + ";");
 		return Application.database.execute("DROP TABLE IF EXISTS competition_" + competition + "_apparati_" + apparatus + ";");
+	}
+
+	public static boolean removeGymnast(String rowid){
+		return removeGymnast(rowid, Application.selectedCompetition);
+	}
+
+	public static boolean removeGymnast(String rowid, String competition){
+		Boolean updateStatus;
+		ArrayList<DatabaseParameter> params = new ArrayList<>();
+		params.add(new DatabaseParameter(rowid));
+		updateStatus = Application.database.execute("UPDATE competition_" + competition + " SET active = 0 WHERE ROWID = ?", params);
+
+		DatabaseAnalyse analyse = new DatabaseAnalyse();
+		ArrayList<String> apparati = analyse.listApparatiInCompetition(competition);
+		for(String apparatus: apparati){
+			Application.database.execute("DELETE FROM competition_" + competition + "_apparati_" + apparatus + " WHERE gymnast = ?", params);
+		}
+
+		return updateStatus;
 	}
 }

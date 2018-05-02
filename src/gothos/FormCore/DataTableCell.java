@@ -114,7 +114,11 @@ public class DataTableCell {
 		Integer number;
 
 		if(value != null && value.getClass() != Integer.class){
-			number = Integer.parseInt(toString());
+			String string = toString();
+			if(Common.emptyString(string)){
+				string = "0";
+			}
+			number = Integer.parseInt(string);
 		}else{
 			number = (Integer) value;
 		}
@@ -126,7 +130,11 @@ public class DataTableCell {
 		Double number;
 
 		if(value != null && value.getClass() != Double.class){
-			number = Double.parseDouble(toString());
+			String string = toString();
+			if(Common.emptyString(string)){
+				string = "0";
+			}
+			number = Double.parseDouble(string);
 		}else{
 			number = (Double) value;
 		}

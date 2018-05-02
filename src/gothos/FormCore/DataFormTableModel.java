@@ -70,7 +70,7 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 	public int addEmptyRow(){
 		ArrayList<DataTableCell> row = new ArrayList<>();
 		for(Integer i = 0; i < columns.size(); i++){
-			DataTableCell cell = new DataTableCell("", getTableForColumn(i), "", getDatabaseNameForColumn(i));
+			DataTableCell cell = new DataTableCell("", getTableForColumn(i), null, getDatabaseNameForColumn(i));
 			cell.setPrimaryKeyColumn(this.getPrimaryKeyColumnForColumn(i));
 			row.add(cell);
 		}

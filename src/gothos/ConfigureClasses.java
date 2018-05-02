@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public class ConfigureClasses {
 	private JPanel panel;
 	private JTable classesTable;
-	private JButton backButton;
 	private JButton newButton;
 	private JButton deleteButton;
+	private JButton backButton;
 
 	protected String databaseTable = "";
 	protected ConfigureClassesModel model;
@@ -24,12 +24,14 @@ public class ConfigureClasses {
 		model = new ConfigureClassesModel(databaseTable);
 
 		classesTable.setModel(model);
+
 		backButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				WindowManager.showStartPanel();
 			}
 		});
+
 
 		newButton.addActionListener(new ActionListener() {
 			@Override
