@@ -1,6 +1,7 @@
 package gothos;
 
 import gothos.DatabaseCore.DatabaseParameter;
+import gothos.competitionMainForm.CompetitionMainForm;
 
 import javax.swing.*;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ public class WindowManager {
 	public static JFrame mainFrame;
 
 	protected static JPanel startPanel;
+	protected static CompetitionMainForm activeCompetition;
 
 	public static void initiateVisuals(JPanel startPanel){
 		WindowManager.startPanel = startPanel;
@@ -59,8 +61,29 @@ public class WindowManager {
 	}
 
 	public static void showStartPanel(){
+
+		if(activeCompetition != null){
+			activeCompetition.close();
+			Application.selectedCompetition = null;
+			activeCompetition = null;
+		}
+
+		WindowManager.mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.NORMAL);
 		showPanel(WindowManager.startPanel);
 		Start.instance.panelShowed();
 	}
 
+	public static void showCompetitionPanel(){
+		if(activeCompetition == null){
+			activeCompetition = new CompetitionMainForm();
+		}
+
+		//mainFrame.get
+		WindowManager.mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		showPanel(activeCompetition.getPanel());
+	}
+
+	public static void closeCompetition(){
+		showStartPanel();
+	}
 }

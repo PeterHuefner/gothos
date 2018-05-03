@@ -89,6 +89,11 @@ public class CompetitionForm extends DataForm{
 			}
 		}
 
+		if(!this.name.getText().matches(Common.tableNameReqex)){
+			Common.showError("Der Wettkampfkenner muss mit einem Buchstaben beginnen und darf nur aus Buchstaben, Zahlen und Unterstrichen bestehen.\nUmlaute und ß sind nicht verwendbar.");
+			status = false;
+		}
+
 		return status;
 	}
 

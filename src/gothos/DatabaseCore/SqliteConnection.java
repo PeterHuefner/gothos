@@ -35,6 +35,7 @@ public class SqliteConnection {
 		}
 
 		if(connection != null){
+			execute("VACUUM;");
 			connection.setAutoCommit(false);
 			//execute("PRAGMA journal_mode = WAL;");
 		}

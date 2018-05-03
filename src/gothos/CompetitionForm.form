@@ -25,7 +25,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value="Wettkenner"/>
+              <text value="Wettkampfkenner"/>
             </properties>
           </component>
           <component id="5290d" class="javax.swing.JTextField" binding="name">

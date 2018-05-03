@@ -50,6 +50,7 @@ public class DatabaseStructure {
 						"class TEXT," +
 						"club TEXT," +
 						"squad TEXT," +
+						"team TEXT," +
 						"active INTEGER DEFAULT 1" +
 						");"
 		);
@@ -120,13 +121,13 @@ public class DatabaseStructure {
 		return Application.database.execute(
 				"CREATE TABLE IF NOT EXISTS competition_" + competition + "_apparati_" + apparatus + " (" +
 						"gymnast INTEGER," +
-						apparatus + " REAL" +
+						apparatus + " REAL," +
+						"isTeamMember INTEGER DEFAULT 1" +
 						");"
 		);
 	}
 
 	public static boolean removeApparatiFromCompetition(String competition, String apparatus) {
-		System.out.println("DROP TABLE IF EXISTS competition_" + competition + "_apparati_" + apparatus + ";");
 		return Application.database.execute("DROP TABLE IF EXISTS competition_" + competition + "_apparati_" + apparatus + ";");
 	}
 

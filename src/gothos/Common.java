@@ -4,6 +4,8 @@ import javax.swing.*;
 
 public class Common {
 
+	public static final String tableNameReqex = "^[a-zA-Z]{1}[a-zA-Z0-9_]*$";
+
 	public static boolean emptyString(String string){
 		return (string == null || string.isEmpty());
 	}

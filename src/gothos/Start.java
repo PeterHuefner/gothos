@@ -44,6 +44,7 @@ public class Start {
 
 				int chooserState = chooser.showOpenDialog(WindowManager.mainFrame);
 				if(chooserState == JFileChooser.APPROVE_OPTION){
+					selectedDatabaseFileLabel.setText("Datenbankverbindung wird etabliert. Bitte warten ...");
 					if(Application.connectToDatabase(chooser.getSelectedFile().getAbsolutePath())){
 						selectedDatabaseFileLabel.setText("verbundene Datenbank: " + chooser.getSelectedFile().getAbsolutePath());
 						createCompetitionButton.setEnabled(true);
@@ -61,6 +62,7 @@ public class Start {
 
 				int chooserState = chooser.showSaveDialog(WindowManager.mainFrame);
 				if(chooserState == JFileChooser.APPROVE_OPTION){
+					selectedDatabaseFileLabel.setText("Datenbankverbindung wird etabliert. Bitte warten ...");
 					String file = chooser.getSelectedFile().getAbsolutePath();
 
 					if(!file.matches("\\.sqlite3?$")){
@@ -120,7 +122,8 @@ public class Start {
 				}
 
 				if(!Common.emptyString(selectedCompetition)){
-
+					Application.selectedCompetition = selectedCompetition;
+					WindowManager.showCompetitionPanel();
 				}
 			}
 		});
