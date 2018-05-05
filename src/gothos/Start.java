@@ -10,6 +10,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -124,6 +126,17 @@ public class Start {
 				if(!Common.emptyString(selectedCompetition)){
 					Application.selectedCompetition = selectedCompetition;
 					WindowManager.showCompetitionPanel();
+				}
+			}
+		});
+
+		competitionList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+
+				if(e.getClickCount() == 2 && !e.isConsumed() && competitionList.getSelectedValue() != null){
+					loadSelectedCompetitionButton.doClick();
 				}
 			}
 		});

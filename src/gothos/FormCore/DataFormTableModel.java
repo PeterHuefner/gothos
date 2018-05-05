@@ -5,12 +5,17 @@ import gothos.Application;
 import gothos.Common;
 import gothos.DatabaseCore.DatabaseParameter;
 
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 abstract public class DataFormTableModel extends DefaultTableModel {
 
@@ -93,6 +98,31 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 		}
 
 		tableData.remove(row);
+		newDataAvailable(new TableModelEvent(this));
+	}
+
+	public void deleteRows(int[] rows){
+		Integer[] convertedRows = new Integer[rows.length];
+		for(int i = 0; i < rows.length; i++){
+			convertedRows[i] = rows[i];
+		}
+		Arrays.sort(convertedRows, Collections.reverseOrder());
+
+		for(Integer row: convertedRows){
+			ArrayList<String> handledTables = new ArrayList<>();
+			for(DataTableCell cell: tableData.get(row.intValue())){
+				if(!handledTables.contains(cell.getTable())){
+					ArrayList<DatabaseParameter> params = new ArrayList<>();
+					params.add(new DatabaseParameter(cell.getPrimaryKey()));
+					Application.database.execute("DELETE FROM `" + cell.getTable() + "` WHERE `" + cell.getPrimaryKeyColumn() + "` = ?;", params);
+					handledTables.add(cell.getTable());
+				}
+			}
+		}
+
+		for(Integer row: convertedRows) {
+			tableData.remove(row.intValue());
+		}
 		newDataAvailable(new TableModelEvent(this));
 	}
 

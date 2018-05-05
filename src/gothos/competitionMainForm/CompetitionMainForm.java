@@ -1,12 +1,16 @@
 package gothos.competitionMainForm;
 
+import com.opencsv.CSVReader;
 import gothos.Application;
 import gothos.Common;
+import gothos.FormCore.TableNavigator;
 import gothos.WindowManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class CompetitionMainForm {
 	private JButton closeCompetition;
@@ -34,8 +38,10 @@ public class CompetitionMainForm {
 	private JTextField searchField;
 	private JButton createIdsButton;
 	private JButton clearSearchButton;
+	private JButton searchButton;
 
 	protected GymnastTableModel tableModel;
+	protected TableNavigator navigator;
 
 	public CompetitionMainForm() {
 
@@ -47,6 +53,8 @@ public class CompetitionMainForm {
 		competitionNameLabel.setText("Wettkampf: " + Application.selectedCompetition);
 		tableModel = new GymnastTableModel();
 		gymnastsTable.setModel(tableModel);
+
+		navigator = new TableNavigator(gymnastsTable);
 
 		closeCompetition.addActionListener(new ActionListener() {
 			@Override
@@ -70,12 +78,44 @@ public class CompetitionMainForm {
 		removeGymnast.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int selectedRow = gymnastsTable.getSelectedRow();
-				if(selectedRow != -1){
-					tableModel.deleteRow(selectedRow);
+				int[] selectedRows = gymnastsTable.getSelectedRows();
+				if(selectedRows.length > 0){
+					tableModel.deleteRows(selectedRows);
 				}else{
-					Common.showError("Selektieren Sie zunächst eine Altersklasse.");
+					Common.showError("Selektieren Sie zunächst einen Teilnehmer.");
 				}
+			}
+		});
+
+		searchButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!Common.emptyString(searchField.getText())){
+					tableModel.searchFor(searchField.getText());
+				}
+			}
+		});
+		clearSearchButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				searchField.setText("");
+				tableModel.searchFor("");
+			}
+		});
+
+		searchField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+					searchButton.doClick();
+				}
+			}
+		});
+		importButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowManager.showImport();
 			}
 		});
 	}

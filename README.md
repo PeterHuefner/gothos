@@ -1,2 +1,2 @@
-# gothos
+# Gothos
 Wettkampfverwaltung

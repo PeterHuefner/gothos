@@ -1,6 +1,8 @@
 package gothos;
 
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Common {
 
@@ -41,5 +43,33 @@ public class Common {
 		}else{
 			return (String) object;
 		}
+	}
+
+	public static void addTableNavigationEvents(JTable tableElement){
+
+		/*tableElement.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+
+				int selectedRow = tableElement.getSelectedRow();
+				int selectedColumn = tableElement.getSelectedColumn();
+				Boolean editing = tableElement.isEditing();
+
+				if(selectedColumn == -1){
+					selectedColumn = 0;
+				}
+
+				if(selectedRow >= 0){
+
+					if(e.getKeyCode() == KeyEvent.VK_UP && selectedRow > 0){
+						tableElement.editCellAt(selectedRow - 1, selectedColumn);
+					}else if(e.getKeyCode() == KeyEvent.VK_DOWN && selectedRow < (tableElement.getRowCount() - 1)){
+						tableElement.editCellAt(selectedRow + 1, selectedColumn);
+					}
+				}
+
+			}
+		});*/
 	}
 }

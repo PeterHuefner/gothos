@@ -2,6 +2,7 @@ package gothos;
 
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.competitionMainForm.CompetitionMainForm;
+import gothos.competitionMainForm.ImportForm;
 
 import javax.swing.*;
 import java.sql.ResultSet;
@@ -11,9 +12,11 @@ import java.util.ArrayList;
 public class WindowManager {
 
 	public static JFrame mainFrame;
+	public static JFrame childFrame;
 
 	protected static JPanel startPanel;
 	protected static CompetitionMainForm activeCompetition;
+
 
 	public static void initiateVisuals(JPanel startPanel){
 		WindowManager.startPanel = startPanel;
@@ -21,6 +24,16 @@ public class WindowManager {
 
 		WindowManager.mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		showStartPanel();
+	}
+
+	public static void createChildFrame(String title){
+		childFrame = new JFrame(title);
+		childFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	}
+
+	public static void disposeChildFrame(){
+		childFrame.dispose();
+		childFrame = null;
 	}
 
 	public static void showCreateCompetition(){
@@ -54,10 +67,14 @@ public class WindowManager {
 	}
 
 	public static void showPanel(JPanel panel){
-		WindowManager.mainFrame.setContentPane(panel);
-		WindowManager.mainFrame.pack();
-		WindowManager.mainFrame.setVisible(true);
-		WindowManager.mainFrame.setLocationRelativeTo(null);
+		showPanelInFrame(panel, WindowManager.mainFrame);
+	}
+
+	public static void showPanelInFrame(JPanel panel, JFrame frame){
+		frame.setContentPane(panel);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setLocationRelativeTo(null);
 	}
 
 	public static void showStartPanel(){
@@ -85,5 +102,12 @@ public class WindowManager {
 
 	public static void closeCompetition(){
 		showStartPanel();
+	}
+
+	public static void showImport(){
+		createChildFrame("Importieren");
+
+		ImportForm importForm = new ImportForm();
+		showPanelInFrame(importForm.getPanel(), childFrame);
 	}
 }

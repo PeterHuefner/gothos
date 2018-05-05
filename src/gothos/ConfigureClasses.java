@@ -47,9 +47,9 @@ public class ConfigureClasses {
 		deleteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int selectedRow = classesTable.getSelectedRow();
-				if(selectedRow != -1){
-					model.deleteRow(selectedRow);
+				int[] selectedRows = classesTable.getSelectedRows();
+				if(selectedRows.length > 0){
+					model.deleteRows(selectedRows);
 				}else{
 					Common.showError("Selektieren Sie zunächst eine Altersklasse.");
 				}

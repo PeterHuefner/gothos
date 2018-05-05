@@ -120,7 +120,7 @@ public class DatabaseStructure {
 	public static boolean addApparatiToCompetition(String competition, String apparatus) {
 		return Application.database.execute(
 				"CREATE TABLE IF NOT EXISTS competition_" + competition + "_apparati_" + apparatus + " (" +
-						"gymnast INTEGER," +
+						"gymnast INTEGER PRIMARY KEY," +
 						apparatus + " REAL," +
 						"isTeamMember INTEGER DEFAULT 1" +
 						");"

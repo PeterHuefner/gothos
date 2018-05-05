@@ -271,4 +271,26 @@ public class SqliteConnection {
 
 		return this.execute(sql, databseParams);
 	}
+
+	public long insertOrReplace(String table, LinkedHashMap<String, DatabaseParameter> params){
+
+
+
+		return this.getLastInsertId();
+	}
+
+	/*
+INSERT OR REPLACE INTO Employee (id, role, name)
+VALUES (  1,
+        'code monkey',
+        (SELECT name FROM Employee WHERE id = 1)
+      );
+
+INSERT OR REPLACE INTO Employee (id, name, role)
+VALUES (  1,
+        'Susan Bar',
+        COALESCE((SELECT role FROM Employee WHERE id = 1), 'Benchwarmer')
+      );
+
+	 */
 }
