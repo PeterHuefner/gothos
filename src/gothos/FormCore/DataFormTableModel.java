@@ -30,12 +30,17 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 
 	protected boolean rowidSkipped = false;
 	protected Integer rowidIndex = 0;
+	protected String lastSql;
+	protected ArrayList<DatabaseParameter> lastParams;
 
 	public DataFormTableModel(){
 		tableData = new ArrayList<>();
 	}
 
 	public void buildData(String sql, ArrayList<DatabaseParameter> params){
+		lastSql = sql;
+		lastParams = params;
+
 		ResultSet result = Application.database.query(sql, params);
 		tableData = new ArrayList<>();
 		columns = new ArrayList<>();
@@ -69,7 +74,11 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 			Common.printError(e);
 		}
 
-		newDataAvailable(new TableModelEvent(this));
+		fireTableDataChanged();
+	}
+
+	public void reloadTableData(){
+		buildData(lastSql, lastParams);
 	}
 
 	public int addEmptyRow(){
@@ -80,7 +89,7 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 			row.add(cell);
 		}
 		tableData.add(row);
-		newDataAvailable(new TableModelEvent(this));
+		fireTableRowsInserted(tableData.size() - 1, tableData.size() - 1);
 		return tableData.size() - 1;
 	}
 
@@ -98,7 +107,7 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 		}
 
 		tableData.remove(row);
-		newDataAvailable(new TableModelEvent(this));
+		fireTableRowsDeleted(row, row);
 	}
 
 	public void deleteRows(int[] rows){
@@ -123,7 +132,7 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 		for(Integer row: convertedRows) {
 			tableData.remove(row.intValue());
 		}
-		newDataAvailable(new TableModelEvent(this));
+		fireTableDataChanged();
 	}
 
 	protected String getPrimaryKeyForRow(ResultSet rs){

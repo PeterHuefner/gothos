@@ -21,7 +21,7 @@ public class GymnastTableModel extends DataFormTableModel {
 
 		super();
 		this.baseTable = "competition_" + Application.selectedCompetition;
-		displayColumns = new String[]{"ID", "Name", "Geburtsdatum", "Alterklasse", "Verein", "Riege", "Mannschaft"};
+		displayColumns = new String[]{"ID", "Name", "Geburtsdatum", "Altersklasse", "Verein", "Riege", "Mannschaft"};
 		searchCols     = new String[]{"ID", "Name", "birthdate", "class", "club", "squad", "team"};
 		baseSql = "SELECT ROWID, " + String.join(", ", searchCols) + " FROM " + baseTable + " WHERE active = 1";
 		buildData(baseSql + ";", new ArrayList<>());
@@ -57,7 +57,7 @@ public class GymnastTableModel extends DataFormTableModel {
 		}
 
 		tableData.remove(row);
-		newDataAvailable(new TableModelEvent(this));
+		fireTableRowsDeleted(row, row);
 	}
 
 	@Override
@@ -80,6 +80,6 @@ public class GymnastTableModel extends DataFormTableModel {
 		for(Integer row: convertedRows) {
 			tableData.remove(row.intValue());
 		}
-		newDataAvailable(new TableModelEvent(this));
+		fireTableDataChanged();
 	}
 }

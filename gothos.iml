@@ -8,15 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="sqlite-jdbc-3.21.0" level="project" />
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/opencsv-4.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="opencsv-4.1" level="project" />
+    <orderEntry type="library" exported="" name="opencsv-4.1" level="project" />
+    <orderEntry type="library" exported="" name="commons-lang3-3.7" level="project" />
   </component>
 </module>

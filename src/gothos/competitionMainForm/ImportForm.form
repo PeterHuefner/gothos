@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gothos.competitionMainForm.ImportForm">
-  <grid id="27dc6" binding="panel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="panel" layout-manager="GridLayoutManager" row-count="6" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
+      <xy x="20" y="20" width="885" height="400"/>
     </constraints>
-    <properties/>
+    <properties>
+      <minimumSize width="-1" height="-1"/>
+      <opaque value="true"/>
+      <preferredSize width="800" height="578"/>
+    </properties>
     <border type="none"/>
     <children>
       <component id="3048f" class="javax.swing.JButton" binding="backButton">
@@ -29,7 +33,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="7b14f" class="javax.swing.JTable" binding="table1" default-binding="true">
+          <component id="7b14f" class="javax.swing.JTable" binding="importDataTable">
             <constraints/>
             <properties/>
           </component>
@@ -66,6 +70,20 @@
           </component>
         </children>
       </grid>
+      <component id="a273a" class="javax.swing.JLabel" binding="helpLabel">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;&#10;&lt;br&gt;&#10;Wählen Sie mit dem Button &quot;CSV-Datei auswählen&quot; eine Datei auf Ihrem PC aus.&lt;br&gt;&#10;Der Inhalt der Datei wird Ihnen anschließend angezeigt. &lt;br&gt;&#10;Wurde die Datei korrekt eingelesen, klicken Sie auf &quot;Daten importieren&quot; um die angezeigten Daten dem aktuellen Wettkampf hinzuzufügen.&#10;&lt;br&gt;&lt;br&gt;&#10;Die CSV-Datei muss als erste Zeile die Spaltennamen enthalten, sodass die Daten zugeordnet werden können.&lt;br&gt;&#10;Die Reihenfolge der Spalten ist frei wählbar. Auch müssen nicht alle Spalten angegeben werden. &lt;br&gt;&#10;Die Spaltennamen können folgende Werte haben:&lt;br&gt;&#10;&lt;b&gt;ID, Name, Geburtsdatum, Altersklasse, Verein, Riege, Mannschaft&lt;/b&gt;&#10;&lt;/html&gt;"/>
+        </properties>
+      </component>
+      <component id="3b54f" class="javax.swing.JSeparator">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
     </children>
   </grid>
 </form>

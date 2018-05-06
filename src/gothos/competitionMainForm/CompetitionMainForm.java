@@ -7,6 +7,7 @@ import gothos.FormCore.TableNavigator;
 import gothos.WindowManager;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -40,10 +41,18 @@ public class CompetitionMainForm {
 	private JButton clearSearchButton;
 	private JButton searchButton;
 
+	protected static CompetitionMainForm instance;
+
 	protected GymnastTableModel tableModel;
 	protected TableNavigator navigator;
 
 	public CompetitionMainForm() {
+
+		if(instance != null){
+			return;
+		}
+
+		instance = this;
 
 		if(Common.emptyString(Application.selectedCompetition)){
 			JOptionPane.showMessageDialog(null, "Kein Wettkampf ausgewählt.");
@@ -66,9 +75,9 @@ public class CompetitionMainForm {
 		addGymnast.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int colIndex = tableModel.addEmptyRow();
-				if(gymnastsTable.editCellAt(colIndex, 0)){
-					gymnastsTable.setRowSelectionInterval(colIndex, colIndex);
+				int rowIndex = tableModel.addEmptyRow();
+				if(gymnastsTable.editCellAt(rowIndex, 1)){
+					gymnastsTable.setRowSelectionInterval(rowIndex, rowIndex);
 					gymnastsTable.requestFocus();
 					gymnastsTable.getEditorComponent().requestFocusInWindow();
 				}
@@ -126,5 +135,15 @@ public class CompetitionMainForm {
 
 	public void close(){
 
+	}
+
+	public void refresh(){
+		tableModel.reloadTableData();
+
+
+	}
+
+	public static void reloadData(){
+		instance.refresh();
 	}
 }
