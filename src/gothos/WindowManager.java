@@ -3,6 +3,7 @@ package gothos;
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.competitionMainForm.CompetitionMainForm;
 import gothos.competitionMainForm.ImportForm;
+import gothos.competitionMainForm.SetIDForm;
 
 import javax.swing.*;
 import java.sql.ResultSet;
@@ -27,12 +28,16 @@ public class WindowManager {
 	}
 
 	public static void createChildFrame(String title){
+		disposeChildFrame();
+
 		childFrame = new JFrame(title);
 		childFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	public static void disposeChildFrame(){
-		childFrame.dispose();
+		if(childFrame != null){
+			childFrame.dispose();
+		}
 		childFrame = null;
 	}
 
@@ -109,5 +114,12 @@ public class WindowManager {
 
 		ImportForm importForm = new ImportForm();
 		showPanelInFrame(importForm.getPanel(), childFrame);
+	}
+
+	public static void shwoSetIds(){
+		createChildFrame("IDs vergeben");
+
+		SetIDForm form = new SetIDForm();
+		showPanelInFrame(form.getPanel(), childFrame);
 	}
 }

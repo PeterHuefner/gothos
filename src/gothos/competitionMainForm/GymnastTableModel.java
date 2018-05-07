@@ -15,6 +15,7 @@ import java.util.Collections;
 public class GymnastTableModel extends DataFormTableModel {
 
 	protected String baseSql;
+	protected String orderSql;
 	protected String[] searchCols;
 
 	public GymnastTableModel(){
@@ -24,7 +25,8 @@ public class GymnastTableModel extends DataFormTableModel {
 		displayColumns = new String[]{"ID", "Name", "Geburtsdatum", "Altersklasse", "Verein", "Riege", "Mannschaft"};
 		searchCols     = new String[]{"ID", "Name", "birthdate", "class", "club", "squad", "team"};
 		baseSql = "SELECT ROWID, " + String.join(", ", searchCols) + " FROM " + baseTable + " WHERE active = 1";
-		buildData(baseSql + ";", new ArrayList<>());
+		orderSql = " ORDER BY ID; ROWID";
+		buildData(baseSql + orderSql + ";", new ArrayList<>());
 
 	}
 
@@ -44,7 +46,7 @@ public class GymnastTableModel extends DataFormTableModel {
 			sql += ")";
 		}
 
-		buildData(sql + ";", params);
+		buildData(sql + orderSql + ";", params);
 	}
 
 	@Override

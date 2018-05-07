@@ -110,7 +110,12 @@ public class ImportForm {
 
 	protected void showData() {
 
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 
 		for (Map.Entry<Integer, Integer> colIndizies : colNames.entrySet()) {
 			model.addColumn(allowedCols[colIndizies.getValue()]);

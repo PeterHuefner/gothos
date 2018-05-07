@@ -127,6 +127,13 @@ public class CompetitionMainForm {
 				WindowManager.showImport();
 			}
 		});
+
+		createIdsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowManager.shwoSetIds();
+			}
+		});
 	}
 
 	public JPanel getPanel(){
