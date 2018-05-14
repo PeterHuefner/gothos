@@ -134,6 +134,20 @@ public class CompetitionMainForm {
 				WindowManager.shwoSetIds();
 			}
 		});
+
+		exportButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowManager.showExportForm("simple");
+			}
+		});
+
+		exportAllButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowManager.showExportForm("extended");
+			}
+		});
 	}
 
 	public JPanel getPanel(){

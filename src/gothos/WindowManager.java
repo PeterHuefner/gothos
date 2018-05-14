@@ -2,6 +2,7 @@ package gothos;
 
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.competitionMainForm.CompetitionMainForm;
+import gothos.competitionMainForm.ExportForm;
 import gothos.competitionMainForm.ImportForm;
 import gothos.competitionMainForm.SetIDForm;
 
@@ -120,6 +121,13 @@ public class WindowManager {
 		createChildFrame("IDs vergeben");
 
 		SetIDForm form = new SetIDForm();
+		showPanelInFrame(form.getPanel(), childFrame);
+	}
+
+	public static void showExportForm(String mode){
+		createChildFrame("Exportieren");
+
+		ExportForm form = new ExportForm(mode);
 		showPanelInFrame(form.getPanel(), childFrame);
 	}
 }
