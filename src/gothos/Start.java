@@ -67,7 +67,7 @@ public class Start {
 					selectedDatabaseFileLabel.setText("Datenbankverbindung wird etabliert. Bitte warten ...");
 					String file = chooser.getSelectedFile().getAbsolutePath();
 
-					if(!file.matches("\\.sqlite3?$")){
+					if(!file.matches("^.+\\.sqlite3?$")){
 						file += ".sqlite3";
 					}
 

@@ -88,35 +88,4 @@ public class DatabaseAnalyse {
 
 		return  apparati;
 	}
-
-	public String baseCompetitionSelect(){
-		return baseCompetitionSelect(false, new ArrayList<String>(), true);
-	}
-
-	public String baseCompetitionSelect(Boolean readableColumns, ArrayList<String> apparaties, Boolean addAppartiesToCols){
-		String colums = "competition_" + Application.selectedCompetition + ".ROWID, ID, name, birthdate, class, club, squad, team";
-		String joins = "";
-		String where = "WHERE active = 1";
-
-		String sql;
-
-		if(readableColumns){
-			colums = "competition_" + Application.selectedCompetition + ".ROWID, ID, Name, birthdate AS Geburtsdatum, class AS Altersklasse, club AS Verein, squad AS Riege, team AS Mannschaft";
-		}
-
-		if(apparaties.size() > 0){
-			for(String apparti: apparaties){
-
-				joins += " LEFT JOIN competition_" + Application.selectedCompetition + "_apparati_" + apparti + " ON competition_" + Application.selectedCompetition + ".ROWID = competition_" + Application.selectedCompetition + "_apparati_" + apparti + ".gymnast";
-
-				if(addAppartiesToCols){
-					colums += ", " + apparti;
-				}
-			}
-		}
-
-		sql = "SELECT " + colums + " FROM competition_" + Application.selectedCompetition + " " + joins + " " + where;
-
-		return sql;
-	}
 }

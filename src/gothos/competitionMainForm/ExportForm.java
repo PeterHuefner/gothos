@@ -3,6 +3,7 @@ package gothos.competitionMainForm;
 import com.opencsv.CSVWriter;
 import gothos.Application;
 import gothos.Common;
+import gothos.DatabaseCore.CompetitionData;
 import gothos.DatabaseCore.DatabaseAnalyse;
 import gothos.WindowManager;
 
@@ -52,7 +53,7 @@ public class ExportForm {
 				int chooserState = chooser.showSaveDialog(WindowManager.childFrame);
 				if (chooserState == JFileChooser.APPROVE_OPTION) {
 					csvFilePath = chooser.getSelectedFile().getAbsolutePath();
-					if(!csvFilePath.matches("\\.csv$")){
+					if(!csvFilePath.matches("^.+\\.csv$")){
 						csvFilePath += ".csv";
 					}
 					File file   = new File(csvFilePath);
@@ -74,14 +75,16 @@ public class ExportForm {
 
 	protected void export(){
 
-		DatabaseAnalyse analyse = new DatabaseAnalyse();
+		CompetitionData data = new CompetitionData();
 		String sql;
 
+		data.setReadableCols(true);
 		if(mode == "extended"){
-			sql = analyse.baseCompetitionSelect(true, analyse.listApparatiInCompetition(), true);
-		}else{
-			sql = analyse.baseCompetitionSelect(true, new ArrayList<String>(), false);
+			data.setAllApparaties(true);
+			data.setApparatiesAsCols(true);
 		}
+
+		sql = data.getSql();
 
 		ResultSet result = Application.database.query(sql);
 		try{
