@@ -11,9 +11,15 @@ public class ConfigureClasses {
 	private JButton newButton;
 	private JButton deleteButton;
 	private JButton backButton;
+	private JLabel infoLabel;
 
 	protected String databaseTable = "";
 	protected ConfigureClassesModel model;
+	protected Boolean openAsChildPanel = false;
+
+	public void setOpenAsChildPanel(Boolean openAsChildPanel) {
+		this.openAsChildPanel = openAsChildPanel;
+	}
 
 	public JPanel getPanel() {
 		return panel;
@@ -25,10 +31,20 @@ public class ConfigureClasses {
 
 		classesTable.setModel(model);
 
+		if (databaseTable == "global_classes") {
+			infoLabel.setText("Sie bearbeiten die Vorlagen der Altersklassen für die ausgewählte Datenbank. Änderungen wirken sich nur auf neu angelegte Wettkämpfe aus.");
+		} else {
+			infoLabel.setText("Sie bearbeiten die Altersklassen für den aktuell ausgewähöten Wettkampf. Änderungen wirken sich nur auf diesen Wettkampf aus.");
+		}
+
 		backButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowManager.showStartPanel();
+				if (openAsChildPanel) {
+					WindowManager.disposeChildFrame();
+				}else{
+					WindowManager.showStartPanel();
+				}
 			}
 		});
 

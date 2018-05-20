@@ -148,6 +148,20 @@ public class CompetitionMainForm {
 				WindowManager.showExportForm("extended");
 			}
 		});
+
+		configureClassesButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowManager.showLocalClasses();
+			}
+		});
+
+		configureAppartiButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowManager.showConfigureApparati();
+			}
+		});
 	}
 
 	public JPanel getPanel(){
