@@ -60,6 +60,7 @@ public class GymnastTableModel extends DataFormTableModel {
 
 		tableData.remove(row);
 		fireTableRowsDeleted(row, row);
+		callListeners();
 	}
 
 	@Override
@@ -83,5 +84,6 @@ public class GymnastTableModel extends DataFormTableModel {
 			tableData.remove(row.intValue());
 		}
 		fireTableDataChanged();
+		callListeners();
 	}
 }

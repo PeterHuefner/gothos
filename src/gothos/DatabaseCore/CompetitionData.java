@@ -1,8 +1,12 @@
 package gothos.DatabaseCore;
 
+import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import gothos.Application;
 import gothos.Common;
 
+import java.sql.Array;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CompetitionData {
@@ -10,17 +14,18 @@ public class CompetitionData {
 	protected String competition;
 
 	protected ArrayList<DatabaseParameter> parameters;
+	protected String[]                     colums;
+	protected String                       className;
+	protected String                       team;
+	protected Integer                      gymnast;
+	protected String                       squad;
+	protected String                       club;
 
-	protected String  className;
-	protected String  team;
-	protected Integer gymnast;
-	protected String  squad;
-	protected String  club;
-
-	protected Boolean           readableCols = false;
-	protected Boolean           allApparaties = false;
-	protected ArrayList<String> apparaties = new ArrayList<>();
+	protected Boolean           readableCols     = false;
+	protected Boolean           allApparaties    = false;
+	protected ArrayList<String> apparaties       = new ArrayList<>();
 	protected Boolean           apparatiesAsCols = false;
+	protected String            groupBy;
 	//protected Boolean           calculateSum;
 	//protected Boolean           calculateTeamSum;
 
@@ -64,6 +69,14 @@ public class CompetitionData {
 		this.apparatiesAsCols = apparatiesAsCols;
 	}
 
+	public void setColums(String[] colums) {
+		this.colums = colums;
+	}
+
+	public void setGroupBy(String groupBy) {
+		this.groupBy = groupBy;
+	}
+
 	/*public void setCalculateSum(Boolean calculateSum) {
 		this.calculateSum = calculateSum;
 	}
@@ -83,12 +96,13 @@ public class CompetitionData {
 		StringBuilder   where   = new StringBuilder();
 		StringBuilder   joins   = new StringBuilder();
 		String          order   = "";
+		String          group   = "";
 
 		parameters = new ArrayList<>();
 
 		if (readableCols) {
 			cols.append("competition_" + competition + ".ROWID, ID, Name, birthdate AS Geburtsdatum, class AS Altersklasse, club AS Verein, squad AS Riege, team AS Mannschaft");
-		} else {
+		} else if (colums == null || colums.length == 0) {
 			cols.append("competition_" + competition + ".ROWID, ID, birthdate, class, club, squad, team");
 		}
 
@@ -96,7 +110,7 @@ public class CompetitionData {
 			apparaties = analyse.listApparatiInCompetition(competition);
 		}
 
-		if (apparaties.size() > 0) {
+		if (apparaties != null && apparaties.size() > 0) {
 			for (String apparti : apparaties) {
 
 				joins.append(" LEFT JOIN competition_" + competition + "_apparati_" + apparti + " ON competition_" + competition + ".ROWID = competition_" + competition + "_apparati_" + apparti + ".gymnast");
@@ -104,6 +118,12 @@ public class CompetitionData {
 				if (apparatiesAsCols) {
 					cols.append(", " + apparti);
 				}
+			}
+		} else if (colums != null && colums.length > 0) {
+			String comma = "";
+			for (String column : colums) {
+				cols.append(comma + column);
+				comma = ", ";
 			}
 		}
 
@@ -142,12 +162,58 @@ public class CompetitionData {
 			parameters.add(new DatabaseParameter(gymnast));
 		}
 
-		sql = "SELECT " + cols.toString() + " FROM competition_" + competition + " " + joins.toString() + " WHERE active = 1 " + where + " " + order + ";";
+		if (!Common.emptyString(groupBy)) {
+			group = " GROUP BY " + groupBy;
+		}
+
+		sql = "SELECT " + cols.toString() + " FROM competition_" + competition + " " + joins.toString() + " WHERE active = 1 " + where + " " + order + group + ";";
 
 		return sql;
 	}
 
-	public ArrayList<DatabaseParameter> getParameters(){
+	public ArrayList<DatabaseParameter> getParameters() {
 		return parameters;
+	}
+
+	protected ArrayList<String> list(String column) {
+		ArrayList<String> values = new ArrayList<>();
+		CompetitionData data = new CompetitionData();
+
+		data.setGroupBy(column);
+		data.setColums((new String[]{column}));
+
+		ResultSet result = Application.database.query(data.getSql());
+
+		try {
+
+			while (result.next()) {
+				values.add(
+						result.getString(column)
+				);
+			}
+
+			result.close();
+
+		} catch (SQLException e) {
+			Common.printError(e);
+		}
+
+		return values;
+	}
+
+	public ArrayList<String> listClasses() {
+		return list("class");
+	}
+
+	public ArrayList<String> listClubs() {
+		return list("club");
+	}
+
+	public ArrayList<String> listSquads() {
+		return list("squad");
+	}
+
+	public ArrayList<String> listTeams() {
+		return list("team");
 	}
 }

@@ -8,6 +8,8 @@ import gothos.DatabaseCore.DatabaseParameter;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -32,6 +34,14 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 	protected Integer rowidIndex = 0;
 	protected String lastSql;
 	protected ArrayList<DatabaseParameter> lastParams;
+
+	protected ArrayList<ActionListener> listeners = new ArrayList<>();
+
+	public void addListener(ActionListener listener) {
+		if (listeners != null) {
+			listeners.add(listener);
+		}
+	}
 
 	public DataFormTableModel(){
 		tableData = new ArrayList<>();
@@ -75,6 +85,7 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 		}
 
 		fireTableDataChanged();
+		callListeners();
 	}
 
 	public void reloadTableData(){
@@ -90,6 +101,7 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 		}
 		tableData.add(row);
 		fireTableRowsInserted(tableData.size() - 1, tableData.size() - 1);
+		callListeners();
 		return tableData.size() - 1;
 	}
 
@@ -108,6 +120,7 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 
 		tableData.remove(row);
 		fireTableRowsDeleted(row, row);
+		callListeners();
 	}
 
 	public void deleteRows(int[] rows){
@@ -133,6 +146,7 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 			tableData.remove(row.intValue());
 		}
 		fireTableDataChanged();
+		callListeners();
 	}
 
 	protected String getPrimaryKeyForRow(ResultSet rs){
@@ -268,6 +282,18 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 			}
 
 			fireTableCellUpdated(row, updateCol);
+			callListeners();
+		}
+
+	}
+
+	protected void callListeners() {
+		ActionEvent event = new ActionEvent(this, 0, "data changed");
+
+		if(listeners != null && listeners.size() > 0) {
+			for (ActionListener listener : listeners) {
+				listener.actionPerformed(event);
+			}
 		}
 
 	}
