@@ -168,7 +168,7 @@ public class SqliteConnection {
 
 		try {
 			ResultSetMetaData metaData = result.getMetaData();
-			for (Integer index = 0; i < metaData.getColumnCount(); index++) {
+			for (Integer index = 0; index < metaData.getColumnCount(); index++) {
 				String columnName = metaData.getColumnLabel(index + 1);
 				if (Common.emptyString(columnName)) {
 					columnName = metaData.getColumnName(index + 1);
@@ -191,9 +191,8 @@ public class SqliteConnection {
 				if (indexColumnIndex == -1) {
 					dataResult.put(i, values);
 				} else {
-					dataResult.put(result.getInt(indexColumnIndex), values);
+					dataResult.put(result.getInt(indexColumnIndex + 1), values);
 				}
-
 
 				i++;
 			}
@@ -336,6 +335,31 @@ public class SqliteConnection {
 
 
 		return this.getLastInsertId();
+	}
+
+	public LinkedHashMap<String, String> convertResultRowToLinkedHasmap(ResultSet result) {
+		LinkedHashMap<String, String> dataResult = new LinkedHashMap<>();
+		ArrayList<String>             columns    = new ArrayList<>();
+
+		try {
+			ResultSetMetaData metaData = result.getMetaData();
+			for (Integer index = 0; index < metaData.getColumnCount(); index++) {
+				String columnName = metaData.getColumnLabel(index + 1);
+				if (Common.emptyString(columnName)) {
+					columnName = metaData.getColumnName(index + 1);
+				}
+				columns.add(columnName);
+			}
+
+			for (String column : columns) {
+				dataResult.put(column, result.getString(column));
+			}
+
+		} catch (SQLException e) {
+			Common.printError(e);
+		}
+
+		return dataResult;
 	}
 
 	/*

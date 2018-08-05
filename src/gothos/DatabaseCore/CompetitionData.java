@@ -10,6 +10,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CompetitionData {
 
@@ -22,14 +23,13 @@ public class CompetitionData {
 	protected Integer                      gymnast;
 	protected String                       squad;
 	protected String                       club;
+	protected String                       calculation = "";
 
 	protected Boolean           readableCols     = false;
 	protected Boolean           allApparaties    = false;
 	protected ArrayList<String> apparaties       = new ArrayList<>();
 	protected Boolean           apparatiesAsCols = false;
 	protected String            groupBy;
-	//protected Boolean           calculateSum;
-	//protected Boolean           calculateTeamSum;
 
 	public void setCompetition(String competition) {
 		this.competition = competition;
@@ -79,14 +79,6 @@ public class CompetitionData {
 		this.groupBy = groupBy;
 	}
 
-	/*public void setCalculateSum(Boolean calculateSum) {
-		this.calculateSum = calculateSum;
-	}
-
-	public void setCalculateTeamSum(Boolean calculateTeamSum) {
-		this.calculateTeamSum = calculateTeamSum;
-	}*/
-
 	public CompetitionData() {
 		competition = Application.selectedCompetition;
 	}
@@ -127,6 +119,10 @@ public class CompetitionData {
 				cols.append(comma + column);
 				comma = ", ";
 			}
+		}
+
+		if (!calculation.isEmpty()) {
+			cols.append(", " + calculation + " AS Gesamt");
 		}
 
 		if (!Common.emptyString(squad)) {
@@ -174,14 +170,79 @@ public class CompetitionData {
 	}
 
 	public LinkedHashMap<Integer, LinkedHashMap<String, String>> calculateClassResult() {
+		String mode = "sumAll";
+		calculation = "";
+		LinkedHashMap<String, String> classConfig = this.getClassConfig(className);
+
+		if (!Common.emptyString(classConfig.get("minApparati"))) {
+			mode = "minApparati";
+		} else if (classConfig.get("sumAll").equals("1")) {
+			mode = "sumAll";
+		} else if (Common.emptyString(classConfig.get("calculation"))) {
+			calculation = classConfig.get("calculation");
+			mode = "calculation";
+		}
 
 		LinkedHashMap<Integer, LinkedHashMap<String, String>> classResult = Application.database.fetchAllIndexByRowid(getSql(), getParameters());
+
+		if (mode != "calculation") {
+
+			for (Map.Entry<Integer, LinkedHashMap<String, String>> gymnastResult : classResult.entrySet()) {
+
+				ArrayList<String> apparati            = (new DatabaseAnalyse()).listApparatiInCompetition();
+				ArrayList<Double> gymnastResultValues = new ArrayList<>();
+				for (Map.Entry<String, String> gymnastResultData : gymnastResult.getValue().entrySet()) {
+					if (apparati.contains(gymnastResultData.getKey())) {
+						String apparatusValue = gymnastResultData.getValue();
+						if(apparatusValue == null || apparatusValue.isEmpty() || apparatusValue.equalsIgnoreCase("null")){
+							apparatusValue = "0";
+						}
+						gymnastResultValues.add(Double.parseDouble(apparatusValue));
+					}
+				}
+
+				if (mode == "sumAll") {
+
+					Double sum = 0.0;
+					for(Double apparatiValue: gymnastResultValues) {
+						sum += apparatiValue;
+					}
+					classResult.get(gymnastResult.getKey()).put("Gesamt", sum.toString());
+				}
+
+			}
+
+		}
 
 		return classResult;
 	}
 
 	public ArrayList<DatabaseParameter> getParameters() {
 		return parameters;
+	}
+
+	public LinkedHashMap<String, String> getClassConfig(String className) {
+		LinkedHashMap<String, String> config = new LinkedHashMap<>();
+
+		String                       sql   = "SELECT * FROM competition_" + competition + "_classes WHERE class = ?;";
+		ArrayList<DatabaseParameter> param = new ArrayList<>();
+
+		param.add(new DatabaseParameter(className));
+
+		ResultSet result = Application.database.query(sql, param);
+
+		try {
+
+			if (result.next()) {
+				config = Application.database.convertResultRowToLinkedHasmap(result);
+			}
+
+			result.close();
+		} catch (SQLException e) {
+			Common.printError(e);
+		}
+
+		return config;
 	}
 
 	protected ArrayList<String> list(String column) {

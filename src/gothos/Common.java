@@ -9,7 +9,7 @@ public class Common {
 	public static final String tableNameReqex = "^[a-zA-Z]{1}[a-zA-Z0-9_]*$";
 
 	public static boolean emptyString(String string){
-		return (string == null || string.isEmpty());
+		return (string == null || string.isEmpty() || string.equalsIgnoreCase("null") || string.equalsIgnoreCase("0"));
 	}
 
 	public static void printError(String error){
