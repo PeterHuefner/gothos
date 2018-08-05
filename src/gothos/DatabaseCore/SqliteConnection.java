@@ -1,5 +1,6 @@
 package gothos.DatabaseCore;
 
+import gothos.Application;
 import gothos.Common;
 import gothos.Start;
 
@@ -10,14 +11,14 @@ import java.util.Map;
 
 public class SqliteConnection {
 
-	protected String file;
+	protected String     file;
 	protected Connection connection;
 	//protected ArrayList<ResultSet> sets = new ArrayList<>();
 
 	public SqliteConnection(String file) throws Exception {
 		this.file = file;
 
-		if(file.equals("")){
+		if (file.equals("")) {
 			throw new Exception("No database file provided");
 		}
 
@@ -30,11 +31,11 @@ public class SqliteConnection {
 
 		try {
 			this.connection = DriverManager.getConnection(url);
-		}catch (SQLException e){
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 
-		if(connection != null){
+		if (connection != null) {
 			execute("VACUUM;");
 			connection.setAutoCommit(false);
 			//execute("PRAGMA journal_mode = WAL;");
@@ -43,38 +44,38 @@ public class SqliteConnection {
 		return this.connection;
 	}
 
-	public void close(){
-		if(this.connection != null){
-			try{
+	public void close() {
+		if (this.connection != null) {
+			try {
 				this.connection.close();
-			}catch (Exception e){
+			} catch (Exception e) {
 				Common.printError(e);
 			}
 			this.connection = null;
 		}
 	}
 
-	public boolean reconnect(){
+	public boolean reconnect() {
 		close();
 		try {
 			connect();
 			return true;
-		}catch (Exception e){
+		} catch (Exception e) {
 			Common.printError(e);
 		}
 		return false;
 	}
 
-	protected PreparedStatement bindParamsToSql(String sql, ArrayList<DatabaseParameter> parameters){
+	protected PreparedStatement bindParamsToSql(String sql, ArrayList<DatabaseParameter> parameters) {
 		PreparedStatement statement = null;
 
-		try{
-		   statement = this.connection.prepareStatement(sql);
+		try {
+			statement = this.connection.prepareStatement(sql);
 
 			int index = 0;
-			for(DatabaseParameter parameter: parameters){
+			for (DatabaseParameter parameter : parameters) {
 				index++;
-				switch (parameter.getType()){
+				switch (parameter.getType()) {
 					case "int":
 						statement.setInt(index, parameter.getIntValue());
 						break;
@@ -87,7 +88,7 @@ public class SqliteConnection {
 				}
 			}
 
-		}catch (SQLException e){
+		} catch (SQLException e) {
 			Common.printError(e);
 		}
 
@@ -109,24 +110,24 @@ public class SqliteConnection {
 
 	}*/
 
-	public ResultSet query(String sql){
+	public ResultSet query(String sql) {
 		return this.query(sql, new ArrayList<DatabaseParameter>());
 	}
 
-	public ResultSet query(String sql, ArrayList<DatabaseParameter> parameters){
+	public ResultSet query(String sql, ArrayList<DatabaseParameter> parameters) {
 		ResultSet result = null;
 
-		if(this.connection != null && !sql.isEmpty()){
-			try{
+		if (this.connection != null && !sql.isEmpty()) {
+			try {
 				PreparedStatement statement = this.bindParamsToSql(sql, parameters);
-				if(statement != null){
+				if (statement != null) {
 					result = statement.executeQuery();
 					connection.commit();
 				}
 
-			}catch (SQLException e){
+			} catch (SQLException e) {
 				Common.printError(e);
-			}catch (Exception e){
+			} catch (Exception e) {
 				Common.printError(e);
 			}
 		}
@@ -134,37 +135,96 @@ public class SqliteConnection {
 		return result;
 	}
 
-	public String fetchFirstColumn(ResultSet result){
+	public String fetchFirstColumn(ResultSet result) {
 		String col = null;
 		try {
 			while (result.next()) {
 				col = result.getString(1);
 			}
 			result.close();
-		}catch (SQLException e){}
+		} catch (SQLException e) {
+		}
 		return col;
 	}
 
-	public String fetchFirstColumn(String sql){
+	public String fetchFirstColumn(String sql) {
 		ResultSet result = this.query(sql);
 		return this.fetchFirstColumn(result);
 	}
 
-	public String fetchFirstColumn(String sql, ArrayList<DatabaseParameter> paramters){
+	public String fetchFirstColumn(String sql, ArrayList<DatabaseParameter> paramters) {
 		ResultSet result = this.query(sql, paramters);
 		return this.fetchFirstColumn(result);
 	}
 
-	public boolean execute(String sql, ArrayList<DatabaseParameter> parameters){
+	public LinkedHashMap<Integer, LinkedHashMap<String, String>> fetchAllIndexed(String sql, ArrayList<DatabaseParameter> parameters, String indexColumn) {
+
+		LinkedHashMap<Integer, LinkedHashMap<String, String>> dataResult = new LinkedHashMap<>();
+
+		ResultSet         result           = this.query(sql, parameters);
+		Integer           i                = 0;
+		ArrayList<String> columns          = new ArrayList<>();
+		Integer           indexColumnIndex = -1;
+
+		try {
+			ResultSetMetaData metaData = result.getMetaData();
+			for (Integer index = 0; i < metaData.getColumnCount(); index++) {
+				String columnName = metaData.getColumnLabel(index + 1);
+				if (Common.emptyString(columnName)) {
+					columnName = metaData.getColumnName(index + 1);
+				}
+				columns.add(columnName);
+
+				if (columnName.equalsIgnoreCase(indexColumn)) {
+					indexColumnIndex = index;
+				}
+			}
+
+
+			while (result.next()) {
+				LinkedHashMap<String, String> values = new LinkedHashMap<>();
+
+				for (String column : columns) {
+					values.put(column, result.getString(column));
+				}
+
+				if (indexColumnIndex == -1) {
+					dataResult.put(i, values);
+				} else {
+					dataResult.put(result.getInt(indexColumnIndex), values);
+				}
+
+
+				i++;
+			}
+
+			result.close();
+
+		} catch (SQLException e) {
+			Common.printError(e);
+		}
+
+		return dataResult;
+	}
+
+	public LinkedHashMap<Integer, LinkedHashMap<String, String>> fetchAll(String sql, ArrayList<DatabaseParameter> parameters) {
+		return this.fetchAllIndexed(sql, parameters, "");
+	}
+
+	public LinkedHashMap<Integer, LinkedHashMap<String, String>> fetchAllIndexByRowid(String sql, ArrayList<DatabaseParameter> parameters) {
+		return this.fetchAllIndexed(sql, parameters, "ROWID");
+	}
+
+	public boolean execute(String sql, ArrayList<DatabaseParameter> parameters) {
 		boolean success = true;
 
-		try{
+		try {
 			PreparedStatement statement = this.bindParamsToSql(sql, parameters);
-			if(statement != null){
+			if (statement != null) {
 				statement.execute();
 				connection.commit();
 			}
-		}catch (SQLException e){
+		} catch (SQLException e) {
 			success = false;
 			System.out.println(e.getMessage());
 		}
@@ -172,13 +232,13 @@ public class SqliteConnection {
 		return success;
 	}
 
-	public boolean execute(String sql){
+	public boolean execute(String sql) {
 		boolean success = true;
 
-		try{
+		try {
 			Statement statement = this.connection.createStatement();
 			statement.execute(sql);
-		}catch (SQLException e){
+		} catch (SQLException e) {
 			success = false;
 			System.out.println(e.getMessage());
 		}
@@ -186,18 +246,18 @@ public class SqliteConnection {
 		return success;
 	}
 
-	public long getLastInsertId(){
+	public long getLastInsertId() {
 		long id = 0;
 
-		try{
+		try {
 			Statement statement = this.connection.createStatement();
-			ResultSet result = statement.executeQuery("SELECT last_insert_rowid();");
+			ResultSet result    = statement.executeQuery("SELECT last_insert_rowid();");
 
-			if(result.next()){
+			if (result.next()) {
 				id = result.getLong(1);
 			}
 			result.close();
-		}catch (SQLException e){
+		} catch (SQLException e) {
 			Common.printError(e);
 		}
 
@@ -205,14 +265,14 @@ public class SqliteConnection {
 	}
 
 	protected long _insertData(String table, LinkedHashMap<String, DatabaseParameter> params, String sqlShit) {
-		String sql = "INSERT " + sqlShit + " INTO `" + table + "`";
+		String        sql     = "INSERT " + sqlShit + " INTO `" + table + "`";
 		StringBuilder columns = new StringBuilder();
-		StringBuilder values = new StringBuilder();
-		String comma = "";
+		StringBuilder values  = new StringBuilder();
+		String        comma   = "";
 
 		ArrayList<DatabaseParameter> databseParams = new ArrayList<>();
 
-		for(Map.Entry<String, DatabaseParameter> param: params.entrySet()){
+		for (Map.Entry<String, DatabaseParameter> param : params.entrySet()) {
 			String columnName = param.getKey();
 			//DatabaseParameter val = param.getValue();
 
@@ -244,14 +304,14 @@ public class SqliteConnection {
 		return _insertData(table, params, "");
 	}
 
-	public boolean updateData(String table, LinkedHashMap<String, DatabaseParameter> params, String primaryKey, String primaryColumn){
-		String sql = "UPDATE `" + table + "` SET ";
+	public boolean updateData(String table, LinkedHashMap<String, DatabaseParameter> params, String primaryKey, String primaryColumn) {
+		String        sql     = "UPDATE `" + table + "` SET ";
 		StringBuilder columns = new StringBuilder();
-		String comma = "";
+		String        comma   = "";
 
 		ArrayList<DatabaseParameter> databseParams = new ArrayList<>();
 
-		for(Map.Entry<String, DatabaseParameter> param: params.entrySet()){
+		for (Map.Entry<String, DatabaseParameter> param : params.entrySet()) {
 			String columnName = param.getKey();
 			//DatabaseParameter val = param.getValue();
 
@@ -272,8 +332,7 @@ public class SqliteConnection {
 		return this.execute(sql, databseParams);
 	}
 
-	public long insertOrReplace(String table, LinkedHashMap<String, DatabaseParameter> params){
-
+	public long insertOrReplace(String table, LinkedHashMap<String, DatabaseParameter> params) {
 
 
 		return this.getLastInsertId();

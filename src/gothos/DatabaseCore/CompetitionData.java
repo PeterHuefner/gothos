@@ -6,8 +6,10 @@ import gothos.Common;
 
 import java.sql.Array;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class CompetitionData {
 
@@ -171,13 +173,20 @@ public class CompetitionData {
 		return sql;
 	}
 
+	public LinkedHashMap<Integer, LinkedHashMap<String, String>> calculateClassResult() {
+
+		LinkedHashMap<Integer, LinkedHashMap<String, String>> classResult = Application.database.fetchAllIndexByRowid(getSql(), getParameters());
+
+		return classResult;
+	}
+
 	public ArrayList<DatabaseParameter> getParameters() {
 		return parameters;
 	}
 
 	protected ArrayList<String> list(String column) {
 		ArrayList<String> values = new ArrayList<>();
-		CompetitionData data = new CompetitionData();
+		CompetitionData   data   = new CompetitionData();
 
 		data.setGroupBy(column);
 		data.setColums((new String[]{column}));
