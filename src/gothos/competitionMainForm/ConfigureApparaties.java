@@ -70,8 +70,7 @@ public class ConfigureApparaties {
 	}
 
 	protected void listApparati() {
-		DatabaseAnalyse analyse = new DatabaseAnalyse();
 		apparatiList.clearSelection();
-		apparatiList.setListData(analyse.listApparatiInCompetition().toArray());
+		apparatiList.setListData(DatabaseAnalyse.listApparatiInCompetition().toArray());
 	}
 }

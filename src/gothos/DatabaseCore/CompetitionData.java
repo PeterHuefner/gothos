@@ -3,14 +3,13 @@ package gothos.DatabaseCore;
 import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import gothos.Application;
 import gothos.Common;
+import gothos.competitionMainForm.Gymnast;
 
 import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CompetitionData {
 
@@ -84,13 +83,12 @@ public class CompetitionData {
 	}
 
 	public String getSql() {
-		DatabaseAnalyse analyse = new DatabaseAnalyse();
-		String          sql;
-		StringBuilder   cols    = new StringBuilder();
-		StringBuilder   where   = new StringBuilder();
-		StringBuilder   joins   = new StringBuilder();
-		String          order   = "";
-		String          group   = "";
+		String        sql;
+		StringBuilder cols  = new StringBuilder();
+		StringBuilder where = new StringBuilder();
+		StringBuilder joins = new StringBuilder();
+		String        order = "";
+		String        group = "";
 
 		parameters = new ArrayList<>();
 
@@ -101,7 +99,7 @@ public class CompetitionData {
 		}
 
 		if (allApparaties) {
-			apparaties = analyse.listApparatiInCompetition(competition);
+			apparaties = DatabaseAnalyse.listApparatiInCompetition(competition);
 		}
 
 		if (apparaties != null && apparaties.size() > 0) {
@@ -122,6 +120,10 @@ public class CompetitionData {
 		}
 
 		if (!calculation.isEmpty()) {
+			for (String apparati : DatabaseAnalyse.listApparatiInCompetition()) {
+				calculation = calculation.replaceAll(apparati, "IFNULL(" + apparati + ", 0)");
+			}
+
 			cols.append(", " + calculation + " AS Gesamt");
 		}
 
@@ -169,52 +171,82 @@ public class CompetitionData {
 		return sql;
 	}
 
-	public LinkedHashMap<Integer, LinkedHashMap<String, String>> calculateClassResult() {
+	public ArrayList<Gymnast> calculateClassResult() {
 		String mode = "sumAll";
 		calculation = "";
+		ArrayList<Gymnast>            result      = new ArrayList<>();
 		LinkedHashMap<String, String> classConfig = this.getClassConfig(className);
 
 		if (!Common.emptyString(classConfig.get("minApparati"))) {
 			mode = "minApparati";
 		} else if (classConfig.get("sumAll").equals("1")) {
 			mode = "sumAll";
-		} else if (Common.emptyString(classConfig.get("calculation"))) {
+		} else if (!Common.emptyString(classConfig.get("calculation"))) {
 			calculation = classConfig.get("calculation");
 			mode = "calculation";
 		}
 
-		LinkedHashMap<Integer, LinkedHashMap<String, String>> classResult = Application.database.fetchAllIndexByRowid(getSql(), getParameters());
+		ResultSet classResult = Application.database.query(getSql(), getParameters());
 
-		if (mode != "calculation") {
+		try {
 
-			for (Map.Entry<Integer, LinkedHashMap<String, String>> gymnastResult : classResult.entrySet()) {
+			while (classResult.next()) {
+				result.add(
+						new Gymnast(classResult)
+				);
+			}
 
-				ArrayList<String> apparati            = (new DatabaseAnalyse()).listApparatiInCompetition();
-				ArrayList<Double> gymnastResultValues = new ArrayList<>();
-				for (Map.Entry<String, String> gymnastResultData : gymnastResult.getValue().entrySet()) {
-					if (apparati.contains(gymnastResultData.getKey())) {
-						String apparatusValue = gymnastResultData.getValue();
-						if(apparatusValue == null || apparatusValue.isEmpty() || apparatusValue.equalsIgnoreCase("null")){
-							apparatusValue = "0";
-						}
-						gymnastResultValues.add(Double.parseDouble(apparatusValue));
-					}
-				}
+			classResult.close();
 
-				if (mode == "sumAll") {
+		} catch (Exception e) {
+			Common.printError(e);
+		}
+
+		if (!mode.equals("calculation")) {
+
+			for (Gymnast gymnast : result) {
+
+				if (mode.equals("sumAll")) {
 
 					Double sum = 0.0;
-					for(Double apparatiValue: gymnastResultValues) {
-						sum += apparatiValue;
+					for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
+						sum += apparatus.getValue();
 					}
-					classResult.get(gymnastResult.getKey()).put("Gesamt", sum.toString());
+					gymnast.setSum(sum);
+
+				} else if (mode.equals("minApparati")) {
+					ArrayList<Double> valueList = new ArrayList<Double>(gymnast.getApparatiValues().values());
+					Double sum = 0.0;
+
+					Collections.sort(valueList, new Comparator<Double>() {
+						@Override
+						public int compare(Double o1, Double o2) {
+							return Double.compare(o1, o2) * -1;
+							//return (o1 > o2 ? 1 : (o1 < o2 ? -1 : 0));
+						}
+					});
+
+					Integer minApparati    = Integer.parseInt(classConfig.get("minApparati"));
+					Integer summedApparati = 0;
+					for (Double apparatiValue : valueList) {
+						if (summedApparati < minApparati) {
+							sum += apparatiValue;
+							summedApparati++;
+						}
+					}
+
+					gymnast.setSum(sum);
 				}
 
 			}
 
 		}
 
-		return classResult;
+		//Nach sum sortieren
+
+		//Platzierung berechnen
+
+		return result;
 	}
 
 	public ArrayList<DatabaseParameter> getParameters() {

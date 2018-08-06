@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class CompetitionMainForm {
@@ -183,7 +184,7 @@ public class CompetitionMainForm {
 				cd.setApparatiesAsCols(true);
 				cd.setClassName("AK 18 m");
 
-				LinkedHashMap<Integer, LinkedHashMap<String, String>> result = cd.calculateClassResult();
+				ArrayList<Gymnast> result = cd.calculateClassResult();
 
 			}
 		});

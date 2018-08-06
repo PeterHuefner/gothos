@@ -25,8 +25,7 @@ public class Application {
 	public static boolean connectToDatabase(String file){
 		try {
 			Application.database = new SqliteConnection(file);
-			DatabaseAnalyse analyse = new DatabaseAnalyse();
-			analyse.checkDatabase();
+			DatabaseAnalyse.checkDatabase();
 		}catch (Exception e){
 			System.out.println("keine Verbindung hergestellt");
 			JOptionPane.showConfirmDialog(WindowManager.mainFrame, "Datenbank könnte nicht geöffnet werden");

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class DatabaseAnalyse {
 
-	public void checkDatabase(){
+	public static void checkDatabase(){
 
 		/*boolean st0 = Application.database.execute("INSERT INTO test(col1, col2) values ('one', 'two');");
 		long id = Application.database.getLastInsertId();
@@ -19,7 +19,7 @@ public class DatabaseAnalyse {
 
 		long id2 = Application.database.getLastInsertId();*/
 
-		ArrayList<String> tables = this.listTables();
+		ArrayList<String> tables = listTables();
 
 		//Check if settings table exists
 		if(!tables.contains("global_classes")){
@@ -42,15 +42,15 @@ public class DatabaseAnalyse {
 
 	}
 
-	public void checkCompetition(String competition){
+	public static void checkCompetition(String competition){
 
 	}
 
-	public ArrayList<String> listTables(){
-		return this.listTables("");
+	public static ArrayList<String> listTables(){
+		return listTables("");
 	}
 
-	public ArrayList<String> listTables(String matchRegex){
+	public static ArrayList<String> listTables(String matchRegex){
 		ArrayList<String> tables = new ArrayList<String>();
 
 		ResultSet rs = Application.database.query("SELECT name FROM sqlite_master WHERE type = 'table';");
@@ -71,12 +71,12 @@ public class DatabaseAnalyse {
 		return  tables;
 	}
 
-	public ArrayList<String> listApparatiInCompetition(){
-		return this.listApparatiInCompetition(Application.selectedCompetition);
+	public static ArrayList<String> listApparatiInCompetition(){
+		return listApparatiInCompetition(Application.selectedCompetition);
 	}
 
-	public ArrayList<String> listApparatiInCompetition(String competition){
-		ArrayList<String> tables = this.listTables("^competition_" + competition + "_apparati_.+$");
+	public static ArrayList<String> listApparatiInCompetition(String competition){
+		ArrayList<String> tables = listTables("^competition_" + competition + "_apparati_.+$");
 		ArrayList<String> apparati = new ArrayList<String>();
 
 		for(String table: tables){

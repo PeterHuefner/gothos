@@ -94,10 +94,8 @@ public class DatabaseStructure {
 	}
 
 	public static boolean removeCompetition(String name) {
-		DatabaseAnalyse analyse = new DatabaseAnalyse();
-
 		Boolean allApparatiStatus = true;
-		ArrayList<String> apparati = analyse.listApparatiInCompetition(name);
+		ArrayList<String> apparati = DatabaseAnalyse.listApparatiInCompetition(name);
 		for(String apparatus: apparati){
 			Boolean apparatusStatus = removeApparatiFromCompetition(name, apparatus);
 
@@ -141,8 +139,7 @@ public class DatabaseStructure {
 		params.add(new DatabaseParameter(rowid));
 		updateStatus = Application.database.execute("UPDATE competition_" + competition + " SET active = 0 WHERE ROWID = ?", params);
 
-		DatabaseAnalyse analyse = new DatabaseAnalyse();
-		ArrayList<String> apparati = analyse.listApparatiInCompetition(competition);
+		ArrayList<String> apparati = DatabaseAnalyse.listApparatiInCompetition(competition);
 		for(String apparatus: apparati){
 			Application.database.execute("DELETE FROM competition_" + competition + "_apparati_" + apparatus + " WHERE gymnast = ?", params);
 		}

@@ -98,7 +98,7 @@ public class DataTableCell {
 		if(value != null && value.getClass() != Boolean.class){
 			String val = toString();
 
-			if(val == null || val == "" || val.toLowerCase() == "false" || val == "0"){
+			if(val == null || val.isEmpty() || val.equalsIgnoreCase("false") || val.equals("0") || val.equalsIgnoreCase("null")){
 				bool = false;
 			}else{
 				bool = true;
