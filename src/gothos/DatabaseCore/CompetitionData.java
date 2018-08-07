@@ -95,7 +95,7 @@ public class CompetitionData {
 		if (readableCols) {
 			cols.append("competition_" + competition + ".ROWID, ID, Name, birthdate AS Geburtsdatum, class AS Altersklasse, club AS Verein, squad AS Riege, team AS Mannschaft");
 		} else if (colums == null || colums.length == 0) {
-			cols.append("competition_" + competition + ".ROWID, ID, birthdate, class, club, squad, team");
+			cols.append("competition_" + competition + ".ROWID, ID, name, birthdate, class, club, squad, team");
 		}
 
 		if (allApparaties) {
@@ -216,7 +216,7 @@ public class CompetitionData {
 
 				} else if (mode.equals("minApparati")) {
 					ArrayList<Double> valueList = new ArrayList<Double>(gymnast.getApparatiValues().values());
-					Double sum = 0.0;
+					Double            sum       = 0.0;
 
 					Collections.sort(valueList, new Comparator<Double>() {
 						@Override
@@ -243,8 +243,30 @@ public class CompetitionData {
 		}
 
 		//Nach sum sortieren
+		Collections.sort(result, new Comparator<Gymnast>() {
+			@Override
+			public int compare(Gymnast o1, Gymnast o2) {
+				return Double.compare(o1.getSum(), o2.getSum()) * -1;
+			}
+		});
 
 		//Platzierung berechnen
+		Double  lastSum  = 0.0;
+		Integer lastRank = 1;
+		Integer rank     = 1;
+		for (Gymnast gymnast : result) {
+
+			if(gymnast.getSum().equals(lastSum)){
+				gymnast.setRanking(lastRank);
+			} else {
+				gymnast.setRanking(rank);
+			}
+
+			lastRank = gymnast.getRanking();
+			lastSum  = gymnast.getSum();
+
+			rank++;
+		}
 
 		return result;
 	}
