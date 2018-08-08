@@ -111,7 +111,9 @@ public class CompetitionData {
 					cols.append(", " + apparti);
 				}
 			}
-		} else if (colums != null && colums.length > 0) {
+		}
+
+		if (colums != null && colums.length > 0) {
 			String comma = "";
 			for (String column : colums) {
 				cols.append(comma + column);

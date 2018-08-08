@@ -1,4 +1,4 @@
-package gothos.competitionMainForm;
+package gothos.competitionMainForm.Export;
 
 import com.opencsv.CSVWriter;
 import gothos.Application;

@@ -2,6 +2,11 @@ package gothos;
 
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.competitionMainForm.*;
+import gothos.competitionMainForm.ConfigureApparaties.ConfigureApparaties;
+import gothos.competitionMainForm.Export.ExportForm;
+import gothos.competitionMainForm.Import.ImportForm;
+import gothos.competitionMainForm.SetID.SetIDForm;
+import gothos.competitionMainForm.Squad.SquadForm;
 
 import javax.swing.*;
 import java.sql.ResultSet;
@@ -148,6 +153,14 @@ public class WindowManager {
 			createChildFrame("Geräte verwalten");
 			ConfigureApparaties apparati = new ConfigureApparaties();
 			showPanelInFrame(apparati.getPanel(), childFrame);
+		}
+	}
+
+	public static void showSquadForm(String className) {
+		if (!Common.emptyString(Application.selectedCompetition)) {
+			createChildFrame("Riege ansehen/Wertungen eintragen");
+			SquadForm squadForm = new SquadForm(className);
+			showPanelInFrame(squadForm.getPanel(), childFrame);
 		}
 	}
 }

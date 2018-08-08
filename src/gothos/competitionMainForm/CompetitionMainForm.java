@@ -188,6 +188,14 @@ public class CompetitionMainForm {
 
 			}
 		});
+		openSquad.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (squadSelect.getSelectedItem() != null) {
+					WindowManager.showSquadForm(squadSelect.getSelectedItem().toString());
+				}
+			}
+		});
 	}
 
 	protected void setDataToCombos() {

@@ -1,10 +1,11 @@
-package gothos.competitionMainForm;
+package gothos.competitionMainForm.SetID;
 
 import gothos.Application;
 import gothos.Common;
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.FormCore.SelectboxItem;
 import gothos.WindowManager;
+import gothos.competitionMainForm.CompetitionMainForm;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

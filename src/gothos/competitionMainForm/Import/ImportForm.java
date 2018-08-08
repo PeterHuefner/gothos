@@ -1,10 +1,11 @@
-package gothos.competitionMainForm;
+package gothos.competitionMainForm.Import;
 
 import com.opencsv.CSVReader;
 import gothos.Application;
 import gothos.Common;
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.WindowManager;
+import gothos.competitionMainForm.CompetitionMainForm;
 import sun.security.krb5.internal.APOptions;
 
 import javax.swing.*;

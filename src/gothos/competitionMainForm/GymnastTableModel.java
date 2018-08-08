@@ -14,30 +14,30 @@ import java.util.Collections;
 
 public class GymnastTableModel extends DataFormTableModel {
 
-	protected String baseSql;
-	protected String orderSql;
+	protected String   baseSql;
+	protected String   orderSql;
 	protected String[] searchCols;
 
-	public GymnastTableModel(){
+	public GymnastTableModel() {
 
 		super();
 		this.baseTable = "competition_" + Application.selectedCompetition;
 		displayColumns = new String[]{"ID", "Name", "Geburtsdatum", "Altersklasse", "Verein", "Riege", "Mannschaft"};
-		searchCols     = new String[]{"ID", "Name", "birthdate", "class", "club", "squad", "team"};
+		searchCols = new String[]{"ID", "Name", "birthdate", "class", "club", "squad", "team"};
 		baseSql = "SELECT ROWID, " + String.join(", ", searchCols) + " FROM " + baseTable + " WHERE active = 1";
 		orderSql = " ORDER BY ID; ROWID";
 		buildData(baseSql + orderSql + ";", new ArrayList<>());
 
 	}
 
-	public void searchFor(String term){
-		String sql = baseSql;
+	public void searchFor(String term) {
+		String                       sql    = baseSql;
 		ArrayList<DatabaseParameter> params = new ArrayList<>();
 
-		if(!Common.emptyString(term)){
+		if (!Common.emptyString(term)) {
 			sql += " AND (";
 			String connector = "";
-			for(int index = 0; index < searchCols.length; index++){
+			for (int index = 0; index < searchCols.length; index++) {
 				params.add(new DatabaseParameter("%" + term + "%"));
 
 				sql += connector + searchCols[index] + " LIKE ?";
@@ -52,7 +52,7 @@ public class GymnastTableModel extends DataFormTableModel {
 	@Override
 	public void deleteRow(int row) {
 		ArrayList<DataTableCell> cells = tableData.get(row);
-		if(cells.size() > 0){
+		if (cells.size() > 0) {
 			ArrayList<DatabaseParameter> params = new ArrayList<>();
 			params.add(new DatabaseParameter(cells.get(0).getPrimaryKey()));
 			Application.database.execute("UPDATE competition_" + Application.selectedCompetition + " SET active = 0 WHERE ROWID = ?", params);
@@ -64,23 +64,23 @@ public class GymnastTableModel extends DataFormTableModel {
 	}
 
 	@Override
-	public void deleteRows(int[] rows){
+	public void deleteRows(int[] rows) {
 		Integer[] convertedRows = new Integer[rows.length];
-		for(int i = 0; i < rows.length; i++){
+		for (int i = 0; i < rows.length; i++) {
 			convertedRows[i] = rows[i];
 		}
 		Arrays.sort(convertedRows, Collections.reverseOrder());
 
-		for(Integer row: convertedRows){
+		for (Integer row : convertedRows) {
 			ArrayList<DataTableCell> cells = tableData.get(row.intValue());
-			if(cells.size() > 0){
+			if (cells.size() > 0) {
 				ArrayList<DatabaseParameter> params = new ArrayList<>();
 				params.add(new DatabaseParameter(cells.get(0).getPrimaryKey()));
 				Application.database.execute("UPDATE competition_" + Application.selectedCompetition + " SET active = 0 WHERE ROWID = ?", params);
 			}
 		}
 
-		for(Integer row: convertedRows) {
+		for (Integer row : convertedRows) {
 			tableData.remove(row.intValue());
 		}
 		fireTableDataChanged();

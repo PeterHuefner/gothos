@@ -1,10 +1,11 @@
-package gothos.competitionMainForm;
+package gothos.competitionMainForm.ConfigureApparaties;
 
 import gothos.Application;
 import gothos.Common;
 import gothos.DatabaseCore.DatabaseAnalyse;
 import gothos.DatabaseCore.DatabaseStructure;
 import gothos.WindowManager;
+import gothos.competitionMainForm.CompetitionMainForm;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
