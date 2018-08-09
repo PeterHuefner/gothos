@@ -7,6 +7,8 @@ import gothos.DatabaseCore.DatabaseParameter;
 import gothos.FormCore.DataFormTableModel;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SquadFormTableModel extends DataFormTableModel {
 
@@ -63,7 +65,7 @@ public class SquadFormTableModel extends DataFormTableModel {
 			displayCols.add(apparatus);
 
 			cols.add(apparatus);
-			cols.add("isTeamMember");
+			cols.add("IFNULL(isTeamMember, 1) AS isTeamMember");
 			displayCols.add("Wertung für Mannschaft");
 		}
 
@@ -77,6 +79,7 @@ public class SquadFormTableModel extends DataFormTableModel {
 		buildData(sql, parameters);
 	}
 
+	@Override
 	protected boolean editableColumn(int row, int col) {
 		boolean editable = super.editableColumn(row, col);
 
@@ -89,6 +92,7 @@ public class SquadFormTableModel extends DataFormTableModel {
 		return editable;
 	}
 
+	@Override
 	protected String getTableForColumn(Integer col) {
 		if (col < 5) {
 			return baseTable;
@@ -97,6 +101,7 @@ public class SquadFormTableModel extends DataFormTableModel {
 		}
 	}
 
+	@Override
 	protected String getPrimaryKeyColumnForColumn(Integer col) {
 		if (col < 5) {
 			return "ROWID";
@@ -104,6 +109,47 @@ public class SquadFormTableModel extends DataFormTableModel {
 			return "gymnast";
 		}
 
+	}
+
+	@Override
+	protected Object handleValuePreInsert(Object value, int row, int col) {
+
+		if (col == 6) {
+			String apparatiValue = value.toString();
+			apparatiValue = apparatiValue.replaceAll(",", ".");
+			if(Common.emptyString(apparatiValue)){
+				apparatiValue = "0";
+			}
+			value = apparatiValue;
+		}
+
+		return value;
+	}
+
+	@Override
+	protected boolean checkValue(Object value, int row, int col) {
+		boolean status = true;
+
+		if (col == 6) {
+			Matcher matcher = Pattern.compile("^\\d+(\\.\\d+)?$").matcher(value.toString());
+			if(!matcher.find()){
+				status = false;
+				Common.showError("'" + value.toString() + "' ist keine gültige Wertung.");
+			}
+		}
+
+		return status;
+	}
+
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		if (columnIndex == 6) {
+			return Boolean.class;
+		} else if (columnIndex == 5) {
+			return String.class;
+		} else {
+			return String.class;
+		}
 	}
 
 }

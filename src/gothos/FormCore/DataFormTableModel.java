@@ -270,6 +270,8 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 			col++;
 		}
 
+		value = handleValuePreInsert(value, row, col);
+
 		if (checkValue(value, row, col)) {
 			DataTableCell thisCell = tableData.get(row).get(col);
 			String        key      = thisCell.getPrimaryKey();
@@ -284,7 +286,10 @@ abstract public class DataFormTableModel extends DefaultTableModel {
 			fireTableCellUpdated(row, updateCol);
 			callListeners();
 		}
+	}
 
+	protected Object handleValuePreInsert(Object value, int row, int col) {
+		return value;
 	}
 
 	protected void callListeners() {

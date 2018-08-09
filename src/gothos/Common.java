@@ -22,11 +22,11 @@ public class Common {
 	}
 
 	public static void showFormError(String error){
-		JOptionPane.showMessageDialog(WindowManager.mainFrame, error);
+		JOptionPane.showMessageDialog((WindowManager.childFrame != null ? WindowManager.childFrame : WindowManager.mainFrame), error);
 	}
 
 	public static void showError(String error){
-		JOptionPane.showMessageDialog(WindowManager.mainFrame, error);
+		JOptionPane.showMessageDialog((WindowManager.childFrame != null ? WindowManager.childFrame : WindowManager.mainFrame), error);
 	}
 
 	public static String objectToString(Object object){
