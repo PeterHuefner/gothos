@@ -46,14 +46,21 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="658db" class="javax.swing.JLabel">
+          <scrollpane id="3479">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties>
-              <text value="&lt;html&gt;&#10;&lt;u&gt;&lt;b&gt;Altersklasse:&lt;/b&gt;&lt;/u&gt; Kenner der Alterklasse.&lt;br&gt;&lt;br&gt;&#10;&lt;u&gt;&lt;b&gt;Anzeigename:&lt;/b&gt;&lt;/u&gt; Dieser Name wird auf Protokollen und Urkunden verwendet.&lt;br&gt;&lt;br&gt;&#10;&lt;u&gt;&lt;b&gt;Berechnung:&lt;/b&gt;&lt;/u&gt; Tragen Sie hier einen mathematischen Ausdruck ein, dessen Ergebnis die Gesamtpunktzahl darstellt.&lt;br&gt; Sie können die bereits angelegten Geräte als Variablen verwenden.&lt;br&gt;&#10;Beispiel: Boden+Sprung+((Ringe+Barren)/2)+Reck&lt;br&gt;&lt;br&gt;&#10;&lt;u&gt;&lt;b&gt;Geräte:&lt;/b&gt;&lt;/u&gt; Listen Sie die Geräte und deren Reihenfolge auf, die im Protokoll der AK angezeigt werden sollen.&lt;br&gt;&#10;Beispiel: Boden,Pauschenpferd AS &quot;PPferd&quot;,Ringe,Sprung,Barren,Reck&lt;br&gt;&#10;Wenn Geräte im Protokoll anders bezeichnet werden sollen, können Sie schreiben:&lt;br&gt;&#10;Geraet AS &quot;angezeigtes Gerät&quot;&lt;br&gt;&lt;br&gt;&#10;&lt;u&gt;&lt;b&gt;Summe aller Geräte:&lt;/b&gt;&lt;/u&gt; Die Gesamtpunktzahl ist die einfache Summe aller Geräte. Der mathematische Ausdruck wird dann nicht mehr verwendet.&lt;br&gt;&lt;br&gt;&#10;&lt;u&gt;&lt;b&gt;maximal zu werten:&lt;/b&gt;&lt;/u&gt; Legt fest, dass die Gesamtpunktzahl eine einfache Summe der besten X Geräte ist. &lt;br&gt;Diese Einstellung überschreibt alle anderen Angaben zur Berechnung der Gesamtpunktzahl.&#10;&lt;/html&gt;"/>
-            </properties>
-          </component>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="658db" class="javax.swing.JLabel">
+                <constraints/>
+                <properties>
+                  <text value="&lt;html&gt;&#10;&lt;u&gt;&lt;b&gt;Altersklasse:&lt;/b&gt;&lt;/u&gt; Kenner der Alterklasse.&lt;br&gt;&lt;br&gt;&#10;&lt;u&gt;&lt;b&gt;Anzeigename:&lt;/b&gt;&lt;/u&gt; Dieser Name wird auf Protokollen und Urkunden verwendet.&lt;br&gt;&lt;br&gt;&#10;&lt;u&gt;&lt;b&gt;Berechnung:&lt;/b&gt;&lt;/u&gt; Tragen Sie hier einen mathematischen Ausdruck ein, dessen Ergebnis die Gesamtpunktzahl darstellt.&lt;br&gt; Sie können die bereits angelegten Geräte als Variablen verwenden.&lt;br&gt;&#10;Beispiel: Boden+Sprung+((Ringe+Barren)/2)+Reck&lt;br&gt;&lt;br&gt;&#10;&lt;u&gt;&lt;b&gt;Geräte:&lt;/b&gt;&lt;/u&gt; Listen Sie die Geräte und deren Reihenfolge auf, die im Protokoll der AK angezeigt werden sollen.&lt;br&gt;&#10;Beispiel: Boden,Pauschenpferd AS &quot;PPferd&quot;,Ringe,Sprung,Barren,Reck&lt;br&gt;&#10;Wenn Geräte im Protokoll anders bezeichnet werden sollen, können Sie schreiben:&lt;br&gt;&#10;Geraet AS &quot;angezeigtes Gerät&quot;&lt;br&gt;&lt;br&gt;&#10;&lt;u&gt;&lt;b&gt;Summe aller Geräte:&lt;/b&gt;&lt;/u&gt; Die Gesamtpunktzahl ist die einfache Summe aller Geräte. Der mathematische Ausdruck wird dann nicht mehr verwendet.&lt;br&gt;&lt;br&gt;&#10;&lt;u&gt;&lt;b&gt;maximal zu werten:&lt;/b&gt;&lt;/u&gt; Legt fest, dass die Gesamtpunktzahl eine einfache Summe der besten X Geräte ist. &lt;br&gt;Diese Einstellung überschreibt alle anderen Angaben zur Berechnung der Gesamtpunktzahl.&#10;&lt;/html&gt;"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
       <grid id="a28d4" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

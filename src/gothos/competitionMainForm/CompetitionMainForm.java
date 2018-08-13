@@ -175,7 +175,8 @@ public class CompetitionMainForm {
 				WindowManager.showConfigureApparati();
 			}
 		});
-		openClass.addActionListener(new ActionListener() {
+
+		/*openClass.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
@@ -187,12 +188,22 @@ public class CompetitionMainForm {
 				ArrayList<Gymnast> result = cd.calculateClassResult();
 
 			}
-		});
+		});*/
+
 		openSquad.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (squadSelect.getSelectedItem() != null) {
 					WindowManager.showSquadForm(squadSelect.getSelectedItem().toString());
+				}
+			}
+		});
+
+		openClass.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (classSelect.getSelectedItem() != null) {
+					WindowManager.showViewClasses(classSelect.getSelectedItem().toString());
 				}
 			}
 		});

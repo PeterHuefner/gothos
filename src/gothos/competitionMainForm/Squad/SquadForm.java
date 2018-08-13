@@ -38,7 +38,7 @@ public class SquadForm {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				WindowManager.disposeChildFrame();
-				CompetitionMainForm.reloadData();
+				//CompetitionMainForm.reloadData();
 			}
 		});
 

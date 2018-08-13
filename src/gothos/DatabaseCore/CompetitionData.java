@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class CompetitionData {
 
@@ -84,18 +85,19 @@ public class CompetitionData {
 
 	public String getSql() {
 		String        sql;
-		StringBuilder cols  = new StringBuilder();
-		StringBuilder where = new StringBuilder();
-		StringBuilder joins = new StringBuilder();
-		String        order = "";
-		String        group = "";
+		StringBuilder cols     = new StringBuilder();
+		StringBuilder where    = new StringBuilder();
+		StringBuilder joins    = new StringBuilder();
+		String        order    = "";
+		String        group    = "";
+		String        classSql = "IFNULL((SELECT displayName FROM competition_" + competition + "_classes WHERE class = competition_" + competition + ".class), class)";
 
 		parameters = new ArrayList<>();
 
 		if (readableCols) {
-			cols.append("competition_" + competition + ".ROWID, ID, Name, birthdate AS Geburtsdatum, class AS Altersklasse, club AS Verein, squad AS Riege, team AS Mannschaft");
+			cols.append("competition_" + competition + ".ROWID, ID, Name, birthdate AS Geburtsdatum, " + classSql + " AS Altersklasse, club AS Verein, squad AS Riege, team AS Mannschaft");
 		} else if (colums == null || colums.length == 0) {
-			cols.append("competition_" + competition + ".ROWID, ID, name, birthdate, class, club, squad, team");
+			cols.append("competition_" + competition + ".ROWID, ID, name, birthdate, " + classSql + " AS class, club, squad, team");
 		}
 
 		if (allApparaties) {
@@ -179,6 +181,29 @@ public class CompetitionData {
 		ArrayList<Gymnast>            result      = new ArrayList<>();
 		LinkedHashMap<String, String> classConfig = this.getClassConfig(className);
 
+		if (!Common.emptyString(classConfig.get("displayColumns"))) {
+			String[]          apparati     = classConfig.get("displayColumns").split("\\s*,\\s*");
+			ArrayList<String> apparatiList = new ArrayList<>(apparati.length);
+
+			for (String apparatus : apparati) {
+				apparatiList.add(
+						apparatus.replaceAll("AS .+", "")
+				);
+			}
+
+			setApparaties(apparatiList);
+			String[] addedCols = colums.clone();
+			colums = new String[addedCols.length + 1];
+
+			int i = 0;
+			for (String col : addedCols) {
+				colums[i] = addedCols[i];
+				i++;
+			}
+			colums[i] = classConfig.get("displayColumns");
+		}
+
+
 		if (!Common.emptyString(classConfig.get("minApparati"))) {
 			mode = "minApparati";
 		} else if (classConfig.get("sumAll").equals("1")) {
@@ -258,14 +283,14 @@ public class CompetitionData {
 		Integer rank     = 1;
 		for (Gymnast gymnast : result) {
 
-			if(gymnast.getSum().equals(lastSum)){
+			if (gymnast.getSum().equals(lastSum)) {
 				gymnast.setRanking(lastRank);
 			} else {
 				gymnast.setRanking(rank);
 			}
 
 			lastRank = gymnast.getRanking();
-			lastSum  = gymnast.getSum();
+			lastSum = gymnast.getSum();
 
 			rank++;
 		}
@@ -296,6 +321,16 @@ public class CompetitionData {
 			result.close();
 		} catch (SQLException e) {
 			Common.printError(e);
+		}
+
+		if (config.size() == 0) {
+
+			if (Pattern.compile("(w|weiblich)$").matcher(className).find()) {
+				config.put("displayColumns", "Sprung, Stufenbarren, Balken, Boden");
+			} else {
+				config.put("displayColumns", "Boden, Pauschenpferd, Ringe, Sprung, Barren, Reck");
+			}
+
 		}
 
 		return config;
