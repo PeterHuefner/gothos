@@ -29,6 +29,7 @@ public class Gymnast {
 	}
 
 	public void setSum(Double sum) {
+		sum = Common.round(sum, 3);
 		this.sum = sum;
 	}
 

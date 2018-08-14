@@ -29,7 +29,7 @@ public class SquadForm {
 	public SquadForm(String squad) {
 
 		this.squad = squad;
-		competitionData = new CompetitionData();
+		//competitionData = new CompetitionData();
 		tableModel = new SquadFormTableModel(this.squad);
 		squadTable.setModel(tableModel);
 		navigator = new TableNavigator(squadTable);

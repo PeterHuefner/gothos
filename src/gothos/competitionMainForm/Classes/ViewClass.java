@@ -14,6 +14,7 @@ public class ViewClass {
 	private JPanel  panel;
 
 	protected String className;
+	protected ViewClassTableModel tableModel;
 
 	public JPanel getPanel() {
 		return panel;
@@ -23,7 +24,8 @@ public class ViewClass {
 		this.className = className;
 
 
-
+		tableModel = new ViewClassTableModel(className);
+		classTable.setModel(tableModel);
 
 
 		backButton.addActionListener(new ActionListener() {

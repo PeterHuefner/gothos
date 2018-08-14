@@ -30,9 +30,12 @@ public class CompetitionData {
 	protected ArrayList<String> apparaties       = new ArrayList<>();
 	protected Boolean           apparatiesAsCols = false;
 	protected String            groupBy;
+	protected String            classSql;
+
 
 	public void setCompetition(String competition) {
 		this.competition = competition;
+		classSql = "IFNULL((SELECT displayName FROM competition_" + competition + "_classes WHERE class = competition_" + competition + ".class), class)";
 	}
 
 	public void setClassName(String className) {
@@ -81,6 +84,7 @@ public class CompetitionData {
 
 	public CompetitionData() {
 		competition = Application.selectedCompetition;
+		classSql = "IFNULL((SELECT displayName FROM competition_" + competition + "_classes WHERE class = competition_" + competition + ".class), class)";
 	}
 
 	public String getSql() {
@@ -90,14 +94,14 @@ public class CompetitionData {
 		StringBuilder joins    = new StringBuilder();
 		String        order    = "";
 		String        group    = "";
-		String        classSql = "IFNULL((SELECT displayName FROM competition_" + competition + "_classes WHERE class = competition_" + competition + ".class), class)";
 
 		parameters = new ArrayList<>();
 
 		if (readableCols) {
 			cols.append("competition_" + competition + ".ROWID, ID, Name, birthdate AS Geburtsdatum, " + classSql + " AS Altersklasse, club AS Verein, squad AS Riege, team AS Mannschaft");
 		} else if (colums == null || colums.length == 0) {
-			cols.append("competition_" + competition + ".ROWID, ID, name, birthdate, " + classSql + " AS class, club, squad, team");
+			useInternalColumns();
+			//cols.append("competition_" + competition + ".ROWID, ID, name, birthdate, " + classSql + " AS class, club, squad, team");
 		}
 
 		if (allApparaties) {
@@ -175,11 +179,19 @@ public class CompetitionData {
 		return sql;
 	}
 
+	public void useInternalColumns() {
+		colums = new String[]{"competition_" + competition + ".ROWID, ID, name, birthdate, " + classSql + " AS class, club, squad, team"};
+	}
+
 	public ArrayList<Gymnast> calculateClassResult() {
 		String mode = "sumAll";
 		calculation = "";
 		ArrayList<Gymnast>            result      = new ArrayList<>();
 		LinkedHashMap<String, String> classConfig = this.getClassConfig(className);
+
+		if (colums == null || colums.length == 0) {
+			useInternalColumns();
+		}
 
 		if (!Common.emptyString(classConfig.get("displayColumns"))) {
 			String[]          apparati     = classConfig.get("displayColumns").split("\\s*,\\s*");
@@ -191,7 +203,7 @@ public class CompetitionData {
 				);
 			}
 
-			setApparaties(apparatiList);
+			this.setApparaties(apparatiList);
 			String[] addedCols = colums.clone();
 			colums = new String[addedCols.length + 1];
 
@@ -323,7 +335,7 @@ public class CompetitionData {
 			Common.printError(e);
 		}
 
-		if (config.size() == 0) {
+		if (config.size() == 0 || Common.emptyString(config.get("displayColumns"))) {
 
 			if (Pattern.compile("(w|weiblich)$").matcher(className).find()) {
 				config.put("displayColumns", "Sprung, Stufenbarren, Balken, Boden");
