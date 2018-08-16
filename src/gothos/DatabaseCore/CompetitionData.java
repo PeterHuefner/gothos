@@ -218,7 +218,7 @@ public class CompetitionData {
 
 		if (!Common.emptyString(classConfig.get("minApparati"))) {
 			mode = "minApparati";
-		} else if (classConfig.get("sumAll").equals("1")) {
+		} else if (!Common.emptyString(classConfig.get("sumAll")) && classConfig.get("sumAll").equals("1")) {
 			mode = "sumAll";
 		} else if (!Common.emptyString(classConfig.get("calculation"))) {
 			calculation = classConfig.get("calculation");
