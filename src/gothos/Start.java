@@ -33,6 +33,9 @@ public class Start {
 
 	public Start() {
 
+		//Für Performance bei PDFs
+		System.setProperty("sun.java2d.cmm", "sun.java2d.cmm.kcms.KcmsServiceProvider");
+
 		this.createCompetitionButton.setEnabled(false);
 		this.loadSelectedCompetitionButton.setEnabled(false);
 		this.deleteSelectedCompetitionButton.setEnabled(false);
@@ -173,6 +176,8 @@ public class Start {
 				}
 			}
 		});
+
+		WindowManager.showTest();
 	}
 
 	private void listCompetitions(){

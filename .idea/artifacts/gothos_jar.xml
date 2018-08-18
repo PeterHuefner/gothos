@@ -6,6 +6,19 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/sqlite-jdbc-3.21.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/commons-lang3-3.7.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/opencsv-4.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/fontbox-2.0.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/pdfbox-2.0.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/pdfbox-app-2.0.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/pdfbox-tools-2.0.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/preflight-2.0.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/preflight-app-2.0.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/xmpbox-2.0.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/boxable/slf4j-api-1.7.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/boxable/jsoup-1.9.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/boxable/guava-18.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/boxable/boxable-1.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/boxable/commons-logging-1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/pdfbox/boxable/commons-csv-1.2.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

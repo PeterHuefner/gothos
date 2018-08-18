@@ -1,6 +1,7 @@
 package gothos;
 
 import gothos.DatabaseCore.DatabaseParameter;
+import gothos.Test.Pdftest;
 import gothos.competitionMainForm.*;
 import gothos.competitionMainForm.Classes.ViewClass;
 import gothos.competitionMainForm.ConfigureApparaties.ConfigureApparaties;
@@ -171,5 +172,15 @@ public class WindowManager {
 			ViewClass viewClass = new ViewClass(className);
 			showPanelInFrame(viewClass.getPanel(), childFrame);
 		}
+	}
+
+
+
+
+
+	public static void showTest(){
+		createChildFrame("TEST");
+		Pdftest pdftest = new Pdftest();
+		showPanelInFrame(pdftest.getPanel(), childFrame);
 	}
 }

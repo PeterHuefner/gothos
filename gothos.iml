@@ -10,5 +10,18 @@
     <orderEntry type="library" exported="" name="sqlite-jdbc-3.21.0" level="project" />
     <orderEntry type="library" exported="" name="opencsv-4.1" level="project" />
     <orderEntry type="library" exported="" name="commons-lang3-3.7" level="project" />
+    <orderEntry type="library" exported="" name="pdfbox-2.0.11" level="project" />
+    <orderEntry type="library" exported="" name="fontbox-2.0.11" level="project" />
+    <orderEntry type="library" exported="" name="pdfbox-app-2.0.11" level="project" />
+    <orderEntry type="library" exported="" name="pdfbox-tools-2.0.11" level="project" />
+    <orderEntry type="library" exported="" name="preflight-2.0.11" level="project" />
+    <orderEntry type="library" exported="" name="preflight-app-2.0.11" level="project" />
+    <orderEntry type="library" exported="" name="xmpbox-2.0.11" level="project" />
+    <orderEntry type="library" name="boxable-1.5" level="project" />
+    <orderEntry type="library" name="commons-csv-1.2" level="project" />
+    <orderEntry type="library" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" name="guava-18.0" level="project" />
+    <orderEntry type="library" name="jsoup-1.9.2" level="project" />
+    <orderEntry type="library" name="slf4j-api-1.7.10" level="project" />
   </component>
 </module>
