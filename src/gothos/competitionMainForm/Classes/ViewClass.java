@@ -38,5 +38,36 @@ public class ViewClass {
 				WindowManager.disposeChildFrame();
 			}
 		});
+
+		printAndPdfProtocol.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PdfClassResult classResult = new PdfClassResult(className);
+				classResult.generatePdf();
+
+				classResult.saveDialog();
+				classResult.print();
+			}
+		});
+
+		printProtocol.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PdfClassResult classResult = new PdfClassResult(className);
+				classResult.generatePdf();
+
+				classResult.print();
+			}
+		});
+
+		pdfProtocol.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PdfClassResult classResult = new PdfClassResult(className);
+				classResult.generatePdf();
+
+				classResult.saveDialog();
+			}
+		});
 	}
 }

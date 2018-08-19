@@ -15,11 +15,17 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.printing.Orientation;
 import org.apache.pdfbox.printing.PDFPageable;
+import org.apache.pdfbox.printing.PDFPrintable;
+import org.apache.pdfbox.printing.Scaling;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.print.Book;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
 import java.awt.print.PrinterJob;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -205,7 +211,20 @@ public class PdfClassResult {
 	public void print() {
 		try {
 			PrinterJob job = PrinterJob.getPrinterJob();
+
 			job.setPageable(new PDFPageable(document));
+
+			PageFormat format = new PageFormat();
+			format.setOrientation(PageFormat.LANDSCAPE);
+
+			Paper paper = new Paper();
+			paper.setSize(595, 842); //A4
+			//Paper paper = job.defaultPage().getPaper(); // wäre auch A4
+
+			format.setPaper(paper);
+
+			job.setPrintable(new PDFPrintable(document, Scaling.SCALE_TO_FIT), format);
+
 			if (job.printDialog()) {
 				job.print();
 			}
