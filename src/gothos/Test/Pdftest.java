@@ -10,8 +10,10 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.printing.PDFPageable;
 
 import javax.swing.*;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.util.GregorianCalendar;
 
@@ -104,6 +106,13 @@ public class Pdftest {
 		try {
 
 			document.save(System.getProperty("user.home") + File.separator + "pdftest.pdf");
+
+			PrinterJob job = PrinterJob.getPrinterJob();
+			job.setPageable(new PDFPageable(document));
+			if (job.printDialog()) {
+				job.print();
+			}
+
 			document.close();
 		}catch (Exception e){
 			Common.printError(e);

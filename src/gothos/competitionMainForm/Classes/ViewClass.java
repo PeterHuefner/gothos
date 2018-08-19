@@ -9,9 +9,13 @@ import java.awt.event.ActionListener;
 public class ViewClass {
 	private JButton backButton;
 	private JTable  classTable;
-	private JButton printProtocol;
+	private JButton printAndPdfProtocol;
 	private JButton printCertificates;
 	private JPanel  panel;
+	private JButton printProtocol;
+	private JButton pdfProtocol;
+	private JButton printAndPdfCertificate;
+	private JButton pdfCertificate;
 
 	protected String className;
 	protected ViewClassTableModel tableModel;

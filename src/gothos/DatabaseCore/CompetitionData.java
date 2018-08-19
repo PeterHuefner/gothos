@@ -89,11 +89,11 @@ public class CompetitionData {
 
 	public String getSql() {
 		String        sql;
-		StringBuilder cols     = new StringBuilder();
-		StringBuilder where    = new StringBuilder();
-		StringBuilder joins    = new StringBuilder();
-		String        order    = "";
-		String        group    = "";
+		StringBuilder cols  = new StringBuilder();
+		StringBuilder where = new StringBuilder();
+		StringBuilder joins = new StringBuilder();
+		String        order = "";
+		String        group = "";
 
 		parameters = new ArrayList<>();
 
@@ -346,6 +346,32 @@ public class CompetitionData {
 		}
 
 		return config;
+	}
+
+	public LinkedHashMap<String, String> getCompetitionData(String competition) {
+		LinkedHashMap<String, String> competitionData = new LinkedHashMap<>();
+		String                        sql             = "SELECT * FROM competitions WHERE name = ?";
+		ArrayList<DatabaseParameter>  parameters      = new ArrayList<>();
+
+		parameters.add(new DatabaseParameter(competition));
+
+		ResultSet result = Application.database.query(sql, parameters);
+
+		try {
+			if (result.next()) {
+				competitionData = Application.database.convertResultRowToLinkedHasmap(result);
+			}
+
+			result.close();
+		} catch (Exception e) {
+			Common.printError(e);
+		}
+
+		return competitionData;
+	}
+
+	public LinkedHashMap<String, String> getCompetitionData() {
+		return this.getCompetitionData(competition);
 	}
 
 	protected ArrayList<String> list(String column) {

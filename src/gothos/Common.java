@@ -76,10 +76,14 @@ public class Common {
 	}
 
 	public static double round(double value, int places) {
+		return round(value, places, RoundingMode.HALF_UP);
+	}
+
+	public static double round(double value, int places, RoundingMode mode) {
 		if (places < 0) throw new IllegalArgumentException();
 
 		BigDecimal bd = new BigDecimal(value);
-		bd = bd.setScale(places, RoundingMode.HALF_UP);
+		bd = bd.setScale(places, mode);
 		return bd.doubleValue();
 	}
 }
