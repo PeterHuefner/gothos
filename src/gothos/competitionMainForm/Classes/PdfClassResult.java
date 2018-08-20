@@ -9,10 +9,7 @@ import gothos.DatabaseCore.CompetitionData;
 import gothos.WindowManager;
 import gothos.competitionMainForm.Gymnast;
 import org.apache.pdfbox.contentstream.PDContentStream;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.printing.Orientation;
@@ -68,6 +65,17 @@ public class PdfClassResult {
 		LinkedHashMap<String, String> competitionInfo = competitionData.getCompetitionData();
 		ArrayList<Gymnast>            gymnasts        = competitionData.calculateClassResult();
 
+		/*ArrayList<Gymnast> copy = new ArrayList<>();
+		for (Gymnast gymnast : gymnasts) {
+			copy.add(gymnast);
+		}
+		for (Gymnast gymnast : copy) {
+			gymnasts.add(gymnast);
+			gymnasts.add(gymnast);
+			gymnasts.add(gymnast);
+			gymnasts.add(gymnast);
+		}*/
+
 		classDisplayName = className;
 
 		if (!Common.emptyString(classConfig.get("displayName"))) {
@@ -98,7 +106,7 @@ public class PdfClassResult {
 			//Titel
 			stream.beginText();
 			stream.setFont(PDType1Font.TIMES_ROMAN, 14);
-			stream.newLineAtOffset(20, page.getMediaBox().getHeight() - 25);
+			stream.newLineAtOffset(30, page.getMediaBox().getHeight() - 40);
 			stream.setLeading(14.5f);
 
 			stream.showText(classDisplayName + " - " + competitionInfo.get("longname"));
@@ -112,7 +120,7 @@ public class PdfClassResult {
 				int apparatiWidth    = (allApparatiWidth / gymnasts.get(0).getApparatiValues().size());
 				int diffSpace        = allApparatiWidth - (gymnasts.get(0).getApparatiValues().size() * apparatiWidth);
 
-				float margin = 15;
+				float margin = 30;
 				// starting y position is whole page height subtracted by top and bottom margin
 				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
 				// we want table across whole page width (subtracted by left and right margin ofcourse)
@@ -181,8 +189,24 @@ public class PdfClassResult {
 				table.draw();
 			}
 
-
 			stream.close();
+
+			PDPageTree pages = document.getPages();
+			for (int i = 0, length = pages.getCount(); i < length; i++) {
+				PDPage thisPage = pages.get(i);
+				PDPageContentStream footerStream = new PDPageContentStream(document, thisPage, PDPageContentStream.AppendMode.APPEND, true);
+
+				footerStream.beginText();
+				footerStream.setFont(PDType1Font.TIMES_ROMAN, 10);
+				footerStream.newLineAtOffset(30, 20);
+				footerStream.setLeading(14.5f);
+
+				footerStream.showText("Seite " + (i + 1));
+
+				footerStream.endText();
+				footerStream.close();
+			}
+
 		} catch (Exception e) {
 			Common.printError(e);
 		}
@@ -217,13 +241,11 @@ public class PdfClassResult {
 			PageFormat format = new PageFormat();
 			format.setOrientation(PageFormat.LANDSCAPE);
 
-			Paper paper = new Paper();
-			paper.setSize(595, 842); //A4
-			//Paper paper = job.defaultPage().getPaper(); // wäre auch A4
+			Paper paper = job.defaultPage().getPaper(); // A4
 
 			format.setPaper(paper);
 
-			job.setPrintable(new PDFPrintable(document, Scaling.SCALE_TO_FIT), format);
+			job.setPrintable(new PDFPrintable(document, Scaling.ACTUAL_SIZE), format);
 
 			if (job.printDialog()) {
 				job.print();
