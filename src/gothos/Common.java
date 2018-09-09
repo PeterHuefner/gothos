@@ -20,7 +20,7 @@ public class Common {
 	}
 
 	public static void printError(Exception error){
-		Common.printError(error.getMessage());
+		Common.printError(error.getMessage() + "\n" + error.toString());
 	}
 
 	public static void showFormError(String error){

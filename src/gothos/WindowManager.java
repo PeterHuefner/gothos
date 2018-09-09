@@ -123,7 +123,7 @@ public class WindowManager {
 		}
 	}
 
-	public static void shwoSetIds() {
+	public static void showSetIds() {
 		if (!Common.emptyString(Application.selectedCompetition)) {
 			createChildFrame("IDs vergeben");
 

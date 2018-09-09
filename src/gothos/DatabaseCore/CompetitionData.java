@@ -4,6 +4,7 @@ import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import gothos.Application;
 import gothos.Common;
 import gothos.competitionMainForm.Gymnast;
+import gothos.competitionMainForm.Team;
 
 import java.sql.Array;
 import java.sql.ResultSet;
@@ -306,6 +307,15 @@ public class CompetitionData {
 
 			rank++;
 		}
+
+		return result;
+	}
+
+	public ArrayList<Team> calculateTeamResult() {
+		ArrayList<Team> result = new ArrayList<>();
+		ArrayList<String> teams = (new CompetitionData()).listTeams();
+
+
 
 		return result;
 	}

@@ -144,7 +144,7 @@ public class CompetitionMainForm {
 		createIdsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowManager.shwoSetIds();
+				WindowManager.showSetIds();
 			}
 		});
 
@@ -231,7 +231,7 @@ public class CompetitionMainForm {
 	}
 
 	public void close() {
-
+		instance = null;
 	}
 
 	public void refresh() {

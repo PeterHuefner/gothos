@@ -6,6 +6,7 @@ import be.quodlibet.boxable.Row;
 import be.quodlibet.boxable.line.LineStyle;
 import gothos.Common;
 import gothos.DatabaseCore.CompetitionData;
+import gothos.PdfCore.PdfTableResult;
 import gothos.WindowManager;
 import gothos.competitionMainForm.Gymnast;
 import org.apache.pdfbox.contentstream.PDContentStream;
@@ -31,14 +32,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PdfClassResult {
+public class PdfClassResult extends PdfTableResult {
 
 	protected String                        className;
 	protected String                        classDisplayName;
 	protected CompetitionData               competitionData;
 	protected LinkedHashMap<String, String> classConfig;
-	protected PDDocument                    document;
-	protected PDPageContentStream           stream;
 
 	public PdfClassResult(String className) {
 		this.className = className;
@@ -94,7 +93,7 @@ public class PdfClassResult {
 		information.setTitle("Protokoll_" + classDisplayName);
 		information.setCreationDate(new GregorianCalendar());
 
-		PDPage page = new PDPage(
+		this.page = new PDPage(
 				new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth())
 		);
 
@@ -111,6 +110,9 @@ public class PdfClassResult {
 
 			stream.showText(classDisplayName + " - " + competitionInfo.get("longname"));
 
+			suggestedFileName = classDisplayName + "_" + competitionInfo.get("longname");
+			suggestedFileName = suggestedFileName.replaceAll("\\s", "_") + ".pdf";
+
 			stream.endText();
 
 
@@ -120,23 +122,7 @@ public class PdfClassResult {
 				int apparatiWidth    = (allApparatiWidth / gymnasts.get(0).getApparatiValues().size());
 				int diffSpace        = allApparatiWidth - (gymnasts.get(0).getApparatiValues().size() * apparatiWidth);
 
-				float margin = 30;
-				// starting y position is whole page height subtracted by top and bottom margin
-				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
-				// we want table across whole page width (subtracted by left and right margin ofcourse)
-				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
-
-				boolean drawContent  = true;
-				float   yStart       = yStartNewPage;
-				float   bottomMargin = 70;
-				// y position is your coordinate of top left corner of the table
-				float yPosition = 550;
-
-				LineStyle borderStyle   = new LineStyle(new Color(0), 0.5f);
-				LineStyle noBorderStyle = new LineStyle(new Color(0xFFFFFF), 0);
-
-				BaseTable table = new BaseTable(yPosition, yStartNewPage, bottomMargin, tableWidth, margin, document, page, true, drawContent);
-				//table.removeAllBorders(true);
+				prepareTable();
 
 				Row<PDPage> headerRow = table.createRow(15f);
 
@@ -170,88 +156,22 @@ public class PdfClassResult {
 
 				}
 
-				for (Row<PDPage> row : table.getRows()) {
-					int i = 0;
-					for (Cell<PDPage> cell : row.getCells()) {
-						cell.setBottomBorderStyle(borderStyle);
-
-						cell.setTopBorderStyle(noBorderStyle);
-						cell.setRightBorderStyle(noBorderStyle);
-						cell.setLeftBorderStyle(noBorderStyle);
-
-						if (i == 0) {
-							//cell.setLeftBorderStyle(borderStyle);
-						}
-						i++;
-					}
-				}
+				handleBorders();
 
 				table.draw();
 			}
 
 			stream.close();
 
-			PDPageTree pages = document.getPages();
-			for (int i = 0, length = pages.getCount(); i < length; i++) {
-				PDPage thisPage = pages.get(i);
-				PDPageContentStream footerStream = new PDPageContentStream(document, thisPage, PDPageContentStream.AppendMode.APPEND, true);
+			defaultFooter();
 
-				footerStream.beginText();
-				footerStream.setFont(PDType1Font.TIMES_ROMAN, 10);
-				footerStream.newLineAtOffset(30, 20);
-				footerStream.setLeading(14.5f);
 
-				footerStream.showText("Seite " + (i + 1));
-
-				footerStream.endText();
-				footerStream.close();
-			}
-
-		} catch (Exception e) {
-			Common.printError(e);
-		}
-	}
-
-	public void saveDialog() {
-		JFileChooser            chooser = new JFileChooser();
-		FileNameExtensionFilter filter  = new FileNameExtensionFilter("PDF", "pdf");
-		chooser.setFileFilter(filter);
-		chooser.setAcceptAllFileFilterUsed(false);
-
-		int chooserState = chooser.showSaveDialog(WindowManager.childFrame);
-		if (chooserState == JFileChooser.APPROVE_OPTION) {
-			this.save(chooser.getSelectedFile().getAbsolutePath());
-		}
-	}
-
-	public void save(String filename) {
-		try {
-			document.save(filename);
 		} catch (Exception e) {
 			Common.printError(e);
 		}
 	}
 
 	public void print() {
-		try {
-			PrinterJob job = PrinterJob.getPrinterJob();
-
-			job.setPageable(new PDFPageable(document));
-
-			PageFormat format = new PageFormat();
-			format.setOrientation(PageFormat.LANDSCAPE);
-
-			Paper paper = job.defaultPage().getPaper(); // A4
-
-			format.setPaper(paper);
-
-			job.setPrintable(new PDFPrintable(document, Scaling.ACTUAL_SIZE), format);
-
-			if (job.printDialog()) {
-				job.print();
-			}
-		} catch (Exception e) {
-			Common.printError(e);
-		}
+		this.print(PageFormat.LANDSCAPE);
 	}
 }
