@@ -26,10 +26,11 @@ public class CompetitionData {
 	protected String                       club;
 	protected String                       calculation = "";
 
-	protected Boolean           readableCols     = false;
-	protected Boolean           allApparaties    = false;
-	protected ArrayList<String> apparaties       = new ArrayList<>();
-	protected Boolean           apparatiesAsCols = false;
+	protected Boolean           readableCols         = false;
+	protected Boolean           allApparaties        = false;
+	protected ArrayList<String> apparaties           = new ArrayList<>();
+	protected Boolean           apparatiesAsCols     = false;
+	protected Boolean           onlyTeamMemberValues = false;
 	protected String            groupBy;
 	protected String            classSql;
 
@@ -83,6 +84,14 @@ public class CompetitionData {
 		this.groupBy = groupBy;
 	}
 
+	public void setCalculation(String calculation) {
+		this.calculation = calculation;
+	}
+
+	public void setOnlyTeamMemberValues(Boolean onlyTeamMemberValues) {
+		this.onlyTeamMemberValues = onlyTeamMemberValues;
+	}
+
 	public CompetitionData() {
 		competition = Application.selectedCompetition;
 		classSql = "IFNULL((SELECT displayName FROM competition_" + competition + "_classes WHERE class = competition_" + competition + ".class), class)";
@@ -112,7 +121,12 @@ public class CompetitionData {
 		if (apparaties != null && apparaties.size() > 0) {
 			for (String apparti : apparaties) {
 
-				joins.append(" LEFT JOIN competition_" + competition + "_apparati_" + apparti + " ON competition_" + competition + ".ROWID = competition_" + competition + "_apparati_" + apparti + ".gymnast");
+				String additionalJoin = "";
+				if (onlyTeamMemberValues) {
+					additionalJoin = " AND competition_" + competition + "_apparati_" + apparti + ".isTeamMember = 1";
+				}
+
+				joins.append(" LEFT JOIN competition_" + competition + "_apparati_" + apparti + " ON competition_" + competition + ".ROWID = competition_" + competition + "_apparati_" + apparti + ".gymnast" + additionalJoin);
 
 				if (apparatiesAsCols) {
 					cols.append(", " + apparti);
@@ -176,7 +190,7 @@ public class CompetitionData {
 		}
 
 		sql = "SELECT " + cols.toString() + " FROM competition_" + competition + " " + joins.toString() + " WHERE active = 1 " + where + " " + order + group + ";";
-
+		//Common.systemoutprintln(sql);
 		return sql;
 	}
 
@@ -246,7 +260,9 @@ public class CompetitionData {
 
 			for (Gymnast gymnast : result) {
 
-				if (mode.equals("sumAll")) {
+				this.calculateGymnastSum(gymnast, mode, classConfig);
+
+				/*if (mode.equals("sumAll")) {
 
 					Double sum = 0.0;
 					for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
@@ -276,7 +292,7 @@ public class CompetitionData {
 					}
 
 					gymnast.setSum(sum);
-				}
+				}*/
 
 			}
 
@@ -312,12 +328,159 @@ public class CompetitionData {
 	}
 
 	public ArrayList<Team> calculateTeamResult() {
-		ArrayList<Team> result = new ArrayList<>();
-		ArrayList<String> teams = (new CompetitionData()).listTeams();
+		ArrayList<Team>                                      result       = new ArrayList<>();
+		ArrayList<String>                                    teams        = (new CompetitionData()).listTeams();
+		LinkedHashMap<String, LinkedHashMap<String, String>> classConfigs = new LinkedHashMap<>();
 
 
+		for (String teamName : teams) {
+
+			Double                        teamSum      = 0.0;
+			LinkedHashMap<String, Double> teamApparati = new LinkedHashMap<>();
+			ArrayList<Gymnast>            gymnasts     = new ArrayList<>();
+			this.setTeam(teamName);
+			ResultSet teamResult = Application.database.query(getSql(), getParameters());
+
+			try {
+
+				while (teamResult.next()) {
+					gymnasts.add(
+							new Gymnast(teamResult)
+					);
+				}
+
+				teamResult.close();
+
+			} catch (Exception e) {
+
+			}
+
+			for (Gymnast gymnast : gymnasts) {
+				//@TODO: Muss überabritet werden, dass Einzelergebnis des Turners nach AK kann nicht auf die Mannschaft addiert werden? Oder doch?
+				calculateGymnastSum(gymnast);
+
+				for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
+					teamApparati.putIfAbsent(apparatus.getKey(), 0.0);
+					teamApparati.put(
+							apparatus.getKey(),
+							teamApparati.getOrDefault(apparatus.getKey(), 0.0) + apparatus.getValue()
+					);
+				}
+
+				teamSum += gymnast.getSum();
+			}
+
+			Team team = new Team(
+					gymnasts,
+					teamApparati,
+					teamSum
+			);
+
+			result.add(team);
+		}
+
+		//Nach sum sortieren
+		Collections.sort(result, new Comparator<Team>() {
+			@Override
+			public int compare(Team o1, Team o2) {
+				return Double.compare(o1.getSum(), o2.getSum()) * -1;
+			}
+		});
+
+		//Platzierung berechnen
+		Double  lastSum  = 0.0;
+		Integer lastRank = 1;
+		Integer rank     = 1;
+		for (Team thisteam : result) {
+
+			if (thisteam.getSum().equals(lastSum)) {
+				thisteam.setRanking(lastRank);
+			} else {
+				thisteam.setRanking(rank);
+			}
+
+			lastRank = thisteam.getRanking();
+			lastSum = thisteam.getSum();
+
+			rank++;
+		}
 
 		return result;
+	}
+
+	protected Gymnast calculateGymnastSum(Gymnast gymnast, String mode, LinkedHashMap<String, String> classConfig) {
+
+		if (mode.equals("sumAll")) {
+
+			Double sum = 0.0;
+			for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
+				sum += apparatus.getValue();
+			}
+			gymnast.setSum(sum);
+
+		} else if (mode.equals("minApparati")) {
+			ArrayList<Double> valueList = new ArrayList<Double>(gymnast.getApparatiValues().values());
+			Double            sum       = 0.0;
+
+			Collections.sort(valueList, new Comparator<Double>() {
+				@Override
+				public int compare(Double o1, Double o2) {
+					return Double.compare(o1, o2) * -1;
+					//return (o1 > o2 ? 1 : (o1 < o2 ? -1 : 0));
+				}
+			});
+
+			//LinkedHashMap<String, String> classConfig = this.getClassConfig(gymnast.getMetaData("class"));
+
+			Integer minApparati    = Integer.parseInt(classConfig.get("minApparati"));
+			Integer summedApparati = 0;
+			for (Double apparatiValue : valueList) {
+				if (summedApparati < minApparati) {
+					sum += apparatiValue;
+					summedApparati++;
+				}
+			}
+
+			gymnast.setSum(sum);
+		} else if (mode.equals("calculation")) {
+			//LinkedHashMap<String, String> classConfig = this.getClassConfig(gymnast.getMetaData("class"));
+
+			if (!Common.emptyString(classConfig.get("calculation"))) {
+
+				CompetitionData competitionData = new CompetitionData();
+				competitionData.setCalculation(classConfig.get("calculation"));
+				competitionData.setGymnast(gymnast.getROWID());
+				ResultSet gymnastResult = Application.database.query(competitionData.getSql(), competitionData.getParameters());
+
+				try {
+					if (gymnastResult.next()) {
+						Double sum = Double.parseDouble(gymnastResult.getString("Gesamt"));
+						gymnast.setSum(sum);
+					}
+					gymnastResult.close();
+				} catch (Exception e) {
+					Common.printError(e);
+				}
+			}
+		}
+
+		return gymnast;
+	}
+
+	protected Gymnast calculateGymnastSum(Gymnast gymnast) {
+		LinkedHashMap<String, String> classConfig = this.getClassConfig(gymnast.getMetaData("class"));
+		String                        mode        = "sumAll";
+
+		if (!Common.emptyString(classConfig.get("minApparati"))) {
+			mode = "minApparati";
+		} else if (!Common.emptyString(classConfig.get("sumAll")) && classConfig.get("sumAll").equals("1")) {
+			mode = "sumAll";
+		} else if (!Common.emptyString(classConfig.get("calculation"))) {
+			//calculation = classConfig.get("calculation");
+			mode = "calculation";
+		}
+
+		return this.calculateGymnastSum(gymnast, mode, classConfig);
 	}
 
 	public ArrayList<DatabaseParameter> getParameters() {

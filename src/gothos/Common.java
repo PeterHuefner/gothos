@@ -14,6 +14,10 @@ public class Common {
 		return (string == null || string.isEmpty() || string.equalsIgnoreCase("null") || string.equalsIgnoreCase("0"));
 	}
 
+	public static void systemoutprintln(String string) {
+		System.out.println(string);
+	}
+
 	public static void printError(String error){
 		System.out.println(error);
 		JOptionPane.showMessageDialog(WindowManager.mainFrame, error);

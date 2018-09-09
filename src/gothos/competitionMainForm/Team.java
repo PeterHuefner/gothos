@@ -30,19 +30,21 @@ public class Team {
 		return ranking;
 	}
 
-	public void addGymnast(Gymnast gymnast) {
+	/*public void addGymnast(Gymnast gymnast) {
 		gymnasts.add(gymnast);
-	}
+	}*/
 
 	public ArrayList<Gymnast> getGymnasts() {
 		return gymnasts;
 	}
 
-	public Team() {
-
+	public Team(ArrayList<Gymnast> gymnasts, LinkedHashMap<String, Double> apparatiValues, Double sum) {
+		this.gymnasts = gymnasts;
+		this.apparatiValues = apparatiValues;
+		this.sum = sum;
 	}
 
-	public void calculateResult() {
+	/*public void calculateResult() {
 
-	}
+	}*/
 }
