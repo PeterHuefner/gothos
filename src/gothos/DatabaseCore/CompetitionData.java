@@ -328,10 +328,13 @@ public class CompetitionData {
 	}
 
 	public ArrayList<Team> calculateTeamResult() {
-		ArrayList<Team>                                      result       = new ArrayList<>();
-		ArrayList<String>                                    teams        = (new CompetitionData()).listTeams();
-		LinkedHashMap<String, LinkedHashMap<String, String>> classConfigs = new LinkedHashMap<>();
+		ArrayList<Team>                                      result            = new ArrayList<>();
+		ArrayList<String>                                    teams             = (new CompetitionData()).listTeams();
+		LinkedHashMap<String, LinkedHashMap<String, String>> classConfigs      = new LinkedHashMap<>();
+		LinkedHashMap<String, String>                        competitionConfig = this.getCompetitionData();
 
+		Integer calculationMode = Integer.parseInt(competitionConfig.getOrDefault("teamCalculationMode", "0"));
+		Integer maxTeamMembers  = Integer.parseInt(competitionConfig.getOrDefault("numberOfMaxTeamMembers", "0"));
 
 		for (String teamName : teams) {
 
@@ -355,20 +358,58 @@ public class CompetitionData {
 
 			}
 
-			for (Gymnast gymnast : gymnasts) {
-				//@TODO: Muss überabritet werden, dass Einzelergebnis des Turners nach AK kann nicht auf die Mannschaft addiert werden? Oder doch?
-				calculateGymnastSum(gymnast);
+			if (calculationMode == 0) {
 
-				for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
-					teamApparati.putIfAbsent(apparatus.getKey(), 0.0);
-					teamApparati.put(
-							apparatus.getKey(),
-							teamApparati.getOrDefault(apparatus.getKey(), 0.0) + apparatus.getValue()
-					);
+				LinkedHashMap<String, ArrayList<Double>> teamMemberApparatiValues = new LinkedHashMap<>();
+
+				for (Gymnast gymnast : gymnasts) {
+					calculateGymnastSum(gymnast);
+
+					for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
+						ArrayList<Double> apparatiValues = teamMemberApparatiValues.getOrDefault(apparatus.getKey(), new ArrayList<>());
+						apparatiValues.add(apparatus.getValue());
+						teamMemberApparatiValues.put(apparatus.getKey(), apparatiValues);
+					}
 				}
 
-				teamSum += gymnast.getSum();
+				for (Map.Entry<String, ArrayList<Double>> apparatus : teamMemberApparatiValues.entrySet()) {
+
+					ArrayList<Double> values = apparatus.getValue();
+
+					Collections.sort(values, new Comparator<Double>() {
+						@Override
+						public int compare(Double o1, Double o2) {
+							return Double.compare(o1, o2) * -1;
+						}
+					});
+
+					if (values.size() > maxTeamMembers && maxTeamMembers > 0) {
+
+						ArrayList<Double> realValues = new ArrayList<>();
+						//@TODO: nur maxTeamMembers ins Array stecken
+
+					} else {
+						teamMemberApparatiValues.put(apparatus.getKey(), values);
+					}
+				}
+
+			} else {
+				for (Gymnast gymnast : gymnasts) {
+					//@TODO: Muss überabritet werden, dass Einzelergebnis des Turners nach AK kann nicht auf die Mannschaft addiert werden? Oder doch?
+					calculateGymnastSum(gymnast);
+
+					for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
+						teamApparati.putIfAbsent(apparatus.getKey(), 0.0);
+						teamApparati.put(
+								apparatus.getKey(),
+								teamApparati.getOrDefault(apparatus.getKey(), 0.0) + apparatus.getValue()
+						);
+					}
+
+					teamSum += gymnast.getSum();
+				}
 			}
+
 
 			Team team = new Team(
 					gymnasts,

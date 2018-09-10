@@ -4,6 +4,7 @@ import gothos.DatabaseCore.DatabaseParameter;
 import gothos.DatabaseCore.DatabaseStructure;
 import gothos.FormCore.DataForm;
 import gothos.FormCore.DataFormElement;
+import gothos.FormCore.SelectboxItem;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,17 +12,23 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class CompetitionForm extends DataForm{
-	private JPanel competitionFormPanel;
+	private JPanel     competitionFormPanel;
 	private JTextField name;
-	private JLabel competitionNameLabel;
-	private JButton saveDataButton;
-	private JButton cancelButton;
+	private JLabel     competitionNameLabel;
+	private JButton    saveDataButton;
+	private JButton    cancelButton;
 	private JTextField longname;
-	private JLabel competitionLongnameLabel;
+	private JLabel     competitionLongnameLabel;
 	private JTextField description;
-	private JLabel competitionDescriptionLabel;
+	private JLabel     competitionDescriptionLabel;
 	private JTextField competitionDay;
-	private JLabel competitionDayLabel;
+	private JLabel     competitionDayLabel;
+	private JLabel     teamCalcModeLabel;
+	private JComboBox  teamCalculateMode;
+	private JLabel     teamCalcExplanation;
+	private JLabel     numberOfMaxTeamMembersLabel;
+	private JTextField numberOfMaxTeamMembers;
+	private JLabel numberofMaxTeamMembersExplanation;
 
 	public CompetitionForm(){
 		super("competitions");
@@ -35,6 +42,13 @@ public class CompetitionForm extends DataForm{
 		ini();
 
 		load();
+	}
+
+	private void createUIComponents() {
+		teamCalculateMode = new JComboBox(new Object[]{
+				new SelectboxItem(0, "Summe aller Wertungen"),
+				new SelectboxItem(1, "Summe aller Ergebnisse")
+		});
 	}
 
 	protected void ini(){
@@ -68,6 +82,8 @@ public class CompetitionForm extends DataForm{
 		columns.add(new DataFormElement(this.longname, "longname"));
 		columns.add(new DataFormElement(this.description, "description"));
 		columns.add(new DataFormElement(this.competitionDay, "competitionDay"));
+		columns.add(new DataFormElement(this.teamCalculateMode, "teamCalculateMode"));
+		columns.add(new DataFormElement(this.numberOfMaxTeamMembers, "numberOfMaxTeamMembers"));
 	}
 
 	public boolean check(){

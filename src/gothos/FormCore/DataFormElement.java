@@ -36,6 +36,15 @@ public class DataFormElement {
 		String value = null;
 		if(this.element.getClass() == javax.swing.JTextField.class){
 			value = ((JTextField) this.element).getText();
+		} else if (this.element.getClass() == javax.swing.JComboBox.class) {
+			JComboBox selectBox = (JComboBox) this.element;
+			Object selectedItem = selectBox.getSelectedItem();
+
+			if (selectedItem.getClass() == SelectboxItem.class) {
+				value = ((SelectboxItem) selectedItem).getKey().toString();
+			} else {
+				value = selectedItem.toString();
+			}
 		}
 
 		return value;
@@ -45,6 +54,23 @@ public class DataFormElement {
 
 		if(this.element.getClass() == javax.swing.JTextField.class){
 			((JTextField) this.element).setText(value);
+		} else if (this.element.getClass() == javax.swing.JComboBox.class) {
+			JComboBox selectBox = (JComboBox) this.element;
+
+			for (int i = 0; i < selectBox.getItemCount(); i++) {
+				Object thisItem = selectBox.getItemAt(i);
+
+				if (thisItem.getClass() == SelectboxItem.class) {
+					SelectboxItem selectboxItem = (SelectboxItem) thisItem;
+					if (selectboxItem.getKey().toString() == value) {
+						selectBox.setSelectedItem(selectboxItem);
+						break;
+					}
+				} else if (thisItem.toString() == value){
+					selectBox.setSelectedItem(thisItem);
+					break;
+				}
+			}
 		}
 
 		return this;

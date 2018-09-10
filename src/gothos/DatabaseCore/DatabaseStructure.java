@@ -36,7 +36,10 @@ public class DatabaseStructure {
 						"longname TEXT," +
 						"description TEXT," +
 						"competitionDay TEXT," +
-						"final INTEGER" +
+						"final INTEGER, " +
+						"numberOfFinalists INTEGER DEFAULT 6, " +
+						"teamCalculateMode INTEGER DEFAULT 0, " +
+						"numberOfMaxTeamMembers INTEGER DEFAULT 0, " +
 					 ");"
 		);
 	}
