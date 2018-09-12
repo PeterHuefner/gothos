@@ -358,6 +358,7 @@ public class CompetitionData {
 
 			}
 
+			// alle Geräte addieren, aber nur bis max
 			if (calculationMode == 0) {
 
 				LinkedHashMap<String, ArrayList<Double>> teamMemberApparatiValues = new LinkedHashMap<>();
@@ -365,6 +366,7 @@ public class CompetitionData {
 				for (Gymnast gymnast : gymnasts) {
 					calculateGymnastSum(gymnast);
 
+					// Von jedem Turner die Wertungen für jedes Gerät speichern
 					for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
 						ArrayList<Double> apparatiValues = teamMemberApparatiValues.getOrDefault(apparatus.getKey(), new ArrayList<>());
 						apparatiValues.add(apparatus.getValue());
@@ -372,25 +374,39 @@ public class CompetitionData {
 					}
 				}
 
+				// Für jedes Gerät die Wertungen sortieren und nur die Anzahl der besten Wertungen behalten die erlaubt sind
 				for (Map.Entry<String, ArrayList<Double>> apparatus : teamMemberApparatiValues.entrySet()) {
-
 					ArrayList<Double> values = apparatus.getValue();
 
-					Collections.sort(values, new Comparator<Double>() {
-						@Override
-						public int compare(Double o1, Double o2) {
-							return Double.compare(o1, o2) * -1;
-						}
-					});
-
 					if (values.size() > maxTeamMembers && maxTeamMembers > 0) {
+						Collections.sort(values, new Comparator<Double>() {
+							@Override
+							public int compare(Double o1, Double o2) {
+								return Double.compare(o1, o2) * -1;
+							}
+						});
 
 						ArrayList<Double> realValues = new ArrayList<>();
-						//@TODO: nur maxTeamMembers ins Array stecken
 
-					} else {
-						teamMemberApparatiValues.put(apparatus.getKey(), values);
+						for (Double value: values) {
+							if (realValues.size() <= maxTeamMembers) {
+								realValues.add(value);
+							}
+						}
+
+						teamMemberApparatiValues.put(apparatus.getKey(), realValues);
 					}
+				}
+
+				for (Map.Entry<String, ArrayList<Double>> apparatus : teamMemberApparatiValues.entrySet()) {
+					Double apparatiSum = 0.0;
+
+					for (Double value: apparatus.getValue()) {
+						apparatiSum += value;
+					}
+
+					teamApparati.put(apparatus.getKey(), apparatiSum);
+					teamSum += apparatiSum;
 				}
 
 			} else {
