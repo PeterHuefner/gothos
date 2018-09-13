@@ -30,6 +30,18 @@ public class Team {
 		return ranking;
 	}
 
+	public LinkedHashMap<String, Double> getApparatiValues() {
+		return apparatiValues;
+	}
+
+	public void setApparatiValues(LinkedHashMap<String, Double> apparatiValues) {
+		this.apparatiValues = apparatiValues;
+	}
+
+	public String getName() {
+		return name;
+	}
+
 	/*public void addGymnast(Gymnast gymnast) {
 		gymnasts.add(gymnast);
 	}*/
@@ -38,10 +50,11 @@ public class Team {
 		return gymnasts;
 	}
 
-	public Team(ArrayList<Gymnast> gymnasts, LinkedHashMap<String, Double> apparatiValues, Double sum) {
+	public Team(ArrayList<Gymnast> gymnasts, LinkedHashMap<String, Double> apparatiValues, Double sum, String name) {
 		this.gymnasts = gymnasts;
 		this.apparatiValues = apparatiValues;
-		this.sum = sum;
+		this.setSum(sum);
+		this.name = name;
 	}
 
 	/*public void calculateResult() {

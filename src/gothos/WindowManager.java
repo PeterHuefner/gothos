@@ -9,6 +9,7 @@ import gothos.competitionMainForm.Export.ExportForm;
 import gothos.competitionMainForm.Import.ImportForm;
 import gothos.competitionMainForm.SetID.SetIDForm;
 import gothos.competitionMainForm.Squad.SquadForm;
+import gothos.competitionMainForm.Teams.ViewTeams;
 
 import javax.swing.*;
 import java.sql.ResultSet;
@@ -171,6 +172,14 @@ public class WindowManager {
 			createChildFrame("Alterklasse " + className + " ansehen");
 			ViewClass viewClass = new ViewClass(className);
 			showPanelInFrame(viewClass.getPanel(), childFrame);
+		}
+	}
+
+	public static void showViewTeams() {
+		if (!Common.emptyString(Application.selectedCompetition)) {
+			createChildFrame("Mannschaften ansehen");
+			ViewTeams viewTeams = new ViewTeams();
+			showPanelInFrame(viewTeams.getPanel(), childFrame);
 		}
 	}
 

@@ -5,6 +5,7 @@ import gothos.Application;
 import gothos.Common;
 import gothos.competitionMainForm.Gymnast;
 import gothos.competitionMainForm.Team;
+import org.apache.pdfbox.debugger.ui.MapEntry;
 
 import java.sql.Array;
 import java.sql.ResultSet;
@@ -119,6 +120,7 @@ public class CompetitionData {
 		}
 
 		if (apparaties != null && apparaties.size() > 0) {
+			String comma = "";
 			for (String apparti : apparaties) {
 
 				String additionalJoin = "";
@@ -129,13 +131,20 @@ public class CompetitionData {
 				joins.append(" LEFT JOIN competition_" + competition + "_apparati_" + apparti + " ON competition_" + competition + ".ROWID = competition_" + competition + "_apparati_" + apparti + ".gymnast" + additionalJoin);
 
 				if (apparatiesAsCols) {
-					cols.append(", " + apparti);
+					if (cols.length() > 0) {
+						comma = ", ";
+					}
+
+					cols.append(comma + apparti);
 				}
 			}
 		}
 
 		if (colums != null && colums.length > 0) {
 			String comma = "";
+			if (cols.length() > 0) {
+				comma = ", ";
+			}
 			for (String column : colums) {
 				cols.append(comma + column);
 				comma = ", ";
@@ -332,9 +341,14 @@ public class CompetitionData {
 		ArrayList<String>                                    teams             = (new CompetitionData()).listTeams();
 		LinkedHashMap<String, LinkedHashMap<String, String>> classConfigs      = new LinkedHashMap<>();
 		LinkedHashMap<String, String>                        competitionConfig = this.getCompetitionData();
+		LinkedHashMap<String, Integer>                       valuedApparati    = new LinkedHashMap<>();
 
 		Integer calculationMode = Integer.parseInt(competitionConfig.getOrDefault("teamCalculationMode", "0"));
 		Integer maxTeamMembers  = Integer.parseInt(competitionConfig.getOrDefault("numberOfMaxTeamMembers", "0"));
+
+		this.setOnlyTeamMemberValues(true);
+		this.setAllApparaties(true);
+		this.setApparatiesAsCols(true);
 
 		for (String teamName : teams) {
 
@@ -374,6 +388,14 @@ public class CompetitionData {
 					}
 				}
 
+				//Nach sum sortieren
+				Collections.sort(gymnasts, new Comparator<Gymnast>() {
+					@Override
+					public int compare(Gymnast o1, Gymnast o2) {
+						return Double.compare(o1.getSum(), o2.getSum()) * -1;
+					}
+				});
+
 				// Für jedes Gerät die Wertungen sortieren und nur die Anzahl der besten Wertungen behalten die erlaubt sind
 				for (Map.Entry<String, ArrayList<Double>> apparatus : teamMemberApparatiValues.entrySet()) {
 					ArrayList<Double> values = apparatus.getValue();
@@ -388,7 +410,7 @@ public class CompetitionData {
 
 						ArrayList<Double> realValues = new ArrayList<>();
 
-						for (Double value: values) {
+						for (Double value : values) {
 							if (realValues.size() <= maxTeamMembers) {
 								realValues.add(value);
 							}
@@ -401,12 +423,15 @@ public class CompetitionData {
 				for (Map.Entry<String, ArrayList<Double>> apparatus : teamMemberApparatiValues.entrySet()) {
 					Double apparatiSum = 0.0;
 
-					for (Double value: apparatus.getValue()) {
+					for (Double value : apparatus.getValue()) {
 						apparatiSum += value;
 					}
 
-					teamApparati.put(apparatus.getKey(), apparatiSum);
-					teamSum += apparatiSum;
+					if (apparatiSum > 0) {
+						teamApparati.put(apparatus.getKey(), apparatiSum);
+						teamSum += apparatiSum;
+						valuedApparati.put(apparatus.getKey(), 1);
+					}
 				}
 
 			} else {
@@ -430,7 +455,8 @@ public class CompetitionData {
 			Team team = new Team(
 					gymnasts,
 					teamApparati,
-					teamSum
+					teamSum,
+					teamName
 			);
 
 			result.add(team);
@@ -443,6 +469,48 @@ public class CompetitionData {
 				return Double.compare(o1.getSum(), o2.getSum()) * -1;
 			}
 		});
+
+		Comparator<Map.Entry<String, Double>> maleComparator = new Comparator<Map.Entry<String, Double>>() {
+			@Override
+			public int compare(Map.Entry<String, Double> a1, Map.Entry<String, Double> a2) {
+				int compare = 0;
+
+				LinkedHashMap<String, Integer> apparatiOrder = new LinkedHashMap<>();
+				apparatiOrder.put("Boden", 1);
+				apparatiOrder.put("Pauschenpferd", 2);
+				apparatiOrder.put("Ringe", 3);
+				apparatiOrder.put("Sprung", 4);
+				apparatiOrder.put("Barren", 5);
+				apparatiOrder.put("Reck", 6);
+
+				compare = apparatiOrder.getOrDefault(a1.getKey(), 0) - apparatiOrder.getOrDefault(a2.getKey(), 0);
+
+				return compare;
+			}
+		};
+
+		Comparator<Map.Entry<String, Double>> femaleComparator = new Comparator<Map.Entry<String, Double>>() {
+			@Override
+			public int compare(Map.Entry<String, Double> a1, Map.Entry<String, Double> a2) {
+				int compare = 0;
+
+				LinkedHashMap<String, Integer> apparatiOrder = new LinkedHashMap<>();
+				apparatiOrder.put("Sprung", 1);
+				apparatiOrder.put("Stufenbarren", 2);
+				apparatiOrder.put("Balken", 3);
+				apparatiOrder.put("Boden", 4);
+
+				compare = apparatiOrder.getOrDefault(a1.getKey(), 0) - apparatiOrder.getOrDefault(a2.getKey(), 0);
+
+				return compare;
+			}
+		};
+
+		Comparator<Map.Entry<String, Double>> comparator = maleComparator;
+
+		if (result.size() > 0 && (result.get(0).getApparatiValues().get("Balken") != null || result.get(0).getApparatiValues().get("Stufenbarren") != null)) {
+			comparator = femaleComparator;
+		}
 
 		//Platzierung berechnen
 		Double  lastSum  = 0.0;
@@ -460,6 +528,18 @@ public class CompetitionData {
 			lastSum = thisteam.getSum();
 
 			rank++;
+
+			for (Map.Entry<String, Integer> apparatus : valuedApparati.entrySet()) {
+				thisteam.getApparatiValues().putIfAbsent(apparatus.getKey(), 0.0);
+			}
+
+			LinkedHashMap<String, Double> newApparatiList = new LinkedHashMap<>();
+			thisteam.getApparatiValues().entrySet().stream()
+					.sorted(comparator)
+					.forEach(stringDoubleEntry -> {
+						newApparatiList.put(stringDoubleEntry.getKey(), stringDoubleEntry.getValue());
+					});
+			thisteam.setApparatiValues(newApparatiList);
 		}
 
 		return result;

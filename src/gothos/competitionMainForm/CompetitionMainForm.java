@@ -27,7 +27,7 @@ public class CompetitionMainForm {
 	private JComboBox  squadSelect;
 	private JButton    openSquad;
 	private JButton    printSquad;
-	private JComboBox  teamSelect;
+	//private JComboBox  teamSelect;
 	private JButton    openTeam;
 	private JButton    printTeamProtocol;
 	private JButton    printTeamCertificate;
@@ -207,6 +207,13 @@ public class CompetitionMainForm {
 				}
 			}
 		});
+
+		openTeam.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowManager.showViewTeams();
+			}
+		});
 	}
 
 	protected void setDataToCombos() {
@@ -220,10 +227,10 @@ public class CompetitionMainForm {
 			squadSelect.addItem(squad);
 		}
 
-		teamSelect.removeAllItems();
+		/*teamSelect.removeAllItems();
 		for (String team : competitionData.listTeams()) {
 			teamSelect.addItem(team);
-		}
+		}*/
 	}
 
 	public JPanel getPanel() {
