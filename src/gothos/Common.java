@@ -8,6 +8,8 @@ import java.math.RoundingMode;
 
 public class Common {
 
+	public static boolean debugMode = true;
+
 	public static final String tableNameReqex = "^[a-zA-Z]{1}[a-zA-Z0-9_]*$";
 
 	public static boolean emptyString(String string){
@@ -19,11 +21,21 @@ public class Common {
 	}
 
 	public static void printError(String error){
+
+		if (!debugMode) {
+			return;
+		}
+
 		System.out.println(error);
 		JOptionPane.showMessageDialog(WindowManager.mainFrame, error);
 	}
 
 	public static void printError(Exception error){
+
+		if (!debugMode) {
+			return;
+		}
+
 		Common.printError(error.getMessage() + "\n" + error.toString());
 	}
 
@@ -32,7 +44,16 @@ public class Common {
 	}
 
 	public static void showError(String error){
+
+		if (!debugMode) {
+			return;
+		}
+
 		JOptionPane.showMessageDialog((WindowManager.childFrame != null ? WindowManager.childFrame : WindowManager.mainFrame), error);
+	}
+
+	public static void showMessage(String message){
+		JOptionPane.showMessageDialog((WindowManager.childFrame != null ? WindowManager.childFrame : WindowManager.mainFrame), message);
 	}
 
 	public static String objectToString(Object object){

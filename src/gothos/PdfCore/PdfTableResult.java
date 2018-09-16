@@ -40,8 +40,8 @@ public class PdfTableResult extends Pdf {
 		return this.table;
 	}
 
-	protected BaseTable prepareTable() throws java.io.IOException{
-		return prepareTable(30, 70, 550);
+	protected BaseTable prepareTable() throws java.io.IOException {
+		return prepareTable(30, 70, 540);
 	}
 
 	protected void handleBorders() {
@@ -66,4 +66,26 @@ public class PdfTableResult extends Pdf {
 		}
 	}
 
+	protected void noBorders() {
+
+		LineStyle noBorderStyle = new LineStyle(new Color(0xFFFFFF), 0);
+
+		for (Row<PDPage> row : table.getRows()) {
+			for (Cell<PDPage> cell : row.getCells()) {
+				cell.setBottomBorderStyle(noBorderStyle);
+				cell.setTopBorderStyle(noBorderStyle);
+				cell.setRightBorderStyle(noBorderStyle);
+				cell.setLeftBorderStyle(noBorderStyle);
+			}
+		}
+	}
+
+	protected Cell<PDPage> noBorder (Cell <PDPage> cell) {
+		LineStyle noBorderStyle = new LineStyle(new Color(0xFFFFFF), 0);
+		cell.setBottomBorderStyle(noBorderStyle);
+		cell.setTopBorderStyle(noBorderStyle);
+		cell.setRightBorderStyle(noBorderStyle);
+		cell.setLeftBorderStyle(noBorderStyle);
+		return cell;
+	}
 }

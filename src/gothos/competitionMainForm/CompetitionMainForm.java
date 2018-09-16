@@ -6,6 +6,8 @@ import gothos.Common;
 import gothos.DatabaseCore.CompetitionData;
 import gothos.FormCore.TableNavigator;
 import gothos.WindowManager;
+import gothos.competitionMainForm.Classes.PdfClassResult;
+import gothos.competitionMainForm.Teams.PdfTeamResult;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -104,7 +106,7 @@ public class CompetitionMainForm {
 				if (selectedRows.length > 0) {
 					tableModel.deleteRows(selectedRows);
 				} else {
-					Common.showError("Selektieren Sie zunächst einen Teilnehmer.");
+					Common.showMessage("Selektieren Sie zunächst einen Teilnehmer.");
 				}
 			}
 		});
@@ -204,6 +206,8 @@ public class CompetitionMainForm {
 			public void actionPerformed(ActionEvent e) {
 				if (classSelect.getSelectedItem() != null) {
 					WindowManager.showViewClasses(classSelect.getSelectedItem().toString());
+				} else {
+					Common.showMessage("Wählen Sie eine Alterklasse aus");
 				}
 			}
 		});
@@ -212,6 +216,67 @@ public class CompetitionMainForm {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				WindowManager.showViewTeams();
+			}
+		});
+
+		printClassProtocol.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (classSelect.getSelectedItem() != null) {
+
+					String[] options = new String[]{
+							"drucken",
+							"PDF",
+							"drucken und PDF",
+							"abbrechen"
+					};
+					int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Wie soll das Protokoll erstellt werden", "Protokoll erstellen", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[2]);
+
+					PdfClassResult result = new PdfClassResult(classSelect.getSelectedItem().toString());
+					result.generatePdf();
+
+					switch (selectedOption) {
+						case 0:
+							result.print();
+							break;
+						case 1:
+							result.saveDialog();
+							break;
+						case 2:
+							result.saveDialog();
+							result.print();
+					}
+
+				} else {
+					Common.showMessage("Wählen Sie eine Alterklasse aus");
+				}
+			}
+		});
+		printTeamProtocol.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String[] options = new String[]{
+						"drucken",
+						"PDF",
+						"drucken und PDF",
+						"abbrechen"
+				};
+				int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Wie soll das Protokoll erstellt werden", "Protokoll erstellen", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[2]);
+
+				PdfTeamResult result = new PdfTeamResult();
+				result.generatePdf();
+
+				switch (selectedOption) {
+					case 0:
+						result.print();
+						break;
+					case 1:
+						result.saveDialog();
+						break;
+					case 2:
+						result.saveDialog();
+						result.print();
+				}
 			}
 		});
 	}

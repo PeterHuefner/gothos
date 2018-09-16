@@ -46,19 +46,6 @@ public class PdfClassResult extends PdfTableResult {
 		classConfig = competitionData.getClassConfig(className);
 	}
 
-	@Override
-	public void finalize() throws Throwable {
-		super.finalize();
-
-		try {
-			if (document != null) {
-				document.close();
-			}
-		} catch (Exception e) {
-
-		}
-	}
-
 	public void generatePdf() {
 
 		LinkedHashMap<String, String> competitionInfo = competitionData.getCompetitionData();
@@ -90,7 +77,7 @@ public class PdfClassResult extends PdfTableResult {
 
 		information.setAuthor("gothos - Wettkampfverwaltung");
 		information.setCreator("gothos - Wettkampfverwaltung");
-		information.setTitle("Protokoll_" + classDisplayName);
+		information.setTitle("Protokoll - " + classDisplayName);
 		information.setCreationDate(new GregorianCalendar());
 
 		this.page = new PDPage(
@@ -124,7 +111,7 @@ public class PdfClassResult extends PdfTableResult {
 
 				prepareTable();
 
-				Row<PDPage> headerRow = table.createRow(15f);
+				Row<PDPage> headerRow = table.createRow(24);
 
 				headerRow.createCell(5, "Startnr.");
 				headerRow.createCell(20 + diffSpace, "Name");
@@ -151,8 +138,8 @@ public class PdfClassResult extends PdfTableResult {
 						row.createCell(apparatiWidth, String.format("%2.3f", apparatus.getValue()));
 					}
 
-					row.createCell(5, "<b>" + String.format("%2.3f", gymnast.getSum()) + "</b>");
-					row.createCell(5, "<b>" + gymnast.getRanking().toString() + "</b>");
+					row.createCell(7, "<b>" + String.format("%2.3f", gymnast.getSum()) + "</b>");
+					row.createCell(3, "<b>" + gymnast.getRanking().toString() + "</b>");
 
 				}
 

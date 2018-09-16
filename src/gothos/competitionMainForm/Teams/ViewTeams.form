@@ -61,28 +61,28 @@
               <text value="Protokoll"/>
             </properties>
           </component>
-          <component id="799f5" class="javax.swing.JButton" binding="button2" default-binding="true">
+          <component id="799f5" class="javax.swing.JButton" binding="printPdfProtocol">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="drucken/PDF"/>
             </properties>
           </component>
-          <component id="4c414" class="javax.swing.JButton" binding="button3" default-binding="true">
+          <component id="4c414" class="javax.swing.JButton" binding="printProtocol">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="drucken"/>
             </properties>
           </component>
-          <component id="c266a" class="javax.swing.JButton" binding="button4" default-binding="true">
+          <component id="c266a" class="javax.swing.JButton" binding="pdfProtocol">
             <constraints>
               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="PDF"/>
             </properties>
           </component>
           <component id="87257" class="javax.swing.JButton" binding="button5" default-binding="true">
@@ -115,6 +115,22 @@
             </constraints>
             <properties>
               <text value="Urkunden"/>
+            </properties>
+          </component>
+          <component id="d11cc" class="javax.swing.JCheckBox" binding="showGymnasts">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Mitglieder anzeigen"/>
+            </properties>
+          </component>
+          <component id="9dd2f" class="javax.swing.JCheckBox" binding="showClubs">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Vereinsname anzeigen"/>
             </properties>
           </component>
         </children>

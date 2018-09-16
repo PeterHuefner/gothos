@@ -13,6 +13,7 @@ import org.apache.pdfbox.printing.Scaling;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.PrinterJob;
@@ -24,6 +25,7 @@ public class Pdf {
 	protected PDPage              page;
 	protected PDPageContentStream stream;
 	protected String              suggestedFileName;
+	protected boolean             openFileAfterSave = true;
 
 	@Override
 	public void finalize() throws Throwable {
@@ -38,10 +40,10 @@ public class Pdf {
 		}
 	}
 
-	protected void defaultFooter() throws java.io.IOException{
+	protected void defaultFooter() throws java.io.IOException {
 		PDPageTree pages = document.getPages();
 		for (int i = 0, length = pages.getCount(); i < length; i++) {
-			PDPage thisPage = pages.get(i);
+			PDPage              thisPage     = pages.get(i);
 			PDPageContentStream footerStream = new PDPageContentStream(document, thisPage, PDPageContentStream.AppendMode.APPEND, true);
 
 			footerStream.beginText();
@@ -75,6 +77,11 @@ public class Pdf {
 	public void save(String filename) {
 		try {
 			document.save(filename);
+
+			if (openFileAfterSave) {
+				File file = new File(filename);
+				Desktop.getDesktop().open(file);
+			}
 		} catch (Exception e) {
 			Common.printError(e);
 		}
