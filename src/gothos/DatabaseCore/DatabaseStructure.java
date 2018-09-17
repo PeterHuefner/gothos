@@ -20,6 +20,19 @@ public class DatabaseStructure {
 		);
 	}
 
+	public static boolean createGlobalCertificate() {
+		return Application.database.execute(
+				"CREATE TABLE IF NOT EXISTS global_certificates ( " +
+						"line TEXT, " +
+						"font TEXT, " +
+						"size TEXT, " +
+						"weight TEXT, " +
+						"align TEXT, " +
+						"type TEXT " +
+					");"
+		);
+	}
+
 	public static boolean createSettings(){
 		return Application.database.execute(
 				"CREATE TABLE IF NOT EXISTS settings (" +
@@ -71,6 +84,18 @@ public class DatabaseStructure {
 
 		Boolean classesCopyStatus = Application.database.execute("INSERT INTO competition_" + name + "_classes (class, displayName, calculation, displayColumns, sumAll, minApparati) SELECT class, displayName, calculation, displayColumns, sumAll, minApparati FROM global_classes;");
 
+		Boolean certificateStatus =  Application.database.execute(
+				"CREATE TABLE IF NOT EXISTS competition_" + name + "_certificates ( " +
+						"line TEXT, " +
+						"font TEXT, " +
+						"size TEXT, " +
+						"weight TEXT, " +
+						"align TEXT, " +
+						"type TEXT " +
+						");");
+
+		Boolean certificateCopyStatus = Application.database.execute("INSERT INTO competition_" + name + "_certificates (line, font, size, weight, align, type) SELECT line, font, size, weight, align, type FROM global_certificates;");
+
 		String[] apparati = new String[]{
 				"Boden",
 				"Pauschenpferd",
@@ -93,7 +118,7 @@ public class DatabaseStructure {
 			}
 		}
 
-		return competitionStatus && allApparatiStatus && classesStatus && classesCopyStatus;
+		return competitionStatus && allApparatiStatus && classesStatus && classesCopyStatus && certificateStatus && certificateCopyStatus;
 	}
 
 	public static boolean removeCompetition(String name) {

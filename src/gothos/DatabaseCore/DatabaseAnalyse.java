@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class DatabaseAnalyse {
 
-	public static void checkDatabase(){
+	public static void checkDatabase() {
 
 		/*boolean st0 = Application.database.execute("INSERT INTO test(col1, col2) values ('one', 'two');");
 		long id = Application.database.getLastInsertId();
@@ -22,70 +22,76 @@ public class DatabaseAnalyse {
 		ArrayList<String> tables = listTables();
 
 		//Check if settings table exists
-		if(!tables.contains("global_classes")){
-			if(!DatabaseStructure.createGlobalClasses()){
+		if (!tables.contains("global_classes")) {
+			if (!DatabaseStructure.createGlobalClasses()) {
 				Common.printError("Fehler beim Anlegen der global_classes");
 			}
 		}
 
-		if(!tables.contains("settings")){
-			if(!DatabaseStructure.createSettings()){
+		if (!tables.contains("settings")) {
+			if (!DatabaseStructure.createSettings()) {
 				Common.printError("Fehler beim Anlegen der settings");
 			}
 		}
 
-		if(!tables.contains("competitions")){
-			if(!DatabaseStructure.createCompetitions()){
+		if (!tables.contains("competitions")) {
+			if (!DatabaseStructure.createCompetitions()) {
 				Common.printError("Fehler beim Anlegen der competitions");
 			}
 		}
 
+		if (!tables.contains("global_certificates")) {
+			if (!DatabaseStructure.createGlobalCertificate()) {
+				Common.printError("Fehler beim Anlegen der global_certificates");
+			}
+		}
+
 	}
 
-	public static void checkCompetition(String competition){
+	public static void checkCompetition(String competition) {
 
 	}
 
-	public static ArrayList<String> listTables(){
+	public static ArrayList<String> listTables() {
 		return listTables("");
 	}
 
-	public static ArrayList<String> listTables(String matchRegex){
+	public static ArrayList<String> listTables(String matchRegex) {
 		ArrayList<String> tables = new ArrayList<String>();
 
 		ResultSet rs = Application.database.query("SELECT name FROM sqlite_master WHERE type = 'table';");
 
-		try{
-			while (rs.next()){
-				if(matchRegex.isEmpty()){
+		try {
+			while (rs.next()) {
+				if (matchRegex.isEmpty()) {
 					tables.add(rs.getString("name"));
-				}else if(rs.getString("name").matches(matchRegex)){
+				} else if (rs.getString("name").matches(matchRegex)) {
 					tables.add(rs.getString("name"));
 				}
 			}
 			rs.close();
-		}catch (SQLException e){
+		} catch (SQLException e) {
 			Common.printError(e);
 		}
 
-		return  tables;
+		return tables;
 	}
 
-	public static ArrayList<String> listApparatiInCompetition(){
+	public static ArrayList<String> listApparatiInCompetition() {
 		return listApparatiInCompetition(Application.selectedCompetition);
 	}
 
-	public static ArrayList<String> listApparatiInCompetition(String competition){
-		ArrayList<String> tables = listTables("^competition_" + competition + "_apparati_.+$");
+	public static ArrayList<String> listApparatiInCompetition(String competition) {
+		ArrayList<String> tables   = listTables("^competition_" + competition + "_apparati_.+$");
 		ArrayList<String> apparati = new ArrayList<String>();
 
-		for(String table: tables){
+		for (String table : tables) {
 			Matcher matcher = Pattern.compile("^.+_apparati_(.+)$").matcher(table);
-			if(matcher.find()){
+			if (matcher.find()) {
 				apparati.add(matcher.group(1));
 			}
 		}
 
-		return  apparati;
+		return apparati;
 	}
 }
