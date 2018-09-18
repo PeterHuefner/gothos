@@ -183,7 +183,23 @@ public class WindowManager {
 		}
 	}
 
+	public static void showConfigureCertificates(String type) {
+		String tableName = "global_certificates";
 
+		if (!Common.emptyString(Application.selectedCompetition)) {
+			tableName = "competition_" + Application.selectedCompetition + "_certificates";
+		}
+
+		String title = "Urkunden verwalten";
+
+		if (type.equals("team")) {
+			title = "Mannschaftsurkunden verwalteb";
+		}
+
+		createChildFrame(title);
+		ConfigureCertificates certificates = new ConfigureCertificates(tableName, type);
+		showPanelInFrame(certificates.getPanel(), childFrame);
+	}
 
 
 

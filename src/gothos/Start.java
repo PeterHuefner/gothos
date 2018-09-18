@@ -33,6 +33,8 @@ public class Start {
 	private JButton selectDatabaseFileButton;
 	private JButton configureClassesButton;
 	private JButton editCompetition;
+	private JButton configureCertificates;
+	private JButton configureTeamCertificates;
 
 	public Start() {
 
@@ -44,6 +46,8 @@ public class Start {
 		this.deleteSelectedCompetitionButton.setEnabled(false);
 		this.configureClassesButton.setEnabled(false);
 		this.editCompetition.setEnabled(false);
+		this.configureCertificates.setEnabled(false);
+		this.configureTeamCertificates.setEnabled(false);
 
 		selectDatabaseFileButton.addActionListener(new ActionListener() {
 			@Override
@@ -55,6 +59,8 @@ public class Start {
 				deleteSelectedCompetitionButton.setEnabled(false);
 				configureClassesButton.setEnabled(false);
 				editCompetition.setEnabled(false);
+				configureCertificates.setEnabled(false);
+				configureTeamCertificates.setEnabled(false);
 				selectedDatabaseFileLabel.setText("keine Datenbankverbindung");
 
 				JFileChooser chooser = findDatabaseDialog();
@@ -66,6 +72,8 @@ public class Start {
 						selectedDatabaseFileLabel.setText("verbundene Datenbank: " + chooser.getSelectedFile().getAbsolutePath());
 						createCompetitionButton.setEnabled(true);
 						configureClassesButton.setEnabled(true);
+						configureCertificates.setEnabled(true);
+						configureTeamCertificates.setEnabled(true);
 						listCompetitions();
 					}
 				}
@@ -82,6 +90,8 @@ public class Start {
 				deleteSelectedCompetitionButton.setEnabled(false);
 				configureClassesButton.setEnabled(false);
 				editCompetition.setEnabled(false);
+				configureCertificates.setEnabled(false);
+				configureTeamCertificates.setEnabled(false);
 				selectedDatabaseFileLabel.setText("keine Datenbankverbindung");
 
 				JFileChooser chooser = findDatabaseDialog();
@@ -99,6 +109,8 @@ public class Start {
 						selectedDatabaseFileLabel.setText("verbundene Datenbank: " + file);
 						createCompetitionButton.setEnabled(true);
 						configureClassesButton.setEnabled(true);
+						configureCertificates.setEnabled(true);
+						configureTeamCertificates.setEnabled(true);
 						listCompetitions();
 					}
 				}
@@ -207,6 +219,8 @@ public class Start {
 					selectedDatabaseFileLabel.setText("verbundene Datenbank: " + file);
 					createCompetitionButton.setEnabled(true);
 					configureClassesButton.setEnabled(true);
+					configureCertificates.setEnabled(true);
+					configureTeamCertificates.setEnabled(true);
 					listCompetitions();
 				}
 			}
@@ -219,6 +233,21 @@ public class Start {
 			test.generatePdf();
 			test.save(System.getProperty("user.home") + File.separator + "testpdf.pdf");
 		}*/
+
+		configureTeamCertificates.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowManager.showConfigureCertificates("team");
+			}
+		});
+
+
+		configureCertificates.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowManager.showConfigureCertificates("single");
+			}
+		});
 	}
 
 	private void listCompetitions() {
