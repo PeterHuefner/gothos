@@ -17,11 +17,11 @@
     <orderEntry type="library" exported="" name="preflight-2.0.11" level="project" />
     <orderEntry type="library" exported="" name="preflight-app-2.0.11" level="project" />
     <orderEntry type="library" exported="" name="xmpbox-2.0.11" level="project" />
-    <orderEntry type="library" name="boxable-1.5" level="project" />
-    <orderEntry type="library" name="commons-csv-1.2" level="project" />
-    <orderEntry type="library" name="commons-logging-1.2" level="project" />
-    <orderEntry type="library" name="guava-18.0" level="project" />
-    <orderEntry type="library" name="jsoup-1.9.2" level="project" />
-    <orderEntry type="library" name="slf4j-api-1.7.10" level="project" />
+    <orderEntry type="library" exported="" name="boxable-1.5" level="project" />
+    <orderEntry type="library" exported="" name="commons-csv-1.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" exported="" name="guava-18.0" level="project" />
+    <orderEntry type="library" exported="" name="jsoup-1.9.2" level="project" />
+    <orderEntry type="library" exported="" name="slf4j-api-1.7.10" level="project" />
   </component>
 </module>

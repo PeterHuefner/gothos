@@ -139,6 +139,10 @@ public class ConfigureCertificates {
 
 	protected void loadMargins() {
 
+		marginTop.setText("0");
+		marginLeft.setText("0");
+		marginRight.setText("0");
+
 		ArrayList<DatabaseParameter> parameters = new ArrayList<>();
 		parameters.add(new DatabaseParameter(type + "Top"));
 		parameters.add(new DatabaseParameter(type + "Left"));

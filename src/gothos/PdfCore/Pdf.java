@@ -21,11 +21,18 @@ import java.io.File;
 
 public class Pdf {
 
+	public final float MM_TO_POINT = 0.352778f;
+
 	protected PDDocument          document;
 	protected PDPage              page;
 	protected PDPageContentStream stream;
 	protected String              suggestedFileName;
 	protected boolean             openFileAfterSave = true;
+
+	protected PDType1Font currentFont;
+	protected float       currentFontsize;
+	protected float       lastX = -1;
+	protected float       lastY = -1;
 
 	@Override
 	public void finalize() throws Throwable {
@@ -38,6 +45,83 @@ public class Pdf {
 		} catch (Exception e) {
 
 		}
+	}
+
+	public float millimeterToPoints(float millimeter) {
+		return this.millimeterToPoints(millimeter, 0);
+	}
+
+	public float millimeterToPoints(float millimeter, int places) {
+		float points = millimeter / MM_TO_POINT;
+		points = (float) Common.round((double) points, places);
+		return points;
+	}
+
+	public float pointsToMillimeters(float point) {
+		return this.pointsToMillimeters(point, 0);
+	}
+
+	public float pointsToMillimeters(float point, int places) {
+		float points = point * MM_TO_POINT;
+		points = (float) Common.round((double) points, places);
+		return points;
+	}
+
+	protected void setFont(PDType1Font font) {
+		currentFont = font;
+	}
+
+	protected void setFontSize(float size) {
+		currentFontsize = size;
+	}
+
+	protected void drawText(String text) throws Exception {
+		drawText(text, currentFont, currentFontsize, "left", 1.0f);
+	}
+
+	protected void drawCenteredText(String text) throws Exception {
+		drawText(text, currentFont, currentFontsize, "center", 1.0f);
+	}
+
+	protected void drawRightText(String text) throws Exception {
+		drawText(text, currentFont, currentFontsize, "right", 1.0f);
+	}
+
+	protected void drawText(String text, PDType1Font font, float size, String alignment, float lineHeight) throws Exception {
+
+		stream.beginText();
+
+		float x = 0, y = 0;
+		float fontHeight = font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * size;
+		float textWidth  = font.getStringWidth(text) / 1000 * size;
+
+		stream.setFont(font, size);
+
+		if (lastX != -1) {
+			//x -= Math.abs(lastX);
+		}
+
+		if (lastY == -1) {
+			y = page.getMediaBox().getHeight() - fontHeight;
+		} else {
+			y = lastY - (fontHeight * lineHeight);
+		}
+
+		if (alignment.equals("center")) {
+			//x += (page.getMediaBox().getWidth() - textWidth) / 2; // margin des Dokuments wird nicht beachtet
+			x += (Math.abs(page.getMediaBox().getUpperRightX()) - Math.abs(page.getMediaBox().getLowerLeftX()) - textWidth) / 2;
+		} else if (alignment.equals("right")) {
+			x += (Math.abs(page.getMediaBox().getUpperRightX()) - Math.abs(page.getMediaBox().getLowerLeftX()) - textWidth);
+		}
+
+		stream.newLineAtOffset(x, y);
+
+		stream.showText(text);
+
+		lastY = y;
+		lastX = x;
+
+		stream.endText();
 	}
 
 	protected void defaultFooter() throws java.io.IOException {

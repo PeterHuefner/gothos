@@ -6,6 +6,7 @@ import gothos.Common;
 import gothos.DatabaseCore.CompetitionData;
 import gothos.FormCore.TableNavigator;
 import gothos.WindowManager;
+import gothos.competitionMainForm.Certificates.PdfCertificate;
 import gothos.competitionMainForm.Classes.PdfClassResult;
 import gothos.competitionMainForm.Teams.PdfTeamResult;
 
@@ -261,9 +262,37 @@ public class CompetitionMainForm {
 						"drucken und PDF",
 						"abbrechen"
 				};
-				int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Wie soll das Protokoll erstellt werden", "Protokoll erstellen", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[2]);
+				int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Wie soll das Protokoll erstellt werden?", "Protokoll erstellen", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[2]);
 
 				PdfTeamResult result = new PdfTeamResult();
+				result.generatePdf();
+
+				switch (selectedOption) {
+					case 0:
+						result.print();
+						break;
+					case 1:
+						result.saveDialog();
+						break;
+					case 2:
+						result.saveDialog();
+						result.print();
+				}
+			}
+		});
+
+		printTeamCertificate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String[] options = new String[]{
+						"drucken",
+						"PDF",
+						"drucken und PDF",
+						"abbrechen"
+				};
+				int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Wie sollen die Urkunden erstellt werden?", "Urkunden erstellen", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[2]);
+
+				PdfCertificate result = new PdfCertificate();
 				result.generatePdf();
 
 				switch (selectedOption) {
