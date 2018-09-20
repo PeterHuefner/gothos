@@ -41,4 +41,10 @@ public class Application {
 
 		return (Application.database != null);
 	}
+
+	public static void disconnectDatabase() {
+		if (Application.database != null) {
+			Application.database.close();
+		}
+	}
 }

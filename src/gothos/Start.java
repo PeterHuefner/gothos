@@ -53,7 +53,7 @@ public class Start {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				Application.database.close();
+				Application.disconnectDatabase();
 				createCompetitionButton.setEnabled(false);
 				loadSelectedCompetitionButton.setEnabled(false);
 				deleteSelectedCompetitionButton.setEnabled(false);
@@ -84,7 +84,7 @@ public class Start {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				Application.database.close();
+				Application.disconnectDatabase();
 				createCompetitionButton.setEnabled(false);
 				loadSelectedCompetitionButton.setEnabled(false);
 				deleteSelectedCompetitionButton.setEnabled(false);
