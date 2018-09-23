@@ -52,7 +52,7 @@ public class DatabaseStructure {
 						"final INTEGER, " +
 						"numberOfFinalists INTEGER DEFAULT 6, " +
 						"teamCalculateMode INTEGER DEFAULT 0, " +
-						"numberOfMaxTeamMembers INTEGER DEFAULT 0, " +
+						"numberOfMaxTeamMembers INTEGER DEFAULT 0 " +
 					 ");"
 		);
 	}
