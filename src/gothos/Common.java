@@ -5,6 +5,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Common {
 
@@ -110,5 +112,13 @@ public class Common {
 		BigDecimal bd = new BigDecimal(value);
 		bd = bd.setScale(places, mode);
 		return bd.doubleValue();
+	}
+
+	public static boolean regexMatch(String regex, String test) {
+		return Pattern.compile(regex).matcher(test).find();
+	}
+
+	public static Matcher regex(String regex, String test) {
+		return Pattern.compile(regex).matcher(test);
 	}
 }

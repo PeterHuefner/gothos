@@ -23,7 +23,6 @@ public class ConfigureCertificates {
 	private JLabel     targetLabel;
 	private JTextField marginTop;
 	private JTextField marginLeft;
-	private JTextField marginRight;
 
 	protected String                          tableName;
 	protected String                          type;
@@ -98,15 +97,6 @@ public class ConfigureCertificates {
 				saveMargin(marginLeft.getText(), "Left");
 			}
 		});
-
-		marginRight.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				super.focusLost(e);
-
-				saveMargin(marginRight.getText(), "Right");
-			}
-		});
 	}
 
 	protected void setCellEditors() {
@@ -141,7 +131,6 @@ public class ConfigureCertificates {
 
 		marginTop.setText("0");
 		marginLeft.setText("0");
-		marginRight.setText("0");
 
 		ArrayList<DatabaseParameter> parameters = new ArrayList<>();
 		parameters.add(new DatabaseParameter(type + "Top"));
@@ -159,8 +148,6 @@ public class ConfigureCertificates {
 					marginTop.setText(resultSet.getString("line"));
 				} else if (marginType.contains("Left")) {
 					marginLeft.setText(resultSet.getString("line"));
-				} else if (marginType.contains("Right")) {
-					marginRight.setText(resultSet.getString("line"));
 				}
 			}
 
@@ -172,8 +159,7 @@ public class ConfigureCertificates {
 	}
 
 	protected void saveMargin(String margin, String orientation) {
-		Matcher matcher = Pattern.compile("^\\d+(\\.\\d+|,\\d+)?$").matcher(margin.toString());
-		if (matcher.find()) {
+		if (Common.regexMatch("^\\d+(\\.\\d+|,\\d+)?$", margin.toString())) {
 
 			margin = margin.replaceAll(",", ".");
 
