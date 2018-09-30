@@ -5,6 +5,8 @@ import gothos.FormCore.DataFormTableModel;
 import gothos.FormCore.DataTableCell;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConfigureCertificatesTableModel extends DataFormTableModel {
 
@@ -16,11 +18,11 @@ public class ConfigureCertificatesTableModel extends DataFormTableModel {
 		this.baseTable = table;
 		this.type      = type;
 
-		displayColumns = new String[]{"Zeile", "Schrift", "Größe", "Stil", "Ausrichtung"};
+		displayColumns = new String[]{"Zeile", "Schrift", "Größe", "Zeilenhöhe", "Stil", "Ausrichtung"};
 
 		ArrayList<DatabaseParameter> params = new ArrayList<>();
 		params.add(new DatabaseParameter(type));
-		buildData("SELECT ROWID, line, font, size, weight, align FROM " + baseTable + " WHERE type = ?;", params);
+		buildData("SELECT ROWID, line, font, size, height, weight, align FROM " + baseTable + " WHERE type = ?;", params);
 	}
 
 	public int addEmptyRow() {
@@ -41,5 +43,42 @@ public class ConfigureCertificatesTableModel extends DataFormTableModel {
 		}
 
 		return insertedIndex;
+	}
+
+	@Override
+	protected Object handleValuePreInsert(Object value, int row, int col) {
+
+		if (col == 3 || col == 4) {
+			if (value == null) {
+				value = "";
+			}
+			String number = value.toString();
+			number = number.replaceAll(",", ".");
+			if(Common.emptyString(number)){
+				number = "0";
+			}
+			value = number;
+		}
+
+		return value;
+	}
+
+	@Override
+	protected boolean checkValue(Object value, int row, int col) {
+		boolean status = true;
+
+		if (col == 3 || col == 4) {
+			if (value == null) {
+				value = "";
+			}
+
+			Matcher matcher = Pattern.compile("^\\d+(\\.\\d+)?$").matcher(value.toString());
+			if(!matcher.find()){
+				status = false;
+				Common.showError("'" + value.toString() + "' ist keine gültige Zahl.");
+			}
+		}
+
+		return status;
 	}
 }

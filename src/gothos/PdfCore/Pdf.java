@@ -6,6 +6,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.printing.PDFPageable;
 import org.apache.pdfbox.printing.PDFPrintable;
@@ -89,6 +90,11 @@ public class Pdf {
 
 	protected void drawText(String text, PDType1Font font, float size, String alignment, float lineHeight) throws Exception {
 
+		if (font == null) {
+			font = PDType1Font.TIMES_ROMAN;
+			size = 12;
+		}
+
 		stream.beginText();
 
 		float x = 0, y = 0;
@@ -122,6 +128,21 @@ public class Pdf {
 		lastX = x;
 
 		stream.endText();
+	}
+
+	protected PDPage addPage() {
+		return addPage(-millimeterToPoints(25), millimeterToPoints(25), PDRectangle.A4.getWidth(), PDRectangle.A4.getHeight());
+	}
+
+	protected PDPage addPage(float x, float y, float width, float height) {
+		page = new PDPage(
+				new PDRectangle(x, y, width, height)
+		);
+		document.addPage(page);
+		lastY = -1;
+		lastX = -1;
+
+		return page;
 	}
 
 	protected void defaultFooter() throws java.io.IOException {

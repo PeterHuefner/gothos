@@ -46,6 +46,7 @@ public class CompetitionMainForm {
 	private JButton    createIdsButton;
 	private JButton    clearSearchButton;
 	private JButton    searchButton;
+	private JButton    configureCertificates;
 
 	protected static CompetitionMainForm instance;
 
@@ -293,6 +294,7 @@ public class CompetitionMainForm {
 				int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Wie sollen die Urkunden erstellt werden?", "Urkunden erstellen", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[2]);
 
 				PdfCertificate result = new PdfCertificate();
+				result.setTeamCertificate(true);
 				result.generatePdf();
 
 				switch (selectedOption) {
@@ -305,6 +307,26 @@ public class CompetitionMainForm {
 					case 2:
 						result.saveDialog();
 						result.print();
+				}
+			}
+		});
+
+		configureCertificates.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String[] options = new String[]{
+						"Einzel",
+						"Mannschaft"
+				};
+				int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Welcher Urkundentyp soll bearbeitet werden", "Urkunden bearbeiten", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[0]);
+
+				switch (selectedOption) {
+					case 0:
+						WindowManager.showConfigureCertificates("single");
+						break;
+					case 1:
+						WindowManager.showConfigureCertificates("team");
+						break;
 				}
 			}
 		});

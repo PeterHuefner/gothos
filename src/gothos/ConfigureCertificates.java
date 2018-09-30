@@ -102,7 +102,8 @@ public class ConfigureCertificates {
 	protected void setCellEditors() {
 		TableColumn fontColumn = certificateTable.getColumnModel().getColumn(1);
 		JComboBox<String> fontBox = new JComboBox<>();
-		fontBox.addItem("Arial");
+		fontBox.addItem("Courier");
+		fontBox.addItem("Helvetica");
 		fontBox.addItem("Times New Roman");
 		fontColumn.setCellEditor(new DefaultCellEditor(fontBox));
 
@@ -113,13 +114,15 @@ public class ConfigureCertificates {
 		}
 		sizeColumn.setCellEditor(new DefaultCellEditor(sizeBox));
 
-		TableColumn weightColumn = certificateTable.getColumnModel().getColumn(3);
+		TableColumn weightColumn = certificateTable.getColumnModel().getColumn(4);
 		JComboBox<String> weightBox = new JComboBox<>();
 		weightBox.addItem("normal");
 		weightBox.addItem("fett");
+		weightBox.addItem("kursiv");
+		weightBox.addItem("fett-kursiv");
 		weightColumn.setCellEditor(new DefaultCellEditor(weightBox));
 
-		TableColumn alignColumn = certificateTable.getColumnModel().getColumn(4);
+		TableColumn alignColumn = certificateTable.getColumnModel().getColumn(5);
 		JComboBox<String> alignBox = new JComboBox<>();
 		alignBox.addItem("zentriert");
 		alignBox.addItem("links");

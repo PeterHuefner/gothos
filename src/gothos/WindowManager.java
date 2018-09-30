@@ -193,7 +193,7 @@ public class WindowManager {
 		String title = "Urkunden verwalten";
 
 		if (type.equals("team")) {
-			title = "Mannschaftsurkunden verwalteb";
+			title = "Mannschaftsurkunden verwalten";
 		}
 
 		createChildFrame(title);

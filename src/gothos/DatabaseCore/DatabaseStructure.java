@@ -25,7 +25,8 @@ public class DatabaseStructure {
 				"CREATE TABLE IF NOT EXISTS global_certificates ( " +
 						"line TEXT, " +
 						"font TEXT, " +
-						"size TEXT, " +
+						"size REAL, " +
+						"height REAL, " +
 						"weight TEXT, " +
 						"align TEXT, " +
 						"type TEXT " +
@@ -88,7 +89,8 @@ public class DatabaseStructure {
 				"CREATE TABLE IF NOT EXISTS competition_" + name + "_certificates ( " +
 						"line TEXT, " +
 						"font TEXT, " +
-						"size TEXT, " +
+						"size REAL, " +
+						"height REAL, " +
 						"weight TEXT, " +
 						"align TEXT, " +
 						"type TEXT " +
