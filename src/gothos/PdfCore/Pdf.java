@@ -19,6 +19,8 @@ import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.PrinterJob;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Pdf {
 
@@ -97,7 +99,7 @@ public class Pdf {
 
 		stream.beginText();
 
-		float x = 0, y = 0;
+		float x          = 0, y = 0;
 		float fontHeight = font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * size;
 		float textWidth  = font.getStringWidth(text) / 1000 * size;
 
@@ -150,6 +152,7 @@ public class Pdf {
 		for (int i = 0, length = pages.getCount(); i < length; i++) {
 			PDPage              thisPage     = pages.get(i);
 			PDPageContentStream footerStream = new PDPageContentStream(document, thisPage, PDPageContentStream.AppendMode.APPEND, true);
+			PDType1Font         font         = PDType1Font.TIMES_ROMAN;
 
 			footerStream.beginText();
 			footerStream.setFont(PDType1Font.TIMES_ROMAN, 10);
@@ -157,6 +160,17 @@ public class Pdf {
 			footerStream.setLeading(14.5f);
 
 			footerStream.showText("Seite " + (i + 1));
+
+			Date             now        = new Date();
+			SimpleDateFormat dateFormat = new SimpleDateFormat();
+			dateFormat.applyPattern("dd.MM.YYYY HH:mm");
+			String dateText = dateFormat.format(now);
+
+			float textWidth = font.getStringWidth(dateText) / 1000 * 10;
+			float x         = (Math.abs(page.getMediaBox().getUpperRightX()) - Math.abs(page.getMediaBox().getLowerLeftX()) - textWidth) - 60;
+
+			footerStream.newLineAtOffset(x, 0);
+			footerStream.showText(dateText);
 
 			footerStream.endText();
 			footerStream.close();

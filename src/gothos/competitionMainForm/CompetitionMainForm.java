@@ -293,20 +293,20 @@ public class CompetitionMainForm {
 				};
 				int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Wie sollen die Urkunden erstellt werden?", "Urkunden erstellen", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[2]);
 
-				PdfCertificate result = new PdfCertificate();
-				result.setTeamCertificate(true);
-				result.generatePdf();
+				PdfCertificate certificate = new PdfCertificate();
+				certificate.setTeamCertificate(true);
+				certificate.generatePdf();
 
 				switch (selectedOption) {
 					case 0:
-						result.print();
+						certificate.print();
 						break;
 					case 1:
-						result.saveDialog();
+						certificate.saveDialog();
 						break;
 					case 2:
-						result.saveDialog();
-						result.print();
+						certificate.saveDialog();
+						certificate.print();
 				}
 			}
 		});
@@ -327,6 +327,40 @@ public class CompetitionMainForm {
 					case 1:
 						WindowManager.showConfigureCertificates("team");
 						break;
+				}
+			}
+		});
+
+		printCertificate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (classSelect.getSelectedItem() != null) {
+
+					String[] options = new String[]{
+							"drucken",
+							"PDF",
+							"drucken und PDF",
+							"abbrechen"
+					};
+					int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Wie sollen die Urkunden erstellt werden?", "Urkunden erstellen", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[2]);
+
+					PdfCertificate certificate = new PdfCertificate();
+					certificate.setClassName(classSelect.getSelectedItem().toString());
+					certificate.generatePdf();
+
+					switch (selectedOption) {
+						case 0:
+							certificate.print();
+							break;
+						case 1:
+							certificate.saveDialog();
+							break;
+						case 2:
+							certificate.saveDialog();
+							certificate.print();
+					}
+				} else {
+					Common.showMessage("Wählen Sie zunächst eine Alterklasse aus für die die Urkunden erstellt werden soll");
 				}
 			}
 		});

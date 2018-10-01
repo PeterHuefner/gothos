@@ -17,7 +17,9 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import java.awt.print.PageFormat;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -136,6 +138,10 @@ public class PdfCertificate extends Pdf {
 		ArrayList<DatabaseParameter> params = new ArrayList<>();
 		params.add(new DatabaseParameter(certType));
 		certificateLines = Application.database.fetchAllIndexed("SELECT ROWID, * FROM " + table + " WHERE type = ? ORDER BY ROWID;", params, "ROWID");
+
+		if (certificateLines.size() == 0) {
+			Common.showError("Es konnte keine Urkunden-Konfiguration geladen werden. Die erstellten Seiten werden vermutlich leer sein.\nLegen Sie vor dem Erstellen von Urkunden erst die Inhalte unter 'Urkunden verwalten' in einem geladenen Wettkampf an.");
+		}
 	}
 
 	protected void loadGymnastData() {
@@ -158,9 +164,25 @@ public class PdfCertificate extends Pdf {
 
 		LinkedHashMap<String, String> placeholder = new LinkedHashMap<>();
 
-		for (Map.Entry<String, String> competitionInfoBlock: competitionInfo.entrySet()) {
+		placeholder.put("COMPETITION_NAME", competitionInfo.getOrDefault("longname", ""));
+		placeholder.put("COMPETITION_DAY", competitionInfo.getOrDefault("competitionDay", ""));
+		placeholder.put("COMPETITION_DESCRIPTION", competitionInfo.getOrDefault("description", ""));
+
+		Date now = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat();
+
+		dateFormat.applyPattern("dd");
+		placeholder.put("DAY", dateFormat.format(now));
+
+		dateFormat.applyPattern("MM");
+		placeholder.put("MONTH", dateFormat.format(now));
+
+		dateFormat.applyPattern("yyyy");
+		placeholder.put("YEAR", dateFormat.format(now));
+
+		/*for (Map.Entry<String, String> competitionInfoBlock: competitionInfo.entrySet()) {
 			placeholder.put("COMPETITION_" + competitionInfoBlock.getKey().toUpperCase(), competitionInfoBlock.getValue());
-		}
+		}*/
 
 		if (certType.equals("single")) {
 			if (counter < classResult.size()) {
