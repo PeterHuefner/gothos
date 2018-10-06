@@ -364,6 +364,15 @@ public class CompetitionMainForm {
 				}
 			}
 		});
+
+		printSquad.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (squadSelect.getSelectedItem() != null) {
+					WindowManager.showSquadLists(squadSelect.getSelectedItem().toString());
+				}
+			}
+		});
 	}
 
 	protected void setDataToCombos() {

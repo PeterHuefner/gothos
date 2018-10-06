@@ -9,9 +9,11 @@ import gothos.competitionMainForm.Export.ExportForm;
 import gothos.competitionMainForm.Import.ImportForm;
 import gothos.competitionMainForm.SetID.SetIDForm;
 import gothos.competitionMainForm.Squad.SquadForm;
+import gothos.competitionMainForm.Squad.SquadLists;
 import gothos.competitionMainForm.Teams.ViewTeams;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -86,6 +88,8 @@ public class WindowManager {
 		frame.pack();
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
+
+		Notification.post("frameShowed", new ActionEvent(frame, 0, ""));
 	}
 
 	public static void showStartPanel() {
@@ -201,7 +205,14 @@ public class WindowManager {
 		showPanelInFrame(certificates.getPanel(), childFrame);
 	}
 
+	public static void showSquadLists(String squad) {
+		if (!Common.emptyString(squad)) {
 
+			createChildFrame("Riegenlisten");
+			SquadLists squadLists = new SquadLists(squad);
+			showPanelInFrame(squadLists.getPanel(), childFrame);
+		}
+	}
 
 	public static void showTest(){
 		createChildFrame("TEST");

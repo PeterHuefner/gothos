@@ -189,7 +189,14 @@ public class Pdf {
 
 		int chooserState = chooser.showSaveDialog(WindowManager.childFrame);
 		if (chooserState == JFileChooser.APPROVE_OPTION) {
-			this.save(chooser.getSelectedFile().getAbsolutePath());
+
+			String filename = chooser.getSelectedFile().getAbsolutePath();
+
+			if (!Common.regexMatch("\\.pdf$", filename)) {
+				filename += ".pdf";
+			}
+
+			this.save(filename);
 		}
 	}
 

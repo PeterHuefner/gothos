@@ -30,7 +30,8 @@ public class PdfTableResult extends Pdf {
 		// starting y position is whole page height subtracted by top and bottom margin
 		float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
 		// we want table across whole page width (subtracted by left and right margin ofcourse)
-		float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
+		//float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
+		float tableWidth = (Math.abs(page.getMediaBox().getUpperRightX()) - Math.abs(page.getMediaBox().getLowerLeftX())) - (2 * margin);
 
 		boolean drawContent  = true;
 		float   yStart       = yStartNewPage;

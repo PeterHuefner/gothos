@@ -34,6 +34,7 @@ public class CompetitionData {
 	protected Boolean           onlyTeamMemberValues = false;
 	protected String            groupBy;
 	protected String            classSql;
+	protected String            orderBy;
 
 
 	public void setCompetition(String competition) {
@@ -83,6 +84,10 @@ public class CompetitionData {
 
 	public void setGroupBy(String groupBy) {
 		this.groupBy = groupBy;
+	}
+
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
 	}
 
 	public void setCalculation(String calculation) {
@@ -192,6 +197,10 @@ public class CompetitionData {
 					" AND competition_" + competition + ".ROWID = ?"
 			);
 			parameters.add(new DatabaseParameter(gymnast));
+		}
+
+		if (!Common.emptyString(orderBy)) {
+			order = " ORDER BY " + orderBy;
 		}
 
 		if (!Common.emptyString(groupBy)) {
