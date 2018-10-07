@@ -1,6 +1,7 @@
 package gothos.competitionMainForm.Squad;
 
 import be.quodlibet.boxable.Cell;
+import be.quodlibet.boxable.HorizontalAlignment;
 import be.quodlibet.boxable.Row;
 import be.quodlibet.boxable.line.LineStyle;
 import gothos.Application;
@@ -29,13 +30,26 @@ public class PdfSquadLists extends PdfTableResult {
 		this.squad = squad;
 	}
 
-	public void generatePdf(ArrayList<String> apparati) {
+	public void generatePdf(ArrayList<String> apparati, boolean showTeamCheckbox) {
 
-		CompetitionData competitionData = new CompetitionData();
+		CompetitionData               competitionData = new CompetitionData();
 		LinkedHashMap<String, String> competitionInfo = competitionData.getCompetitionData();
 
 		setFont(PDType1Font.TIMES_ROMAN);
 
+		float idColWidth                 = 12;
+		float nameColWidth               = 44;
+		float apparatiValueColWidth      = 44;
+		float teamCheckBoxColWidth       = 0;
+		float spacerColWidth             = 0;
+		float headerTeamCheckBoxColWidth = 0;
+
+		if (showTeamCheckbox) {
+			apparatiValueColWidth = 30;
+			teamCheckBoxColWidth = 10;
+			spacerColWidth = 4;
+			headerTeamCheckBoxColWidth = 25;
+		}
 
 		document = new PDDocument();
 
@@ -44,14 +58,14 @@ public class PdfSquadLists extends PdfTableResult {
 			competitionData.setSquad(squad);
 			competitionData.setOrderBy("ID ASC, ROWID ASC");
 
-			String sql = competitionData.getSql();
+			String                       sql        = competitionData.getSql();
 			ArrayList<DatabaseParameter> parameters = competitionData.getParameters();
 
 			LinkedHashMap<Integer, LinkedHashMap<String, String>> gymnasts = Application.database.fetchAll(sql, parameters);
 
 			LineStyle borderStyle = new LineStyle(new Color(0), 0.5f);
 
-			for (String apparatus: apparati) {
+			for (String apparatus : apparati) {
 				addPage(-millimeterToPoints(12), millimeterToPoints(12), PDRectangle.A4.getWidth(), PDRectangle.A4.getHeight());
 
 				stream = new PDPageContentStream(document, page);
@@ -70,36 +84,59 @@ public class PdfSquadLists extends PdfTableResult {
 
 				Row<PDPage> headerRow = table.createRow(24);
 
-				styleHeaderCell(headerRow.createCell(12, "Startnr."));
-				styleHeaderCell(headerRow.createCell(44, "Name"));
-				styleHeaderCell(headerRow.createCell(44, "Wertung"));
-				
+				styleHeaderCell(headerRow.createCell(idColWidth, "Startnr."));
+				styleHeaderCell(headerRow.createCell(nameColWidth, "Name"));
+
+				if (showTeamCheckbox) {
+					styleHeaderCell(headerRow.createCell(apparatiValueColWidth - (headerTeamCheckBoxColWidth - teamCheckBoxColWidth), "Wertung"));
+					//styleHeaderCell(headerRow.createCell(spacerColWidth, ""));
+					styleHeaderCell(headerRow.createCell(headerTeamCheckBoxColWidth + spacerColWidth, "in Mannschaftswertung")).setAlign(HorizontalAlignment.RIGHT);
+				} else {
+					styleHeaderCell(headerRow.createCell(apparatiValueColWidth, "Wertung"));
+				}
+
 				table.addHeaderRow(headerRow);
 
-				for (Map.Entry<Integer, LinkedHashMap<String, String>> gymnastEntry: gymnasts.entrySet()) {
+				for (Map.Entry<Integer, LinkedHashMap<String, String>> gymnastEntry : gymnasts.entrySet()) {
 
 					Row<PDPage> emptyRow = table.createRow(12);
-					noBorder(emptyRow.createCell(12, ""));
-					noBorder(emptyRow.createCell(44, ""));
-					noBorder(emptyRow.createCell(44, "")).setBottomBorderStyle(borderStyle);
+					noBorder(emptyRow.createCell(idColWidth, ""));
+					noBorder(emptyRow.createCell(nameColWidth, ""));
+					noBorder(emptyRow.createCell(apparatiValueColWidth, "")).setBottomBorderStyle(borderStyle);
+
+					if (showTeamCheckbox) {
+						noBorder(emptyRow.createCell(spacerColWidth, ""));
+						noBorder(emptyRow.createCell(teamCheckBoxColWidth, "")).setBottomBorderStyle(borderStyle);
+					}
 
 					LinkedHashMap<String, String> gymnast = gymnastEntry.getValue();
-					Row<PDPage> row = table.createRow(24);
+					Row<PDPage>                   row     = table.createRow(24);
 
-					String name = gymnast.getOrDefault("name", "") + "<br><br><i>" + gymnast.getOrDefault("club", "");
-					if (!Common.emptyString(gymnast.getOrDefault("team", "")) && !gymnast.getOrDefault("club", "").equals(gymnast.getOrDefault("team", ""))) {
+					String name = gymnast.getOrDefault("name", "") + "<br>" + gymnast.getOrDefault("club", "");
+					/*if (!Common.emptyString(gymnast.getOrDefault("team", "")) && !gymnast.getOrDefault("club", "").equals(gymnast.getOrDefault("team", ""))) {
 						name += "<br>" + gymnast.getOrDefault("team", "");
-					}
-					name += "</i>";
-					
-					styleCell(row.createCell(12, gymnast.getOrDefault("ID", "")));
-					styleCell(row.createCell(44, name));
+					}*/
+					//name += "</i>";
 
-					Cell<PDPage> apparatusValueCell = row.createCell(44, "");
+					styleCell(row.createCell(idColWidth, gymnast.getOrDefault("ID", "")));
+					styleCell(row.createCell(nameColWidth, name));
+
+					Cell<PDPage> apparatusValueCell = row.createCell(apparatiValueColWidth, "");
 					apparatusValueCell.setBottomBorderStyle(borderStyle);
 					apparatusValueCell.setTopBorderStyle(borderStyle);
 					apparatusValueCell.setLeftBorderStyle(borderStyle);
 					apparatusValueCell.setRightBorderStyle(borderStyle);
+
+					if (showTeamCheckbox) {
+
+						styleCell(row.createCell(spacerColWidth, ""));
+
+						Cell<PDPage> teamCheckBoxCell = row.createCell(teamCheckBoxColWidth, "");
+						teamCheckBoxCell.setBottomBorderStyle(borderStyle);
+						teamCheckBoxCell.setTopBorderStyle(borderStyle);
+						teamCheckBoxCell.setLeftBorderStyle(borderStyle);
+						teamCheckBoxCell.setRightBorderStyle(borderStyle);
+					}
 				}
 
 				table.draw();
@@ -115,18 +152,22 @@ public class PdfSquadLists extends PdfTableResult {
 
 	}
 
-	protected void styleHeaderCell(Cell<PDPage> cell) {
+	protected Cell<PDPage> styleHeaderCell(Cell<PDPage> cell) {
 		noBorder(cell);
 		cell.setFont(PDType1Font.TIMES_BOLD);
 		cell.setFontSize(14f);
+
+		return cell;
 	}
 
-	protected void styleCell(Cell<PDPage> cell) {
+	protected Cell<PDPage> styleCell(Cell<PDPage> cell) {
 		noBorder(cell);
 		cell.setFont(PDType1Font.TIMES_ROMAN);
 		cell.setFontSize(12f);
+
+		return cell;
 	}
-	
+
 	public void print() {
 		this.print(PageFormat.PORTRAIT);
 	}

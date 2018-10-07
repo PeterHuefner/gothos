@@ -13,13 +13,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SquadLists {
-	private JPanel  panel;
-	private JButton backButton;
-	private JPanel  apparatiPanel;
-	private JButton printButton;
-	private JButton menOlympic;
-	private JButton womenOlympic;
-	private JButton pdfButton;
+	private JPanel    panel;
+	private JButton   backButton;
+	private JPanel    apparatiPanel;
+	private JButton   printButton;
+	private JButton   menOlympic;
+	private JButton   womenOlympic;
+	private JButton   pdfButton;
+	private JCheckBox showTeamCheckbox;
 
 	protected String squad;
 	protected LinkedHashMap<String, JCheckBox> apparatiCheckboxes = new LinkedHashMap<>();
@@ -144,7 +145,7 @@ public class SquadLists {
 
 			return null;
 		} else {
-			list.generatePdf(apparati);
+			list.generatePdf(apparati, showTeamCheckbox.isSelected());
 			return list;
 		}
 	}
