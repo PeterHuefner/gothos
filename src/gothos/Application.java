@@ -8,6 +8,9 @@ import java.util.prefs.Preferences;
 
 public class Application {
 
+	public static final String name    = "Gothos";
+	public static final String version = "0.9";
+
 	public static SqliteConnection database;
 	public static String           selectedCompetition = "";
 

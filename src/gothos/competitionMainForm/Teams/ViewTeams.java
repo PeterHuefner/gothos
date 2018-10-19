@@ -1,6 +1,7 @@
 package gothos.competitionMainForm.Teams;
 
 import gothos.WindowManager;
+import gothos.competitionMainForm.Certificates.PdfCertificate;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,9 +14,9 @@ public class ViewTeams {
 	private JButton   printPdfProtocol;
 	private JButton   printProtocol;
 	private JButton   pdfProtocol;
-	private JButton   button5;
-	private JButton   button6;
-	private JButton   button7;
+	private JButton   printPdfCertificate;
+	private JButton   printCertificate;
+	private JButton   pdfCertificate;
 	private JLabel    certificateLabel;
 	private JLabel    protocolLabel;
 	private JCheckBox showGymnasts;
@@ -79,6 +80,40 @@ public class ViewTeams {
 				result.generatePdf();
 
 				result.saveDialog();
+			}
+		});
+
+		printPdfCertificate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PdfCertificate certificate = new PdfCertificate();
+				certificate.setTeamCertificate(true);
+				certificate.generatePdf();
+
+				certificate.saveDialog();
+				certificate.print();
+			}
+		});
+
+		printCertificate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PdfCertificate certificate = new PdfCertificate();
+				certificate.setTeamCertificate(true);
+				certificate.generatePdf();
+
+				certificate.print();
+			}
+		});
+
+		pdfCertificate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PdfCertificate certificate = new PdfCertificate();
+				certificate.setTeamCertificate(true);
+				certificate.generatePdf();
+
+				certificate.saveDialog();
 			}
 		});
 	}

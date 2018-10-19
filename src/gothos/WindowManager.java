@@ -29,7 +29,7 @@ public class WindowManager {
 
 	public static void initiateVisuals(JPanel startPanel) {
 		WindowManager.startPanel = startPanel;
-		WindowManager.mainFrame = new JFrame("Gothos - dev state");
+		WindowManager.mainFrame = new JFrame(Application.name + " - " + Application.version);
 
 		WindowManager.mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		showStartPanel();
