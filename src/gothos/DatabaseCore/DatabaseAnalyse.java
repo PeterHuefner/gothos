@@ -43,6 +43,8 @@ public class DatabaseAnalyse {
 		if (!tables.contains("global_certificates")) {
 			if (!DatabaseStructure.createGlobalCertificate()) {
 				Common.printError("Fehler beim Anlegen der global_certificates");
+			} else if(!DatabaseStructure.insertDefaultCertificates()) {
+				Common.printError("Fehler beim Einfügen der Default-Certificates");
 			}
 		}
 

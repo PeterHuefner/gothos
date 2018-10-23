@@ -123,6 +123,26 @@ public class DatabaseStructure {
 		return competitionStatus && allApparatiStatus && classesStatus && classesCopyStatus && certificateStatus && certificateCopyStatus;
 	}
 
+	public static boolean insertDefaultCertificates() {
+		return Application.database.execute(
+				"INSERT INTO global_certificates\n" +
+				"(line, font, \"size\", height, weight, align, \"type\")\n" +
+				"VALUES\n" +
+				"('8', NULL, NULL, NULL, NULL, NULL, 'teamTop'),\n" +
+				"('4', NULL, NULL, NULL, NULL, NULL, 'teamLeft'),\n" +
+				"('8', NULL, NULL, NULL, NULL, NULL, 'singleTop'),\n" +
+				"('4', NULL, NULL, NULL, NULL, NULL, 'singleLeft'),\n" +
+				"('$$NAME$$', 'Times New Roman', 28, 1, 'fett', 'zentriert', 'single'),\n" +
+				"('vom $$CLUB$$', 'Times New Roman', 24, 3.5, 'normal', 'zentriert', 'single'),\n" +
+				"('belegte mit $$POINTS$$ Punkten', 'Times New Roman', 24, 2.5, 'normal', 'zentriert', 'single'),\n" +
+				"('in der $$CLASS$$', 'Times New Roman', 24, 2.5, 'normal', 'zentriert', 'single'),\n" +
+				"('den $$RANKING$$. Platz', 'Times New Roman', 28, 3, 'fett', 'zentriert', 'single'),\n" +
+				"('$$NAME$$', 'Times New Roman', 28, 1, 'fett', 'zentriert', 'team'),\n" +
+				"('belegte mit $$POINTS$$ Punkten', 'Times New Roman', 24, 2.5, 'normal', 'zentriert', 'team'),\n" +
+				"('den $$RANKING$$. Platz', 'Times New Roman', 28, 3, 'fett', 'zentriert', 'team');\n"
+		);
+	}
+
 	public static boolean removeCompetition(String name) {
 		Boolean allApparatiStatus = true;
 		ArrayList<String> apparati = DatabaseAnalyse.listApparatiInCompetition(name);
