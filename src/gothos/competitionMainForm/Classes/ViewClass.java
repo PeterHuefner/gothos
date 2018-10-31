@@ -1,6 +1,7 @@
 package gothos.competitionMainForm.Classes;
 
 import gothos.WindowManager;
+import gothos.competitionMainForm.Certificates.PdfCertificate;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -67,6 +68,40 @@ public class ViewClass {
 				classResult.generatePdf();
 
 				classResult.saveDialog();
+			}
+		});
+
+		printAndPdfCertificate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PdfCertificate certificate = new PdfCertificate();
+				certificate.setClassName(className);
+				certificate.generatePdf();
+
+				certificate.saveDialog();
+				certificate.print();
+			}
+		});
+
+		printCertificates.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PdfCertificate certificate = new PdfCertificate();
+				certificate.setClassName(className);
+				certificate.generatePdf();
+
+				certificate.print();
+			}
+		});
+
+		pdfCertificate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PdfCertificate certificate = new PdfCertificate();
+				certificate.setClassName(className);
+				certificate.generatePdf();
+
+				certificate.saveDialog();
 			}
 		});
 	}

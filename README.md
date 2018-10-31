@@ -13,8 +13,9 @@ Gothos wurde speziell für das Turnen entwickelt, kann aber auch für andere Spo
 * Import und Export der Teilnehmer
 
 ## Systemvoraussetzungen und Installation
-Gothos ist eine Java-Anwendung und wird JAR-Datei bereitgestellt. Auf allen Java unterstützenden Betriebssystemen kann das Programm verwendet werden. Linux, macOS und Windows können also verwendet werden.
-Aktuell wird Java 8 vorausgesetzt.
+Gothos ist eine Java-Anwendung und wird als JAR-Datei bereitgestellt. Auf allen Java unterstützenden Betriebssystemen kann das Programm verwendet werden. Auf Linux, macOS und Windows kann Java in der Regel ohne Probleme installiert werden oder ist bereits vorinstalliert.
+
+Java Version 8 muss installiert sein.
 
 Eine JAR-Datei kann ohne Softwareinstallation ausgeführt werden. Es ist nur ein Download erforderlich, dann kann die Datei gestartet werden.
 

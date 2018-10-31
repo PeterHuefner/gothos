@@ -96,7 +96,7 @@ public class DatabaseStructure {
 						"type TEXT " +
 						");");
 
-		Boolean certificateCopyStatus = Application.database.execute("INSERT INTO competition_" + name + "_certificates (line, font, size, weight, align, type) SELECT line, font, size, weight, align, type FROM global_certificates;");
+		Boolean certificateCopyStatus = Application.database.execute("INSERT INTO competition_" + name + "_certificates (line, font, size, height, weight, align, type) SELECT line, font, size, height, weight, align, type FROM global_certificates;");
 
 		String[] apparati = new String[]{
 				"Boden",
