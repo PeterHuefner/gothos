@@ -27,3 +27,14 @@ java -jar PFAD_ZUR_DATEI.jar
 ```
 
 ## Anleitung
+
+Die folgende Anleitung soll einen Überblick über die wesentlichen Hautpfunktionen und Schritte liefern, die für einen Wettkampf notwendig sind.
+
+Die Screenshots zeigen die Anwendung in Version 0.9. In zukünftigen Versionen können Änderungen und zusätzliche Funktionen die einzelnen Schritte verändern.
+
+### Erste Schritte
+
+Die Anwendung speichert alle Daten in einer SQLite-Datenbank ab. Nach dem Start muss eine Datenbank erstellt oder ausgewählt werden. Die Datenbank ist eine einzelne Datei mit der Endung "sqlite" oder "sqlite3".<br>
+Wenn Sie einmal eine Datenbank erstellt haben, wird diese beim nächsten Start der Anwendung automatisch geladen, sofern die Datei noch existiert.
+
+    
