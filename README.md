@@ -134,7 +134,7 @@ Hier ein paar Beispiele für die "Berechnung" (welche keinen turnerischen Sinn h
 * Boden + ((Pauschenpferd+Pilz) / 2) + Ringe + Sprung + Barren + Reck
 
 *Hinweis*<br>
- Für jene die von Datenbanken und SQL Ahnung haben: "Berechnung" ist ein Ausdruck der als virtuelle Spalte einer SQL-Abfrage erzeugt wird. Die Geräte sind physische Spalten, weshalb mit ihnen gerechnet werden kann. Zusätzlich den mathematischen Operationen +-*/ können auch SQLite-Funktionen wir SQRT oder ABS verwendet werden. 
+ Für jene die von Datenbanken und SQL Ahnung haben: "Berechnung" ist ein Ausdruck der als virtuelle Spalte einer SQL-Abfrage erzeugt wird. Die Geräte sind physische Spalten, weshalb mit ihnen gerechnet werden kann. Zusätzlich zu den mathematischen Operationen +-*/ können auch SQLite-Funktionen wie SQRT oder ABS verwendet werden. 
 
 "Geräte" ist eine mit Komma separierte Liste der Geräte die auf dem Protokoll angezeigt werden sollen.
 
