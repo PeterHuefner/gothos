@@ -137,8 +137,72 @@ Hier ein paar Beispiele für die "Berechnung" (welche keinen turnerischen Sinn h
  Für jene die von Datenbanken und SQL Ahnung haben: "Berechnung" ist ein Ausdruck der als virtuelle Spalte einer SQL-Abfrage erzeugt wird. Die Geräte sind physische Spalten, weshalb mit ihnen gerechnet werden kann. Zusätzlich zu den mathematischen Operationen +-*/ können auch SQLite-Funktionen wie SQRT oder ABS verwendet werden. 
 
 "Geräte" ist eine mit Komma separierte Liste der Geräte die auf dem Protokoll angezeigt werden sollen.
-
-
  
 
 ![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/05_ak_verwalten_02.png)
+
+#### Teilnehmer eintragen
+
+Der Button "Teilnehmer hinzufügen" im Wettkampffenster fügt einen neuen Eintrag in der Teilnehmertabelle hinzu. In der neuen Zeile können dann alle Angaben zum Teilnehmer gemacht werden.
+Sobald eine Zelle ausgefüllt wurde und man aus dieser herausklickt oder die nächste Zelle fokussiert, wird der eingetragene Wert gespeichert. 
+
+![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/06_turner_eintragen_01.png)
+
+Teilnehmer können auch über den Button "Importieren" aus einer CSV-Datei importiert werden.
+
+#### IDs vergeben
+
+IDs oder auch Startnummern sind fortlaufende Nummern für jeden Teilnehmer eines Wettkampfs.<br>
+Die ID kann, wie jede andere Spalte der Teilnehmertabelle auch, durch einfaches anklicken bearbeitet werden.<br>
+Die IDs können so händisch vergeben werden.
+
+Über den Button "IDs vergeben" können die Startnummern aber auch automatisiert jedem Teilnehmer vergeben werden.<br>
+Im anschließenden Fenster können Sortierungskritierien vergeben werden, nach denen die IDs automatisch erstellt werden sollen.
+
+![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/07_IDs_vergeben.png)
+
+
+#### Riegenlisten
+
+Jedem Teilnehmer kann eine Riege zugeordnet werden. Das geschieht einfach durch die Angabe eines Wertes in der Spalte "Riege" der Teilnehmertabelle.
+Zu jedem einzigartig vergebenen Wert wird automatisch eine Riege erstellt, welche im Wettkampffenster im Auswahlfeld "Riegen" aufgelistet sind.
+
+Zu jeder Riege kann eine Liste mit allen Teilnehmern zu gewünschten Geräten erstellt werden.
+
+Der Button "Riegenlisten" öffnet ein neues Fenster zur Erstellung von Riegenlisten. Zuvor muss im Auswahlfeld "Riegen" die jeweilige Riege ausgewählt werden.
+Das Fenster "Regenlisten" bietet eine Auswahl aller möglichen Geräte an und auch eine olympische Schnellauswahl für weiblich und männlich. Damit diese Schnellauswahl funktioniert, müssen die Geräte wie im Bild benannt sein.<br>
+Die Riegenliste kann dann als PDF-Datei erstellt oder direkt gedruckt werden.
+
+Auf jede Liste kann noch ein Feld gedruckt werden, welches es dem Kampfgericht ermöglicht die Berücksichtigung der Wertung für die Mannschaftswertung anzugeben.
+
+![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/08_Riegenlisten_01.png)
+
+Die erstellte Riegenliste kann wie folgt aussehen:
+
+![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/08_Riegenlisten_02.png)
+
+#### Wertungen eintragen
+
+Im Wettkampffentser muss zunächst die Riege ausgewählt sein zu der eine mit Wertungen ausgefüllte Riegenliste vorliegt.<br>
+Mit dem Button "ansehen/eintragen" wird ein Fenster geöffnet in dem alle Teilnehmer der Riege in einer Tabelle dargestellt werden. Ebenfalls ist ein Auswahlfeld für alle möglichen Geräte vorhanden.
+
+Im Auswahlfeld muss nun das Gerät ausgewählt werden zu dem die Wertungen eingetragen werden sollen.<br>
+Nach der Auswahl wird der Tabelle eine Spalte für die Wertung des Geräts und eine Spalte "Wertung für Mannschaft" hinzugefügt.<br>
+Die Wertung wird nun in der Spalte mit dem Namen des Gerätes eingetragen und die Checkbox der anderen Spalte kann zur Berücksichting dieser Wertung in der Mannschaftswertung verwendet werden.
+
+![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/09_Wertungen_eintragen_01.png)
+![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/09_Wertungen_eintragen_02.png)
+
+Sind alle Wertungen eingetragen ist die zuletzt eingetragene Wertung mit ENTER zu bestätigen.
+
+#### Protokoll einer Alterklasse erstellen
+
+Sind zu einer Alterklasse alle Wertungen eingetragen kann das Protokoll erstellt werden.<br>
+Dazu muss im Auswahlfeld "Alterklassen" im Wettkampffenster die gewünschte Alterklasse ausgewählt werden.
+
+Über den Button "Protokoll" kann nun direkt das Protokoll als PDF erstellt oder direkt gedruckt werden.<br>
+Der Button "ansehen" öffnet zunächst ein weiteres Fenster und zeigt die Teilnehmer der Alterklasse mit ihren Wertungen und der Platzierung an.
+
+![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/10_AK_ansehen.png)
+
+Von diesem Fenster aus kann ebenfalls ein Protokoll als PDF erstellt oder direkt gedruckt werden.
