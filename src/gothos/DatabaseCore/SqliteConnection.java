@@ -149,12 +149,26 @@ public class SqliteConnection {
 
 	public String fetchFirstColumn(String sql) {
 		ResultSet result = this.query(sql);
-		return this.fetchFirstColumn(result);
+		String value =  this.fetchFirstColumn(result);
+		try {
+			result.close();
+		} catch (Exception e) {
+			Common.printError(e);
+		}
+
+		return value;
 	}
 
 	public String fetchFirstColumn(String sql, ArrayList<DatabaseParameter> paramters) {
 		ResultSet result = this.query(sql, paramters);
-		return this.fetchFirstColumn(result);
+		String value =  this.fetchFirstColumn(result);
+		try {
+			result.close();
+		} catch (Exception e) {
+			Common.printError(e);
+		}
+
+		return value;
 	}
 
 	public LinkedHashMap<Integer, LinkedHashMap<String, String>> fetchAllIndexed(String sql, ArrayList<DatabaseParameter> parameters, String indexColumn) {

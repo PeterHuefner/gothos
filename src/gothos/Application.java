@@ -11,6 +11,8 @@ public class Application {
 	public static final String name    = "Gothos";
 	public static final String version = "0.9";
 
+	public static String dbVersion = "";
+
 	public static SqliteConnection database;
 	public static String           selectedCompetition = "";
 

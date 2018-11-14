@@ -83,7 +83,7 @@ Um mit einem Wettkampf zu arbeiten, also Turnerinnen und Turner anzulegen, Wertu
 Wählen Sie einen Wettkampf in der Liste aus und klicken Sie auf "Wettkampf laden" oder klicken Sie doppelt auf den Eintrag in der Liste.<br>
 Es erscheint anschließend ein neues Fenster und das Startfenster schließt sich.
 
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/03_mainform_01.png)
+![Wettkampffenster](http://www.peterhuefner.de/gothos_anleitung/03_mainform_01.png)
 
 Nehmen wir uns kurz Zeit und betrachten das Wettkampffenster.
 
@@ -104,14 +104,14 @@ Der untere Bereich ermöglicht das Importieren von mehreren Teilnehmern aus eine
 Die Anwendung erstellt die Olympischen Geräte für Frauen und Männer (sowie Pilz und Minitramp) beim Anlegen eines Wettkampfs automatisch.<br>
 Sie können die automatisch erstellten Geräte löschen und Ihre eigenen Geräte hinzufügen.
 
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/04_geraete_verwalten_01.png)
+![Geräte verwalten](http://www.peterhuefner.de/gothos_anleitung/04_geraete_verwalten_01.png)
 
 Wie die Hinweise im Fenster "Geräte verwalten" aufzeigen, sind die Geräte für jeden Wettkampf exklusiv und werden nicht automatisch auf andere Wettkämpfe übertragen.<br>
 In der Alterklassenverwaltung können Sie den Namen eines Gerätes für die Anzeige im Protokoll einer Altersklasse individuell festlegen und dort auch Sonderzeichen verwenden.
 
 #### Alterklassen verwalten
 
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/05_ak_verwalten_01.png)
+![Alterklassen verwalten](http://www.peterhuefner.de/gothos_anleitung/05_ak_verwalten_01.png)
 
 Im Fenster "Altersklassen verwalten" können Sie die Eigenschaften einer Altersklasse festlegen.<br>
 Welchen Name die Alterklasse auf dem Protokoll und den Urkunden hat, welche Geräte im Protokoll angezeigt werden sollen und wie das Ergebnis für die Alterklasse berechnet werden soll.
@@ -139,14 +139,14 @@ Hier ein paar Beispiele für die "Berechnung" (welche keinen turnerischen Sinn h
 "Geräte" ist eine mit Komma separierte Liste der Geräte die auf dem Protokoll angezeigt werden sollen.
  
 
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/05_ak_verwalten_02.png)
+![Alterklasse verwalten](http://www.peterhuefner.de/gothos_anleitung/05_ak_verwalten_02.png)
 
 #### Teilnehmer eintragen
 
 Der Button "Teilnehmer hinzufügen" im Wettkampffenster fügt einen neuen Eintrag in der Teilnehmertabelle hinzu. In der neuen Zeile können dann alle Angaben zum Teilnehmer gemacht werden.
 Sobald eine Zelle ausgefüllt wurde und man aus dieser herausklickt oder die nächste Zelle fokussiert, wird der eingetragene Wert gespeichert. 
 
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/06_turner_eintragen_01.png)
+![Teilnehmertabelle](http://www.peterhuefner.de/gothos_anleitung/06_turner_eintragen_01.png)
 
 Teilnehmer können auch über den Button "Importieren" aus einer CSV-Datei importiert werden.
 
@@ -159,7 +159,7 @@ Die IDs können so händisch vergeben werden.
 Über den Button "IDs vergeben" können die Startnummern aber auch automatisiert jedem Teilnehmer vergeben werden.<br>
 Im anschließenden Fenster können Sortierungskritierien vergeben werden, nach denen die IDs automatisch erstellt werden sollen.
 
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/07_IDs_vergeben.png)
+![IDs vergeben](http://www.peterhuefner.de/gothos_anleitung/07_IDs_vergeben.png)
 
 
 #### Riegenlisten
@@ -175,11 +175,11 @@ Die Riegenliste kann dann als PDF-Datei erstellt oder direkt gedruckt werden.
 
 Auf jede Liste kann noch ein Feld gedruckt werden, welches es dem Kampfgericht ermöglicht die Berücksichtigung der Wertung für die Mannschaftswertung anzugeben.
 
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/08_Riegenlisten_01.png)
+![Riegenlisten Einstellungen](http://www.peterhuefner.de/gothos_anleitung/08_Riegenlisten_01.png)
 
 Die erstellte Riegenliste kann wie folgt aussehen:
 
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/08_Riegenlisten_02.png)
+![Riegenliste](http://www.peterhuefner.de/gothos_anleitung/08_Riegenlisten_02.png)
 
 #### Wertungen eintragen
 
@@ -190,12 +190,12 @@ Im Auswahlfeld muss nun das Gerät ausgewählt werden zu dem die Wertungen einge
 Nach der Auswahl wird der Tabelle eine Spalte für die Wertung des Geräts und eine Spalte "Wertung für Mannschaft" hinzugefügt.<br>
 Die Wertung wird nun in der Spalte mit dem Namen des Gerätes eingetragen und die Checkbox der anderen Spalte kann zur Berücksichting dieser Wertung in der Mannschaftswertung verwendet werden.
 
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/09_Wertungen_eintragen_01.png)
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/09_Wertungen_eintragen_02.png)
+![Riegenansicht](http://www.peterhuefner.de/gothos_anleitung/09_Wertungen_eintragen_01.png)
+![Wertung eintragen](http://www.peterhuefner.de/gothos_anleitung/09_Wertungen_eintragen_02.png)
 
 Sind alle Wertungen eingetragen ist die zuletzt eingetragene Wertung mit ENTER zu bestätigen.
 
-#### Protokoll einer Alterklasse erstellen
+#### Protokoll und Urkunden einer Alterklasse erstellen
 
 Sind zu einer Alterklasse alle Wertungen eingetragen kann das Protokoll erstellt werden.<br>
 Dazu muss im Auswahlfeld "Alterklassen" im Wettkampffenster die gewünschte Alterklasse ausgewählt werden.
@@ -203,6 +203,35 @@ Dazu muss im Auswahlfeld "Alterklassen" im Wettkampffenster die gewünschte Alte
 Über den Button "Protokoll" kann nun direkt das Protokoll als PDF erstellt oder direkt gedruckt werden.<br>
 Der Button "ansehen" öffnet zunächst ein weiteres Fenster und zeigt die Teilnehmer der Alterklasse mit ihren Wertungen und der Platzierung an.
 
-![Wettkampf erstellen](http://www.peterhuefner.de/gothos_anleitung/10_AK_ansehen.png)
+![Alterklasse ansehen](http://www.peterhuefner.de/gothos_anleitung/10_AK_ansehen.png)
 
 Von diesem Fenster aus kann ebenfalls ein Protokoll als PDF erstellt oder direkt gedruckt werden.
+
+![Prokoll](http://www.peterhuefner.de/gothos_anleitung/11_AK_Protokoll.png)
+
+Auf die gleiche Art- und Weise können Urkunden zur Alterklasse generiert werden.
+
+![Urkunden](http://www.peterhuefner.de/gothos_anleitung/12_Urkunden.png)
+
+#### Mannschaften
+
+Analog zu den Riegen, können Teilnehmer in Mannschaften gruppiert werden.
+
+Zu jeder Mannschaft wird eine Gesamtwertung gebildet welche dann in einem Protokoll und in Urkunden ausgewertet werden kann.<br>
+Alle Mannschaften eines Wettkampfes treten gegeneinander an. Eine Zuordnung/Gruppierung der Mannschaften in Klassen ist nicht möglich.
+
+Um real existierende Mannschaften in verschiedenen Klassen gegeneinander antreten zu lassen, müssen mehrere Wettkämpfe erstellt werden.
+
+Über den Button "Wettkampf bearbeiten" im Startfenster kann der Berechnungsmodus für Mannschaften festgelegt werden.
+Ebenso kann hier die Anzahl der zu wertenden Mannschaftsmitglieder bewertet werden.
+
+Das Häkchen "Wertung für Mannschaft" bei der Wertungseingabe ist bei Mannschaftswettkämpfen für alle Wertungen der Teilnehmer anzuhaken, deren Wertung in die Mannschaft kommen können.
+Aus diesen berücksichtigten Wertungen werden dann nur die X besten verwendet.<br>
+Bei Mannschaftswettkämpfen die nur nach Teilnehmerendwertung ausgewertet werden ist das Häkchen nicht erforderlich.
+
+
+#### Finale
+
+Die Erstellung eines Finalwettkampfes für Einzelwertungen pro Gerät ist derzeit nicht verfügbar.
+
+Diese Funktion ist für 2019 geplant.  

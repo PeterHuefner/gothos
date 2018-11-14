@@ -2,10 +2,19 @@ package gothos.DatabaseCore;
 
 import gothos.Common;
 import gothos.Application;
+import gothos.Start;
+import gothos.WindowManager;
+import gothos.competitionMainForm.Certificates.PdfCertificate;
 
+import javax.swing.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +40,8 @@ public class DatabaseAnalyse {
 		if (!tables.contains("settings")) {
 			if (!DatabaseStructure.createSettings()) {
 				Common.printError("Fehler beim Anlegen der settings");
+			} else {
+				insertCreatedSettings();
 			}
 		}
 
@@ -48,6 +59,91 @@ public class DatabaseAnalyse {
 			}
 		}
 
+
+		String version = Application.database.fetchFirstColumn("SELECT value FROM settings WHERE name = 'version'");
+		if (Common.emptyString(version)) {
+			version = "unbekannt";
+		}
+
+		if (!version.equals(Application.version)) {
+
+			String dbCreated = Application.database.fetchFirstColumn("SELECT value FROM settings WHERE name = 'database created'");
+
+			String[] options = new String[]{
+					"ignorieren",
+					"versuchen die Datenbank zu aktualisieren, Warnung wird bei Erfolg nicht mehr angezeigt",
+					"in der Datenbank die aktuelle Version vermerken und somit diese Warnung nicht mehr anzeigen",
+			};
+			int selectedOption = JOptionPane.showOptionDialog(
+					WindowManager.mainFrame,
+					"Diese Datenbank wurde mit einer anderen Version von " + Application.name + " erstellt.\n\n" +
+					"Es wird empfohlen eine neue Datenbank zu erstellen, vor allem wenn Sie einen Wettkampf durchführen.\n\n" +
+					"Wenn Sie keine Daten ändern oder eingeben wollen, können Sie zunächst fortfahren. \n\n"+
+					"Der Funktionsumfang von " + Application.name + " in so einem Fall, \n" +
+					"hängt vom Unterschied der Versionen ab, die die Datenbank erstellt hat und der aktuell verwendeteten.\n\n" +
+					"Die Datenbank wurde am " + dbCreated + " mit der Version " + version + " erstellt. Sie verwenden momentan " + Application.version + ".\n\n" +
+					"Sie haben nun folgende Möglichkeiten:",
+					"Versionskonflikt festgestellt",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE,
+					new ImageIcon(""),
+					options,
+					options[1]);
+
+
+			switch (selectedOption) {
+				case 0:
+
+					break;
+				case 1:
+
+					if (upgradeDatabase(version)) {
+						updateVersionInfo();
+					}
+
+					break;
+				case 2:
+					updateVersionInfo();
+					break;
+			}
+
+		}
+	}
+
+	protected static void insertCreatedSettings() {
+		LinkedHashMap<String, DatabaseParameter> values = new LinkedHashMap<>();
+		values.put("name", new DatabaseParameter("version"));
+		values.put("value", new DatabaseParameter(Application.version));
+		Application.database.insertData("settings", values);
+
+		values = new LinkedHashMap<>();
+		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+		Date today = Calendar.getInstance().getTime();
+		values.put("name", new DatabaseParameter("database created"));
+		values.put("value", new DatabaseParameter(df.format(today)));
+
+		long insertCount = Application.database.insertData("settings", values);
+
+		if (insertCount > 0) {
+			Common.showMessage("Versionsnummer in der Datenbank erfolgreich gespeichert.");
+		} else {
+			Common.showError("Versionsnummer konnte nicht in der Datenbank gespeichert werden.");
+		}
+	}
+
+	protected static void updateVersionInfo() {
+		Application.database.execute("DELETE FROM settings WHERE name = 'version'");
+
+		LinkedHashMap<String, DatabaseParameter> values = new LinkedHashMap<>();
+		values.put("name", new DatabaseParameter("version"));
+		values.put("value", new DatabaseParameter(Application.version));
+		Application.database.insertData("settings", values);
+	}
+
+	protected static boolean upgradeDatabase(String oldVersion) {
+		boolean status = true;
+
+		return true;
 	}
 
 	public static void checkCompetition(String competition) {
