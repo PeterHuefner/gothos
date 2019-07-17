@@ -18,6 +18,17 @@ public class GymnastTableModel extends DataFormTableModel {
 	protected String   orderSql;
 	protected String[] searchCols;
 
+	protected String lastSql;
+	protected ArrayList<DatabaseParameter> lastParams;
+
+	public ArrayList<DatabaseParameter> getLastParams() {
+		return lastParams;
+	}
+
+	public String getLastSql() {
+		return lastSql;
+	}
+
 	public GymnastTableModel() {
 
 		super();
@@ -47,6 +58,9 @@ public class GymnastTableModel extends DataFormTableModel {
 		}
 
 		buildData(sql + orderSql + ";", params);
+
+		lastSql = sql;
+		lastParams = params;
 	}
 
 	@Override

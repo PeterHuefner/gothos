@@ -9,6 +9,7 @@ import gothos.PdfCore.Pdf;
 import gothos.competitionMainForm.Gymnast;
 import gothos.competitionMainForm.Team;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -18,10 +19,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import java.awt.print.PageFormat;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,10 +62,36 @@ public class PdfCertificate extends Pdf {
 		competitionData = new CompetitionData();
 		competitionInfo = competitionData.getCompetitionData();
 
+		if (certType.equals("single")) {
+			suggestedFileName = className + "_" + competitionInfo.get("longname");
+		} else {
+			suggestedFileName = "Mannschaftsurkunden_" + competitionInfo.get("longname");;
+		}
+
+		suggestedFileName = suggestedFileName.replaceAll("\\s", "_") + ".pdf";
+
 		loadMargins();
 		loadCertificateLines();
 
 		document = new PDDocument();
+
+		PDDocumentInformation information = document.getDocumentInformation();
+
+		information.setAuthor("gothos - Wettkampfverwaltung");
+		information.setCreator("gothos - Wettkampfverwaltung");
+		if (certType.equals("single")) {
+			String classDisplayName = className;
+
+			LinkedHashMap<String, String> classConfig = competitionData.getClassConfig(className);
+			if (!Common.emptyString(classConfig.get("displayName"))) {
+				classDisplayName = classConfig.get("displayName");
+			}
+
+			information.setTitle("Urkunden - " + classDisplayName);
+		} else {
+			information.setTitle("Mannschaftsurkunden");
+		}
+		information.setCreationDate(new GregorianCalendar());
 
 
 		try {

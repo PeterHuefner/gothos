@@ -31,7 +31,11 @@ public class WindowManager {
 		WindowManager.startPanel = startPanel;
 		WindowManager.mainFrame = new JFrame(Application.name + " - " + Application.version);
 
-		WindowManager.mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		//WindowManager.mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		WindowManager.mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+		WindowManager.mainFrame.addWindowListener(new MainWindowEventManager());
+
 		showStartPanel();
 	}
 

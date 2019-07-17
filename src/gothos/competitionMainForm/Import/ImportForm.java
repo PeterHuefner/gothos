@@ -6,7 +6,7 @@ import gothos.Common;
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.WindowManager;
 import gothos.competitionMainForm.CompetitionMainForm;
-import sun.security.krb5.internal.APOptions;
+//import sun.security.krb5.internal.APOptions;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;

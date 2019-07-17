@@ -4,6 +4,8 @@ import com.opencsv.CSVReader;
 import gothos.Application;
 import gothos.Common;
 import gothos.DatabaseCore.CompetitionData;
+import gothos.DatabaseCore.CompetitionStatistics;
+import gothos.DatabaseCore.DatabaseParameter;
 import gothos.FormCore.TableNavigator;
 import gothos.WindowManager;
 import gothos.competitionMainForm.Certificates.PdfCertificate;
@@ -47,6 +49,7 @@ public class CompetitionMainForm {
 	private JButton    clearSearchButton;
 	private JButton    searchButton;
 	private JButton    configureCertificates;
+	private JLabel     competitionTableInfoLabel;
 
 	protected static CompetitionMainForm instance;
 
@@ -74,6 +77,7 @@ public class CompetitionMainForm {
 
 		navigator = new TableNavigator(gymnastsTable);
 		setDataToCombos();
+		generateStatistics();
 
 		tableModel.addListener(new ActionListener() {
 			@Override
@@ -118,6 +122,8 @@ public class CompetitionMainForm {
 			public void actionPerformed(ActionEvent e) {
 				if (!Common.emptyString(searchField.getText())) {
 					tableModel.searchFor(searchField.getText());
+
+					generateStatisticsAfterSearch(tableModel.getLastSql(), tableModel.getLastParams());
 				}
 			}
 		});
@@ -126,6 +132,7 @@ public class CompetitionMainForm {
 			public void actionPerformed(ActionEvent e) {
 				searchField.setText("");
 				tableModel.searchFor("");
+				generateStatistics();
 			}
 		});
 
@@ -232,7 +239,7 @@ public class CompetitionMainForm {
 							"drucken und PDF",
 							"abbrechen"
 					};
-					int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Wie soll das Protokoll erstellt werden", "Protokoll erstellen", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[2]);
+					int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Wie soll das Protokoll erstellt werden?", "Protokoll erstellen", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[2]);
 
 					PdfClassResult result = new PdfClassResult(classSelect.getSelectedItem().toString());
 					result.generatePdf();
@@ -318,7 +325,7 @@ public class CompetitionMainForm {
 						"Einzel",
 						"Mannschaft"
 				};
-				int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Welcher Urkundentyp soll bearbeitet werden", "Urkunden bearbeiten", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[0]);
+				int selectedOption = JOptionPane.showOptionDialog(WindowManager.mainFrame, "Welcher Urkundentyp soll bearbeitet werden?", "Urkunden bearbeiten", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(""), options, options[0]);
 
 				switch (selectedOption) {
 					case 0:
@@ -403,7 +410,19 @@ public class CompetitionMainForm {
 	public void refresh() {
 		tableModel.reloadTableData();
 		setDataToCombos();
+		generateStatistics();
+	}
 
+	public void generateStatistics() {
+		CompetitionStatistics stats = new CompetitionStatistics(competitionData);
+		LinkedHashMap<String, Integer> counts = stats.getCountsForCols(new String[]{"club", "class", "squad", "team"});
+		competitionTableInfoLabel.setText("Anzahl Aktive: " + stats.getGymnastCountInCurrentQuery() + " | Anzahl Vereine: " + counts.get("club") + " | Anzahl Alterklassen: " + counts.get("class") + " | Anzahl Riegen: " + counts.get("squad") + " | Anzahl Teams: " + counts.get("team"));
+	}
+
+	public void generateStatisticsAfterSearch(String sql, ArrayList<DatabaseParameter> parameters) {
+		CompetitionStatistics stats = new CompetitionStatistics(null);
+		LinkedHashMap<String, Integer> counts = stats.getCountsForCols(new String[]{"club", "class", "squad", "team"}, sql, parameters);
+		competitionTableInfoLabel.setText("Anzahl Aktive: " + stats.getGymnastCountInCurrentQuery() + " | Anzahl Vereine: " + counts.get("club") + " | Anzahl Alterklassen: " + counts.get("class") + " | Anzahl Riegen: " + counts.get("squad") + " | Anzahl Teams: " + counts.get("team"));
 	}
 
 	public static void reloadData() {

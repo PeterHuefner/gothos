@@ -22,9 +22,7 @@ public class Application {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				if (Application.database != null) {
-					Application.database.close();
-				}
+				Application.disconnectDatabase();
 			}
 		});
 	}
@@ -51,5 +49,14 @@ public class Application {
 		if (Application.database != null) {
 			Application.database.close();
 		}
+	}
+
+	public static void exitApplication() {
+		WindowManager.disposeChildFrame();
+		WindowManager.mainFrame.dispose();
+
+		Application.disconnectDatabase();
+
+		Runtime.getRuntime().exit(0);
 	}
 }

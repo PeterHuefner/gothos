@@ -22,3 +22,6 @@
 hs_err_pid*
 
 .idea/workspace.xml
+
+# out wird nicht benötigt in git
+/out

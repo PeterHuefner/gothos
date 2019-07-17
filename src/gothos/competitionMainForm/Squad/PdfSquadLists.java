@@ -11,6 +11,7 @@ import gothos.DatabaseCore.DatabaseParameter;
 import gothos.PdfCore.Pdf;
 import gothos.PdfCore.PdfTableResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -19,6 +20,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import java.awt.*;
 import java.awt.print.PageFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,6 +36,9 @@ public class PdfSquadLists extends PdfTableResult {
 
 		CompetitionData               competitionData = new CompetitionData();
 		LinkedHashMap<String, String> competitionInfo = competitionData.getCompetitionData();
+
+		suggestedFileName = "Riege_" + squad + "_" + competitionInfo.get("longname");
+		suggestedFileName = suggestedFileName.replaceAll("\\s", "_") + ".pdf";
 
 		setFont(PDType1Font.TIMES_ROMAN);
 
@@ -52,6 +57,13 @@ public class PdfSquadLists extends PdfTableResult {
 		}
 
 		document = new PDDocument();
+
+		PDDocumentInformation information = document.getDocumentInformation();
+
+		information.setAuthor("gothos - Wettkampfverwaltung");
+		information.setCreator("gothos - Wettkampfverwaltung");
+		information.setTitle("Riege - " + squad);
+		information.setCreationDate(new GregorianCalendar());
 
 		try {
 

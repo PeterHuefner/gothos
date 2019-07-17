@@ -1,11 +1,14 @@
 package gothos.competitionMainForm.Classes;
 
+import gothos.DatabaseCore.CompetitionData;
+import gothos.DatabaseCore.CompetitionStatistics;
 import gothos.WindowManager;
 import gothos.competitionMainForm.Certificates.PdfCertificate;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedHashMap;
 
 public class ViewClass {
 	private JButton backButton;
@@ -17,8 +20,9 @@ public class ViewClass {
 	private JButton pdfProtocol;
 	private JButton printAndPdfCertificate;
 	private JButton pdfCertificate;
+    private JLabel classInfoLabel;
 
-	protected String className;
+    protected String className;
 	protected ViewClassTableModel tableModel;
 
 	public JPanel getPanel() {
@@ -104,5 +108,17 @@ public class ViewClass {
 				certificate.saveDialog();
 			}
 		});
+
+		generateStatistics();
+	}
+
+	protected void generateStatistics() {
+		CompetitionData competitionData = new CompetitionData();
+		competitionData.setClassName(className);
+
+		CompetitionStatistics          stats  = new CompetitionStatistics(competitionData);
+		LinkedHashMap<String, Integer> counts = stats.getCountsForCols(new String[]{"club"});
+
+		classInfoLabel.setText("Anzahl Aktive: " + stats.getGymnastCountInCurrentQuery() + " | Anzahl Vereine: " + counts.get("club"));
 	}
 }

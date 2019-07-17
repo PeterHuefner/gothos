@@ -1,6 +1,6 @@
 package gothos.DatabaseCore;
 
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
+//import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import gothos.Application;
 import gothos.Common;
 import gothos.competitionMainForm.Gymnast;
@@ -352,8 +352,14 @@ public class CompetitionData {
 		LinkedHashMap<String, String>                        competitionConfig = this.getCompetitionData();
 		LinkedHashMap<String, Integer>                       valuedApparati    = new LinkedHashMap<>();
 
-		Integer calculationMode = Integer.parseInt(competitionConfig.getOrDefault("teamCalculationMode", "0"));
-		Integer maxTeamMembers  = Integer.parseInt(competitionConfig.getOrDefault("numberOfMaxTeamMembers", "0"));
+        Integer calculationMode = 0;
+        Integer maxTeamMembers  = 0;
+		try {
+            calculationMode = Integer.parseInt(competitionConfig.getOrDefault("teamCalculationMode", "0"));
+        } catch (NumberFormatException e) {}
+		try {
+            maxTeamMembers  = Integer.parseInt(competitionConfig.getOrDefault("numberOfMaxTeamMembers", "0"));
+        } catch (NumberFormatException e) {}
 
 		this.setOnlyTeamMemberValues(true);
 		this.setAllApparaties(true);

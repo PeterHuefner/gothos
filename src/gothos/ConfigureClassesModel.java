@@ -1,6 +1,6 @@
 package gothos;
 
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
+//import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import gothos.DatabaseCore.CompetitionData;
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.FormCore.DataFormTableModel;

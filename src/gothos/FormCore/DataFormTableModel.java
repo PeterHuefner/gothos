@@ -1,6 +1,6 @@
 package gothos.FormCore;
 
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
+//import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import gothos.Application;
 import gothos.Common;
 import gothos.DatabaseCore.DatabaseParameter;
