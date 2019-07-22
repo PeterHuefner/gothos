@@ -50,6 +50,7 @@ public class CompetitionMainForm {
 	private JButton    searchButton;
 	private JButton    configureCertificates;
 	private JLabel     competitionTableInfoLabel;
+	private JButton    competitionInfoButton;
 
 	protected static CompetitionMainForm instance;
 
@@ -378,6 +379,13 @@ public class CompetitionMainForm {
 				if (squadSelect.getSelectedItem() != null) {
 					WindowManager.showSquadLists(squadSelect.getSelectedItem().toString());
 				}
+			}
+		});
+
+		competitionInfoButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				WindowManager.showCompetitionInfo();
 			}
 		});
 	}

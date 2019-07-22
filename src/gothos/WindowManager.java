@@ -4,6 +4,7 @@ import gothos.DatabaseCore.DatabaseParameter;
 import gothos.Test.Pdftest;
 import gothos.competitionMainForm.*;
 import gothos.competitionMainForm.Classes.ViewClass;
+import gothos.competitionMainForm.CompetitionInfoWindow.CompetitionInfoWindow;
 import gothos.competitionMainForm.ConfigureApparaties.ConfigureApparaties;
 import gothos.competitionMainForm.Export.ExportForm;
 import gothos.competitionMainForm.Import.ImportForm;
@@ -216,6 +217,12 @@ public class WindowManager {
 			SquadLists squadLists = new SquadLists(squad);
 			showPanelInFrame(squadLists.getPanel(), childFrame);
 		}
+	}
+
+	public static void showCompetitionInfo() {
+		createChildFrame("Wettkampf-Info");
+		CompetitionInfoWindow infoWindow = new CompetitionInfoWindow();
+		showPanelInFrame(infoWindow.getPanel(), childFrame);
 	}
 
 	public static void showTest(){

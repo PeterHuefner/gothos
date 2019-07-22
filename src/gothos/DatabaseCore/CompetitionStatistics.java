@@ -28,7 +28,7 @@ public class CompetitionStatistics {
         return this.calcCountsForCols(columns, this.getStatsForColsFromQuery(columns, sql, parameters));
     }
 
-    private  LinkedHashMap<String, Integer> calcCountsForCols(String[] columns, LinkedHashMap<String, LinkedHashMap<String, Integer>> stats) {
+    public LinkedHashMap<String, Integer> calcCountsForCols(String[] columns, LinkedHashMap<String, LinkedHashMap<String, Integer>> stats) {
         LinkedHashMap<String, Integer> counts                       = new LinkedHashMap<>(columns.length);
 
 
