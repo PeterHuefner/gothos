@@ -29,7 +29,7 @@ public class CompetitionInfoWindowTableModel extends DataFormTableModel {
 		tableData = new ArrayList<>();
 		columns = new ArrayList<>();
 
-		String[] cols = new String[]{"class", "club", "squad", "team"};
+		cols = new String[]{"class", "club", "squad", "team"};
 
 		this.competitionData = new CompetitionData();
 		this.statistics = new CompetitionStatistics(competitionData);
@@ -37,14 +37,65 @@ public class CompetitionInfoWindowTableModel extends DataFormTableModel {
 		this.stats = statistics.getStatsForCols(cols);
 		this.counts = statistics.getCountsForCols(cols);
 
-		columns.add("Objekt");
-		columns.add("Anzahl");
+		columns.add("Entität");
+		columns.add("Anzahl Entitäten/Aktive pro Entität");
 
 		addGymnasts();
 
 		addEmptyRow();
+		addEmptyRow();
 
 		addClubs();
+
+		addEmptyRow();
+		addEmptyRow();
+
+		addClasses();
+
+		addEmptyRow();
+		addEmptyRow();
+
+		addSquads();
+
+		addEmptyRow();
+		addEmptyRow();
+
+		addTeams();
+
+	}
+
+	void addCategory(String category, String key) {
+		ArrayList<DataTableCell> row = new ArrayList<>();
+		row.add(
+				new DataTableCell("0", "", category, "")
+		);
+		row.add(
+				new DataTableCell("0", "", counts.getOrDefault(key, 0), "")
+		);
+		tableData.add(row);
+
+		//addEmptyRow();
+		row = new ArrayList<>();
+		row.add(
+				new DataTableCell("0", "", "---------------------", "")
+		);
+		row.add(
+				new DataTableCell("0", "", "---------------------", "")
+		);
+		tableData.add(row);
+
+		for(Map.Entry<String, Integer> club : stats.get(key).entrySet()) {
+			row = new ArrayList<>();
+
+			row.add(
+					new DataTableCell("0", "", club.getKey(), "")
+			);
+			row.add(
+					new DataTableCell("0", "", club.getValue(), "")
+			);
+
+			tableData.add(row);
+		}
 	}
 
 	void addGymnasts() {
@@ -61,27 +112,18 @@ public class CompetitionInfoWindowTableModel extends DataFormTableModel {
 	}
 
 	void addClubs() {
-		ArrayList<DataTableCell> row = new ArrayList<>();
-		row.add(
-				new DataTableCell("0", "", "Vereine", "")
-		);
-		row.add(
-				new DataTableCell("0", "", counts.getOrDefault("club", 0), "")
-		);
-		tableData.add(row);
+		addCategory("Vereine", "club");
+	}
 
-		for(Map.Entry<String, Integer> club : stats.get("club").entrySet()) {
-			row = new ArrayList<>();
+	void addClasses() {
+		addCategory("Alterklassen", "class");
+	}
 
-			row.add(
-					new DataTableCell("0", "", club.getKey(), "")
-			);
-			row.add(
-					new DataTableCell("0", "", club.getValue(), "")
-			);
+	void addSquads() {
+		addCategory("Riegen", "squad");
+	}
 
-			tableData.add(row);
-		}
-
+	void addTeams() {
+		addCategory("Mannschaften", "team");
 	}
 }

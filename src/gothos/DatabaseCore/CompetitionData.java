@@ -740,4 +740,18 @@ public class CompetitionData {
 	public ArrayList<String> listTeams() {
 		return list("team");
 	}
+
+	public boolean allSquadsAreIntegers() {
+		ArrayList<String> squads = this.listSquads();
+
+		boolean yesThatIsTrue = true;
+		for (String squad: squads) {
+			if (!Common.regexMatch("^\\d+$", squad)) {
+				yesThatIsTrue = false;
+				break;
+			}
+		}
+
+		return yesThatIsTrue;
+	}
 }

@@ -3,6 +3,8 @@ package gothos.competitionMainForm.CompetitionInfoWindow;
 import gothos.WindowManager;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

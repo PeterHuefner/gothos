@@ -2,6 +2,7 @@ package gothos.competitionMainForm;
 
 import gothos.Application;
 import gothos.Common;
+import gothos.DatabaseCore.CompetitionData;
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.FormCore.DataFormTableModel;
 import gothos.FormCore.DataTableCell;
@@ -99,5 +100,20 @@ public class GymnastTableModel extends DataFormTableModel {
 		}
 		fireTableDataChanged();
 		callListeners();
+	}
+
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+
+		if (columnIndex == 0) {
+			return Integer.class;
+		} else if (columnIndex == 5) {
+			CompetitionData competitionData = new CompetitionData();
+			if (competitionData.allSquadsAreIntegers()) {
+				return Integer.class;
+			}
+		}
+
+		return Object.class;
 	}
 }

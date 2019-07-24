@@ -14,12 +14,15 @@ import gothos.competitionMainForm.Teams.PdfTeamResult;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class CompetitionMainForm {
 	private JButton    closeCompetition;
@@ -75,6 +78,14 @@ public class CompetitionMainForm {
 		competitionNameLabel.setText("Wettkampf: " + Application.selectedCompetition);
 		tableModel = new GymnastTableModel();
 		gymnastsTable.setModel(tableModel);
+
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tableModel);
+		gymnastsTable.setRowSorter(sorter);
+		List<RowSorter.SortKey> sortKeyList = new ArrayList<>();
+		for (int i = 0; i <= 6; i++) {
+			sortKeyList.add(new RowSorter.SortKey(i, SortOrder.ASCENDING));
+		}
+		sorter.setSortKeys(sortKeyList);
 
 		navigator = new TableNavigator(gymnastsTable);
 		setDataToCombos();
