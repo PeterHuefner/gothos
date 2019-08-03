@@ -170,7 +170,9 @@ public class DatabaseStructure {
 				"CREATE TABLE IF NOT EXISTS competition_" + competition + "_apparati_" + apparatus + " (" +
 						"gymnast INTEGER PRIMARY KEY NOT NULL," +
 						apparatus + " REAL," +
-						"isTeamMember INTEGER DEFAULT 1" +
+						"isTeamMember INTEGER DEFAULT 1," +
+						"isFinalist INTEGER DEFAULT 0," +
+						"isReplacer INTEGER DEFAULT 0" +
 						");"
 		);
 	}

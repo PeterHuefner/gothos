@@ -1,7 +1,9 @@
 package gothos;
 
+import gothos.DatabaseCore.CompetitionData;
 import gothos.DatabaseCore.DatabaseParameter;
 import gothos.DatabaseCore.DatabaseStructure;
+import gothos.DatabaseCore.TransferDataForFinalCompetition;
 import gothos.FormCore.DataForm;
 import gothos.FormCore.DataFormElement;
 import gothos.FormCore.SelectboxItem;
@@ -9,6 +11,8 @@ import gothos.FormCore.SelectboxItem;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CompetitionForm extends DataForm{
@@ -28,7 +32,14 @@ public class CompetitionForm extends DataForm{
 	private JLabel     teamCalcExplanation;
 	private JLabel     numberOfMaxTeamMembersLabel;
 	private JTextField numberOfMaxTeamMembers;
-	private JLabel numberofMaxTeamMembersExplanation;
+	private JLabel     numberofMaxTeamMembersExplanation;
+	private JLabel     isFinalLabel;
+	private JComboBox  referenceCompetitions;
+	private JLabel     isFinalHelp;
+	private JTextField numberOfFinalists;
+	private JTextField numberOfReplacers;
+
+	private final String referenceCompetitionPlaceholder = "Kein Finalwettkampf erstellen";
 
 	public CompetitionForm(){
 		super("competitions");
@@ -49,6 +60,8 @@ public class CompetitionForm extends DataForm{
 				new SelectboxItem(0, "Summe aller Wertungen"),
 				new SelectboxItem(1, "Summe aller Ergebnisse")
 		});
+
+
 	}
 
 	protected void ini(){
@@ -68,8 +81,14 @@ public class CompetitionForm extends DataForm{
 			}
 		});
 
+		listCompetitions();
+
 		if(!Common.emptyString(primaryKey)){
 			name.setEnabled(false);
+		} else {
+			referenceCompetitions.setEnabled(false);
+			numberOfFinalists.setEnabled(false);
+			numberOfReplacers.setEnabled(false);
 		}
 	}
 
@@ -129,8 +148,32 @@ public class CompetitionForm extends DataForm{
 
 		if(addCompetition && status){
 			DatabaseStructure.createCompetition(name.getText());
+
+			String referenceCompetition = (String) referenceCompetitions.getSelectedItem();
+			if (Common.emptyString(referenceCompetition) || referenceCompetition.equals(referenceCompetitionPlaceholder)) {
+				TransferDataForFinalCompetition transfer = new TransferDataForFinalCompetition(name.getText(), referenceCompetition);
+				transfer.setFinalistsCount();
+				transfer.setReplacersCount();
+			}
 		}
 
 		return status;
+	}
+
+	private void listCompetitions() {
+		ArrayList<DatabaseParameter> params = new ArrayList<>();
+		params.add(new DatabaseParameter(1));
+
+		referenceCompetitions.addItem(referenceCompetitionPlaceholder);
+
+		ResultSet         result       = Application.database.query("SELECT name FROM competitions WHERE final != ?;", params);
+		try {
+			while (result.next()) {
+				referenceCompetitions.addItem(result.getString("name"));
+			}
+			result.close();
+		} catch (SQLException e) {
+			Common.printError(e);
+		}
 	}
 }
