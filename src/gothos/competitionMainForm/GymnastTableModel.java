@@ -116,4 +116,31 @@ public class GymnastTableModel extends DataFormTableModel {
 
 		return Object.class;
 	}
+
+	@Override
+	public int addEmptyRow () {
+		int newIndex = super.addEmptyRow();
+
+		String sql = "SELECT MAX(ID) FROM competition_" + Application.selectedCompetition + " WHERE active = 1;";
+		String maxId = Application.database.fetchFirstColumn(sql);
+		Integer newID = null;
+
+		if (Common.emptyString(maxId)) {
+			maxId = "0";
+		}
+
+		try {
+			newID = Integer.parseInt(maxId);
+			newID++;
+		} catch (NumberFormatException e) {
+			newID = null;
+			newIndex = -1;
+		}
+
+		if (newID != null) {
+			setValueAt(newID.toString(), newIndex, 0);
+		}
+
+		return newIndex;
+	}
 }

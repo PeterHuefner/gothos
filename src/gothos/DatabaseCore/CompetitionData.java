@@ -746,7 +746,7 @@ public class CompetitionData {
 
 		boolean yesThatIsTrue = true;
 		for (String squad: squads) {
-			if (!Common.regexMatch("^\\d+$", squad)) {
+			if (!Common.emptyString(squad) && !Common.regexMatch("^\\d+$", squad)) {
 				yesThatIsTrue = false;
 				break;
 			}

@@ -61,7 +61,7 @@ public class CompetitionMainForm {
 	protected TableNavigator    navigator;
 	protected CompetitionData   competitionData;
 
-	public CompetitionMainForm() {
+	public CompetitionMainForm () {
 
 		if (instance != null) {
 			return;
@@ -79,13 +79,7 @@ public class CompetitionMainForm {
 		tableModel = new GymnastTableModel();
 		gymnastsTable.setModel(tableModel);
 
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tableModel);
-		gymnastsTable.setRowSorter(sorter);
-		List<RowSorter.SortKey> sortKeyList = new ArrayList<>();
-		for (int i = 0; i <= 6; i++) {
-			sortKeyList.add(new RowSorter.SortKey(i, SortOrder.ASCENDING));
-		}
-		sorter.setSortKeys(sortKeyList);
+		enableSorter();
 
 		navigator = new TableNavigator(gymnastsTable);
 		setDataToCombos();
@@ -93,33 +87,36 @@ public class CompetitionMainForm {
 
 		tableModel.addListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				setDataToCombos();
 			}
 		});
 
 		closeCompetition.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				WindowManager.closeCompetition();
 			}
 		});
 
 		addGymnast.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
+				disableSorter();
 				int rowIndex = tableModel.addEmptyRow();
-				if (gymnastsTable.editCellAt(rowIndex, 1)) {
+				if (rowIndex > 0 && gymnastsTable.editCellAt(rowIndex, 1)) {
 					gymnastsTable.setRowSelectionInterval(rowIndex, rowIndex);
 					gymnastsTable.requestFocus();
 					gymnastsTable.getEditorComponent().requestFocusInWindow();
+
+					enableSorter();
 				}
 			}
 		});
 
 		removeGymnast.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				int[] selectedRows = gymnastsTable.getSelectedRows();
 				if (selectedRows.length > 0) {
 					tableModel.deleteRows(selectedRows);
@@ -131,7 +128,7 @@ public class CompetitionMainForm {
 
 		searchButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				if (!Common.emptyString(searchField.getText())) {
 					tableModel.searchFor(searchField.getText());
 
@@ -141,7 +138,7 @@ public class CompetitionMainForm {
 		});
 		clearSearchButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				searchField.setText("");
 				tableModel.searchFor("");
 				generateStatistics();
@@ -150,7 +147,7 @@ public class CompetitionMainForm {
 
 		searchField.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e) {
+			public void keyReleased (KeyEvent e) {
 				super.keyReleased(e);
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					searchButton.doClick();
@@ -159,42 +156,42 @@ public class CompetitionMainForm {
 		});
 		importButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				WindowManager.showImport();
 			}
 		});
 
 		createIdsButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				WindowManager.showSetIds();
 			}
 		});
 
 		exportButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				WindowManager.showExportForm("simple");
 			}
 		});
 
 		exportAllButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				WindowManager.showExportForm("extended");
 			}
 		});
 
 		configureClassesButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				WindowManager.showLocalClasses();
 			}
 		});
 
 		configureAppartiButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				WindowManager.showConfigureApparati();
 			}
 		});
@@ -215,7 +212,7 @@ public class CompetitionMainForm {
 
 		openSquad.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				if (squadSelect.getSelectedItem() != null) {
 					WindowManager.showSquadForm(squadSelect.getSelectedItem().toString());
 				}
@@ -224,7 +221,7 @@ public class CompetitionMainForm {
 
 		openClass.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				if (classSelect.getSelectedItem() != null) {
 					WindowManager.showViewClasses(classSelect.getSelectedItem().toString());
 				} else {
@@ -235,14 +232,14 @@ public class CompetitionMainForm {
 
 		openTeam.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				WindowManager.showViewTeams();
 			}
 		});
 
 		printClassProtocol.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				if (classSelect.getSelectedItem() != null) {
 
 					String[] options = new String[]{
@@ -275,7 +272,7 @@ public class CompetitionMainForm {
 		});
 		printTeamProtocol.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				String[] options = new String[]{
 						"drucken",
 						"PDF",
@@ -303,7 +300,7 @@ public class CompetitionMainForm {
 
 		printTeamCertificate.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				String[] options = new String[]{
 						"drucken",
 						"PDF",
@@ -332,7 +329,7 @@ public class CompetitionMainForm {
 
 		configureCertificates.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				String[] options = new String[]{
 						"Einzel",
 						"Mannschaft"
@@ -352,7 +349,7 @@ public class CompetitionMainForm {
 
 		printCertificate.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				if (classSelect.getSelectedItem() != null) {
 
 					String[] options = new String[]{
@@ -386,7 +383,7 @@ public class CompetitionMainForm {
 
 		printSquad.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				if (squadSelect.getSelectedItem() != null) {
 					WindowManager.showSquadLists(squadSelect.getSelectedItem().toString());
 				}
@@ -395,13 +392,13 @@ public class CompetitionMainForm {
 
 		competitionInfoButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
+			public void actionPerformed (ActionEvent actionEvent) {
 				WindowManager.showCompetitionInfo();
 			}
 		});
 	}
 
-	protected void setDataToCombos() {
+	protected void setDataToCombos () {
 		classSelect.removeAllItems();
 		for (String className : competitionData.listClasses()) {
 			classSelect.addItem(className);
@@ -418,33 +415,47 @@ public class CompetitionMainForm {
 		}*/
 	}
 
-	public JPanel getPanel() {
+	public JPanel getPanel () {
 		return panel;
 	}
 
-	public void close() {
+	public void close () {
 		instance = null;
 	}
 
-	public void refresh() {
+	public void refresh () {
 		tableModel.reloadTableData();
 		setDataToCombos();
 		generateStatistics();
 	}
 
-	public void generateStatistics() {
-		CompetitionStatistics stats = new CompetitionStatistics(competitionData);
+	public void generateStatistics () {
+		CompetitionStatistics          stats  = new CompetitionStatistics(competitionData);
 		LinkedHashMap<String, Integer> counts = stats.getCountsForCols(new String[]{"club", "class", "squad", "team"});
 		competitionTableInfoLabel.setText("Anzahl Aktive: " + stats.getGymnastCountInCurrentQuery() + " | Anzahl Vereine: " + counts.get("club") + " | Anzahl Alterklassen: " + counts.get("class") + " | Anzahl Riegen: " + counts.get("squad") + " | Anzahl Teams: " + counts.get("team"));
 	}
 
-	public void generateStatisticsAfterSearch(String sql, ArrayList<DatabaseParameter> parameters) {
-		CompetitionStatistics stats = new CompetitionStatistics(null);
+	public void generateStatisticsAfterSearch (String sql, ArrayList<DatabaseParameter> parameters) {
+		CompetitionStatistics          stats  = new CompetitionStatistics(null);
 		LinkedHashMap<String, Integer> counts = stats.getCountsForCols(new String[]{"club", "class", "squad", "team"}, sql, parameters);
 		competitionTableInfoLabel.setText("Anzahl Aktive: " + stats.getGymnastCountInCurrentQuery() + " | Anzahl Vereine: " + counts.get("club") + " | Anzahl Alterklassen: " + counts.get("class") + " | Anzahl Riegen: " + counts.get("squad") + " | Anzahl Teams: " + counts.get("team"));
 	}
 
-	public static void reloadData() {
+	void enableSorter () {
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tableModel);
+		gymnastsTable.setRowSorter(sorter);
+		List<RowSorter.SortKey> sortKeyList = new ArrayList<>();
+		for (int i = 0; i <= 6; i++) {
+			sortKeyList.add(new RowSorter.SortKey(i, SortOrder.ASCENDING));
+		}
+		sorter.setSortKeys(sortKeyList);
+	}
+
+	void disableSorter () {
+		gymnastsTable.setRowSorter(null);
+	}
+
+	public static void reloadData () {
 		instance.refresh();
 	}
 }
