@@ -22,7 +22,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -136,14 +139,14 @@ public class PdfSquadLists extends PdfTableResult {
 						teamCheckBoxCell.setLeftBorderStyle(borderStyle);
 						teamCheckBoxCell.setRightBorderStyle(borderStyle);*/
 
-						ImageCell<PDPage> imgCell = row.createImageCell(apparatiValueColWidth, new Image(ImageIO.read(new File(getClass().getResource("images/valueRectSmall.png").getPath()))));
+						ImageCell<PDPage> imgCell = row.createImageCell(apparatiValueColWidth, new Image(ImageIO.read(getClass().getResourceAsStream("/images/valueRectSmall.png"))));
 						noBorder(imgCell);
 
-						ImageCell<PDPage> imgTeamCell = row.createImageCell(teamCheckBoxColWidth, new Image(ImageIO.read(new File(getClass().getResource("images/teamCheckBox.png").getPath()))));
+						ImageCell<PDPage> imgTeamCell = row.createImageCell(teamCheckBoxColWidth, new Image(ImageIO.read(getClass().getResourceAsStream("/images/teamCheckBox.png"))));
 						noBorder(imgTeamCell);
 
 					} else {
-						ImageCell<PDPage> imgCell = row.createImageCell(apparatiValueColWidth, new Image(ImageIO.read(new File(getClass().getResource("images/valueRectBig.png").getPath()))));
+						ImageCell<PDPage> imgCell = row.createImageCell(apparatiValueColWidth, new Image(ImageIO.read(getClass().getResourceAsStream("/images/valueRectBig.png"))));
 						noBorder(imgCell);
 					}
 				}
@@ -200,7 +203,10 @@ public class PdfSquadLists extends PdfTableResult {
 	}
 
 	void printApparatiFooter (String apparatus, ArrayList<Integer> pageIndexes) throws java.io.IOException {
+		int counter = 0;
 		for (Integer pageIndex : pageIndexes) {
+			counter++;
+
 			PDPage              thisPage     = document.getPage(pageIndex);
 			PDPageContentStream footerStream = new PDPageContentStream(document, thisPage, PDPageContentStream.AppendMode.APPEND, true);
 			PDType1Font         font         = PDType1Font.TIMES_ROMAN;
@@ -210,7 +216,13 @@ public class PdfSquadLists extends PdfTableResult {
 			footerStream.newLineAtOffset(0, 60);
 			//footerStream.setLeading(14.5f);
 
-			footerStream.showText("Riege " + squad + " - " + apparatus);
+			String squadNumberAndApparatus = "Riege " + squad + " - " + apparatus;
+
+			if (pageIndexes.size() > 1) {
+				squadNumberAndApparatus += " - Blatt " + counter;
+			}
+
+			footerStream.showText(squadNumberAndApparatus);
 
 			String pageNumber = "Seite " + (pageIndex + 1);
 			float  textWidth  = font.getStringWidth(pageNumber) / 1000 * 10;
