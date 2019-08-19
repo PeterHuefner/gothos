@@ -152,8 +152,8 @@ public class CompetitionForm extends DataForm{
 			String referenceCompetition = (String) referenceCompetitions.getSelectedItem();
 			if (Common.emptyString(referenceCompetition) || referenceCompetition.equals(referenceCompetitionPlaceholder)) {
 				TransferDataForFinalCompetition transfer = new TransferDataForFinalCompetition(name.getText(), referenceCompetition);
-				transfer.setFinalistsCount();
-				transfer.setReplacersCount();
+				//transfer.setFinalistsCount();
+				//transfer.setReplacersCount();
 			}
 		}
 

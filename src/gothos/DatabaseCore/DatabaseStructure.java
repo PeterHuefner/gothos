@@ -155,6 +155,7 @@ public class DatabaseStructure {
 		}
 
 		Boolean classesStatus = Application.database.execute("DROP TABLE IF EXISTS competition_" + name + "_classes;");
+		Boolean certificatesStatus = Application.database.execute("DROP TABLE IF EXISTS competition_" + name + "_certificates;");
 		Boolean competitionStatus = Application.database.execute("DROP TABLE IF EXISTS competition_" + name + ";");
 
 		ArrayList<DatabaseParameter> parameters = new ArrayList<>();
@@ -162,7 +163,7 @@ public class DatabaseStructure {
 		Boolean competitionEntryStatus = Application.database.execute("DELETE FROM competitions WHERE name = ?", parameters);
 
 
-		return competitionStatus && allApparatiStatus && classesStatus && competitionEntryStatus;
+		return competitionStatus && allApparatiStatus && classesStatus && competitionEntryStatus && certificatesStatus;
 	}
 
 	public static boolean addApparatiToCompetition(String competition, String apparatus) {
@@ -170,6 +171,12 @@ public class DatabaseStructure {
 				"CREATE TABLE IF NOT EXISTS competition_" + competition + "_apparati_" + apparatus + " (" +
 						"gymnast INTEGER PRIMARY KEY NOT NULL," +
 						apparatus + " REAL," +
+						apparatus + "_d_value REAL, " +
+						apparatus + "_e_value REAL, " +
+						apparatus + "_additional_value_one REAL, " +
+						apparatus + "_additional_value_two REAL, " +
+						apparatus + "_additional_value_three REAL, " +
+						apparatus + "_additional_value_four REAL, " +
 						"isTeamMember INTEGER DEFAULT 1," +
 						"isFinalist INTEGER DEFAULT 0," +
 						"isReplacer INTEGER DEFAULT 0" +
