@@ -34,7 +34,7 @@ public class GymnastTableModel extends DataFormTableModel {
 
 		super();
 		this.baseTable = "competition_" + Application.selectedCompetition;
-		displayColumns = new String[]{"ID", "Name", "Geburtsdatum", "Altersklasse", "Verein", "Riege", "Mannschaft"};
+		displayColumns = new String[]{"Startnr", "Name", "Geburtsdatum", "Altersklasse", "Verein", "Riege", "Mannschaft"};
 		searchCols = new String[]{"ID", "Name", "birthdate", "class", "club", "squad", "team"};
 		baseSql = "SELECT ROWID, " + String.join(", ", searchCols) + " FROM " + baseTable + " WHERE active = 1";
 		orderSql = " ORDER BY ID; ROWID";
