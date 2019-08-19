@@ -34,7 +34,7 @@ public class GymnastTableModel extends DataFormTableModel {
 
 		super();
 		this.baseTable = "competition_" + Application.selectedCompetition;
-		displayColumns = new String[]{"ID", "Name", "Geburtsdatum", "Altersklasse", "Verein", "Riege", "Mannschaft"};
+		displayColumns = new String[]{"Startnr", "Name", "Geburtsdatum", "Altersklasse", "Verein", "Riege", "Mannschaft"};
 		searchCols = new String[]{"ID", "Name", "birthdate", "class", "club", "squad", "team"};
 		baseSql = "SELECT ROWID, " + String.join(", ", searchCols) + " FROM " + baseTable + " WHERE active = 1";
 		orderSql = " ORDER BY ID; ROWID";
@@ -115,5 +115,32 @@ public class GymnastTableModel extends DataFormTableModel {
 		}
 
 		return Object.class;
+	}
+
+	@Override
+	public int addEmptyRow () {
+		int newIndex = super.addEmptyRow();
+
+		String sql = "SELECT MAX(ID) FROM competition_" + Application.selectedCompetition + " WHERE active = 1;";
+		String maxId = Application.database.fetchFirstColumn(sql);
+		Integer newID = null;
+
+		if (Common.emptyString(maxId)) {
+			maxId = "0";
+		}
+
+		try {
+			newID = Integer.parseInt(maxId);
+			newID++;
+		} catch (NumberFormatException e) {
+			newID = null;
+			newIndex = -1;
+		}
+
+		if (newID != null) {
+			setValueAt(newID.toString(), newIndex, 0);
+		}
+
+		return newIndex;
 	}
 }
