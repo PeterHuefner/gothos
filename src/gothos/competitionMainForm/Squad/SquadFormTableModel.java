@@ -63,12 +63,22 @@ public class SquadFormTableModel extends DataFormTableModel {
 			competitionData.setApparaties(apparatusList);
 
 			displayCols.add(apparatus);
-			displayCols.add("D-Wert");
 			displayCols.add("Wertung für Mannschaft");
+			displayCols.add("D-Wert");
+			displayCols.add("E-Wert");
+			displayCols.add("E-Wert Kari 1");
+			displayCols.add("E-Wert Kari 2");
+			displayCols.add("E-Wert Kari 3");
+			displayCols.add("E-Wert Kari 4");
 
 			cols.add(apparatus);
-			cols.add(apparatus + "_d_value");
 			cols.add("IFNULL(isTeamMember, 1) AS isTeamMember");
+			cols.add(apparatus + "_d_value");
+			cols.add(apparatus + "_e_value");
+			cols.add(apparatus + "_additional_value_one");
+			cols.add(apparatus + "_additional_value_two");
+			cols.add(apparatus + "_additional_value_three");
+			cols.add(apparatus + "_additional_value_four");
 		}
 
 		competitionData.setColums(cols.toArray(new String[cols.size()]));
@@ -116,7 +126,7 @@ public class SquadFormTableModel extends DataFormTableModel {
 	@Override
 	protected Object handleValuePreInsert(Object value, int row, int col) {
 
-		if (col == 6 || col == 7) {
+		if (col == 6 || col >= 8) {
 			String apparatiValue = value.toString();
 			apparatiValue = apparatiValue.replaceAll(",", ".");
 			if(Common.emptyString(apparatiValue)){
@@ -132,7 +142,7 @@ public class SquadFormTableModel extends DataFormTableModel {
 	protected boolean checkValue(Object value, int row, int col) {
 		boolean status = true;
 
-		if (col == 6 || col == 7) {
+		if (col == 6 || col >= 8) {
 			Matcher matcher = Pattern.compile("^\\d+(\\.\\d+)?$").matcher(value.toString());
 			if(!matcher.find()){
 				status = false;
@@ -145,7 +155,7 @@ public class SquadFormTableModel extends DataFormTableModel {
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		if (columnIndex == 7) {
+		if (columnIndex == 6) {
 			return Boolean.class;
 		} else if (columnIndex == 5) {
 			return String.class;

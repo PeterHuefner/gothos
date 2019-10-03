@@ -27,12 +27,9 @@ public class CompetitionForm extends DataForm{
 	private JLabel     competitionDescriptionLabel;
 	private JTextField competitionDay;
 	private JLabel     competitionDayLabel;
-	private JLabel     teamCalcModeLabel;
-	private JComboBox  teamCalculateMode;
-	private JLabel     teamCalcExplanation;
+	//private JComboBox  teamCalculateMode;
 	private JLabel     numberOfMaxTeamMembersLabel;
 	private JTextField numberOfMaxTeamMembers;
-	private JLabel     numberofMaxTeamMembersExplanation;
 	private JLabel     isFinalLabel;
 	private JComboBox  referenceCompetitions;
 	private JLabel     isFinalHelp;
@@ -56,10 +53,10 @@ public class CompetitionForm extends DataForm{
 	}
 
 	private void createUIComponents() {
-		teamCalculateMode = new JComboBox(new Object[]{
+		/*teamCalculateMode = new JComboBox(new Object[]{
 				new SelectboxItem(0, "Summe aller Wertungen"),
 				new SelectboxItem(1, "Summe aller Ergebnisse")
-		});
+		});*/
 
 
 	}
@@ -101,7 +98,7 @@ public class CompetitionForm extends DataForm{
 		columns.add(new DataFormElement(this.longname, "longname"));
 		columns.add(new DataFormElement(this.description, "description"));
 		columns.add(new DataFormElement(this.competitionDay, "competitionDay"));
-		columns.add(new DataFormElement(this.teamCalculateMode, "teamCalculateMode"));
+		//columns.add(new DataFormElement(this.teamCalculateMode, "teamCalculateMode"));
 		columns.add(new DataFormElement(this.numberOfMaxTeamMembers, "numberOfMaxTeamMembers"));
 	}
 

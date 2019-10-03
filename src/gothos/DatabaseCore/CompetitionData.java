@@ -5,11 +5,9 @@ import gothos.Application;
 import gothos.Common;
 import gothos.competitionMainForm.Gymnast;
 import gothos.competitionMainForm.Team;
-import org.apache.pdfbox.debugger.ui.MapEntry;
+import gothos.competitionMainForm.TeamGymnastApparatusInfo;
 
-import java.sql.Array;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -387,69 +385,91 @@ public class CompetitionData {
 
 			}
 
+			LinkedHashMap<Integer, LinkedHashMap<String, TeamGymnastApparatusInfo>> teamApparatiValueData = new LinkedHashMap<>(gymnasts.size());
+
+			/*calculationMode = 0;
 			// alle Geräte addieren, aber nur bis max
-			if (calculationMode == 0) {
+			if (calculationMode == 0) {*/
 
-				LinkedHashMap<String, ArrayList<Double>> teamMemberApparatiValues = new LinkedHashMap<>();
+			//LinkedHashMap<String, ArrayList<Double>> teamMemberApparatiValues = new LinkedHashMap<>();
+			LinkedHashMap<String, ArrayList<TeamGymnastApparatusInfo>> teamMemberApparatiValues = new LinkedHashMap<>();
 
-				for (Gymnast gymnast : gymnasts) {
-					calculateGymnastSum(gymnast);
+			for (Gymnast gymnast : gymnasts) {
+				calculateGymnastSum(gymnast);
 
-					// Von jedem Turner die Wertungen für jedes Gerät speichern
-					for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
-						ArrayList<Double> apparatiValues = teamMemberApparatiValues.getOrDefault(apparatus.getKey(), new ArrayList<>());
-						apparatiValues.add(apparatus.getValue());
-						teamMemberApparatiValues.put(apparatus.getKey(), apparatiValues);
-					}
+				// Von jedem Turner die Wertungen für jedes Gerät speichern
+				for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
+					ArrayList<TeamGymnastApparatusInfo> apparatiValues = teamMemberApparatiValues.getOrDefault(apparatus.getKey(), new ArrayList<>());
+
+					TeamGymnastApparatusInfo info = new TeamGymnastApparatusInfo();
+					info.gymnast     = gymnast.getROWID();
+					info.value       = apparatus.getValue();
+					info.isTeamValue = true;
+
+					apparatiValues.add(info);
+					teamMemberApparatiValues.put(apparatus.getKey(), apparatiValues);
+
+					/*ArrayList<Double> apparatiValues = teamMemberApparatiValues.getOrDefault(apparatus.getKey(), new ArrayList<>());
+					apparatiValues.add(apparatus.getValue());
+					teamMemberApparatiValues.put(apparatus.getKey(), apparatiValues);
+
+					LinkedHashMap<String, TeamGymnastApparatusInfo> subMap = teamApparatiValueData.getOrDefault(gymnast.getROWID(), new LinkedHashMap<>());
+					TeamGymnastApparatusInfo info = new TeamGymnastApparatusInfo();
+					info.value = apparatus.getValue();
+					subMap.put(apparatus.getKey(), info);
+					teamApparatiValueData.put(gymnast.getROWID(), subMap);*/
 				}
+			}
 
-				//Nach sum sortieren
-				Collections.sort(gymnasts, new Comparator<Gymnast>() {
-					@Override
-					public int compare(Gymnast o1, Gymnast o2) {
-						return Double.compare(o1.getSum(), o2.getSum()) * -1;
-					}
-				});
+			//Nach sum sortieren
+			Collections.sort(gymnasts, new Comparator<Gymnast>() {
+				@Override
+				public int compare(Gymnast o1, Gymnast o2) {
+					return Double.compare(o1.getSum(), o2.getSum()) * -1;
+				}
+			});
 
-				// Für jedes Gerät die Wertungen sortieren und nur die Anzahl der besten Wertungen behalten die erlaubt sind
-				for (Map.Entry<String, ArrayList<Double>> apparatus : teamMemberApparatiValues.entrySet()) {
-					ArrayList<Double> values = apparatus.getValue();
+			// Für jedes Gerät die Wertungen sortieren und nur die Anzahl der besten Wertungen behalten die erlaubt sind
+			for (Map.Entry<String, ArrayList<TeamGymnastApparatusInfo>> apparatus : teamMemberApparatiValues.entrySet()) {
+				ArrayList<TeamGymnastApparatusInfo> values = apparatus.getValue();
 
-					if (values.size() > maxTeamMembers && maxTeamMembers > 0) {
-						Collections.sort(values, new Comparator<Double>() {
-							@Override
-							public int compare(Double o1, Double o2) {
-								return Double.compare(o1, o2) * -1;
-							}
-						});
-
-						ArrayList<Double> realValues = new ArrayList<>();
-
-						for (Double value : values) {
-							if (realValues.size() <= maxTeamMembers) {
-								realValues.add(value);
-							}
+				if (values.size() > maxTeamMembers && maxTeamMembers > 0) {
+					Collections.sort(values, new Comparator<TeamGymnastApparatusInfo>() {
+						@Override
+						public int compare(TeamGymnastApparatusInfo o1, TeamGymnastApparatusInfo o2) {
+							return Double.compare(o1.value, o2.value) * -1;
 						}
+					});
 
-						teamMemberApparatiValues.put(apparatus.getKey(), realValues);
+					int teamValues = 0;
+					for (TeamGymnastApparatusInfo info : values) {
+						if (teamValues < maxTeamMembers) {
+							info.isTeamValue = true;
+							teamValues++;
+						} else {
+							info.isTeamValue = false;
+						}
+					}
+				}
+			}
+
+			for (Map.Entry<String, ArrayList<TeamGymnastApparatusInfo>> apparatus : teamMemberApparatiValues.entrySet()) {
+				Double apparatiSum = 0.0;
+
+				for (TeamGymnastApparatusInfo info : apparatus.getValue()) {
+					if (info.isTeamValue) {
+						apparatiSum += info.value;
 					}
 				}
 
-				for (Map.Entry<String, ArrayList<Double>> apparatus : teamMemberApparatiValues.entrySet()) {
-					Double apparatiSum = 0.0;
-
-					for (Double value : apparatus.getValue()) {
-						apparatiSum += value;
-					}
-
-					if (apparatiSum > 0) {
-						teamApparati.put(apparatus.getKey(), apparatiSum);
-						teamSum += apparatiSum;
-						valuedApparati.put(apparatus.getKey(), 1);
-					}
+				if (apparatiSum > 0) {
+					teamApparati.put(apparatus.getKey(), apparatiSum);
+					teamSum += apparatiSum;
+					valuedApparati.put(apparatus.getKey(), 1);
 				}
+			}
 
-			} else {
+			/*} else {
 				for (Gymnast gymnast : gymnasts) {
 					//@TODO: Muss überabritet werden, dass Einzelergebnis des Turners nach AK kann nicht auf die Mannschaft addiert werden? Oder doch?
 					calculateGymnastSum(gymnast);
@@ -464,14 +484,15 @@ public class CompetitionData {
 
 					teamSum += gymnast.getSum();
 				}
-			}
+			}*/
 
 
 			Team team = new Team(
 					gymnasts,
 					teamApparati,
 					teamSum,
-					teamName
+					teamName,
+					teamMemberApparatiValues
 			);
 
 			result.add(team);
@@ -699,7 +720,7 @@ public class CompetitionData {
 		return this.getCompetitionData(competition);
 	}
 
-	protected ArrayList<String> list(String column) {
+	protected ArrayList<String> list(String column, boolean skipEmpty) {
 		ArrayList<String> values = new ArrayList<>();
 		CompetitionData   data   = new CompetitionData();
 
@@ -711,9 +732,13 @@ public class CompetitionData {
 		try {
 
 			while (result.next()) {
-				values.add(
-						result.getString(column)
-				);
+				String value = result.getString(column);
+
+				if ((skipEmpty && Common.emptyString(value))) {
+					continue;
+				}
+
+				values.add(value);
 			}
 
 			result.close();
@@ -723,6 +748,10 @@ public class CompetitionData {
 		}
 
 		return values;
+	}
+
+	protected ArrayList<String> list (String column) {
+		return list(column, true);
 	}
 
 	public ArrayList<String> listClasses() {

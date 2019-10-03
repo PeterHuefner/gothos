@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gothos.competitionMainForm.Squad.SquadForm">
-  <grid id="27dc6" binding="panel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="panel" layout-manager="GridLayoutManager" row-count="8" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="20" y="20" width="800" height="600"/>
+      <xy x="20" y="20" width="1000" height="600"/>
     </constraints>
     <properties>
-      <minimumSize width="800" height="600"/>
-      <preferredSize width="900" height="700"/>
+      <minimumSize width="1000" height="600"/>
+      <preferredSize width="1920" height="700"/>
     </properties>
     <border type="none"/>
     <children>
@@ -22,7 +22,7 @@
       <grid id="f0a6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -42,10 +42,10 @@
           </scrollpane>
         </children>
       </grid>
-      <grid id="6b1cc" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="6b1cc" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -66,15 +66,76 @@
             </constraints>
             <properties/>
           </component>
+          <component id="e4bdd" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Endwerte und E-Noten automatisch berechnen:"/>
+            </properties>
+          </component>
+          <component id="1ff5d" class="javax.swing.JButton" binding="calcValuesOuter">
+            <constraints>
+              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="äußere"/>
+            </properties>
+          </component>
+          <component id="8f406" class="javax.swing.JButton" binding="calcValuesInner">
+            <constraints>
+              <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="innere"/>
+            </properties>
+          </component>
+          <hspacer id="6048">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </hspacer>
         </children>
       </grid>
       <component id="24daf" class="javax.swing.JLabel" binding="squadInfoLabel">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value=""/>
         </properties>
+      </component>
+      <vspacer id="5a503">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <scrollpane id="acb02">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="64808" class="javax.swing.JLabel" binding="helpTextLabel">
+            <constraints/>
+            <properties>
+              <text value="&lt;html&gt;&#10;Zum Eintragen der Wertungen muss zunächst das Gerät ausgewählt werden.&lt;br&gt;&#10;Anschließend erscheinen weitere Spalten in der Tabelle. Die Spalte die gleichlautend mit dem Gerät ist, ist die Gesamtwertung des Teilnehmers.&lt;br&gt;&#10;Wertung für Mannschaft zeigt an, ob der Teilnehmer seine Wertung in das Mannschaftsergebnis einbringt.&lt;br&gt;&#10;Die D- und E-Werte dienen nur der zusätzlichen Anzeige und Kontrolle der Gesamtwertung.&lt;br&gt;&#10;Bei Bedarf kann auch aus Ihnen der Gesamtwert automatsich errechnet werden.&lt;br&gt;&#10;Die Buttons &quot;äußere&quot; und &quot;innere&quot; berechnen den Mittelwert der E-Noten.&lt;br&gt;&#10;&quot;äußere&quot; streicht bei 3 und 4 E-Noten die mittlere(n), &quot;innere&quot; streicht die höchste und/oder niedrigste.&lt;br&gt;&#10;Bei der Berechnung werden bereits eingetragene Gesamtwertungen des jeweiligen Geräts überschrieben.&#10;&lt;/html&gt;"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+      <component id="ba0f7" class="javax.swing.JSeparator">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="bca15" class="javax.swing.JSeparator">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
       </component>
     </children>
   </grid>
