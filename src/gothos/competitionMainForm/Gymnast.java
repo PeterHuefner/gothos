@@ -61,8 +61,15 @@ public class Gymnast {
 
 	}
 
-	public Gymnast(ResultSet databaseRow) {
+	public Gymnast(ResultSet databaseRow, boolean nullForAbsenceApparati) {
+		loadResultSet(databaseRow, nullForAbsenceApparati);
+	}
 
+	public Gymnast(ResultSet databaseRow) {
+		loadResultSet(databaseRow, false);
+	}
+
+	private void loadResultSet (ResultSet databaseRow, boolean nullForAbsenceApparati) {
 		ArrayList<String> apparati = DatabaseAnalyse.listApparatiInCompetition();
 
 		try {
@@ -83,20 +90,15 @@ public class Gymnast {
 					this.setSum(Double.parseDouble(columnValue));
 				} else if (apparati.contains(columnName)) {
 					if (columnValue == null || columnValue.isEmpty() || columnValue.equalsIgnoreCase("null")) {
-						columnValue = "0";
+						if (nullForAbsenceApparati) {
+							apparatiValues.put(columnName, null);
+						} else {
+							apparatiValues.put(columnName, 0.0);
+						}
+					} else {
+						apparatiValues.put(columnName, Double.parseDouble(columnValue));
 					}
 
-					apparatiValues.put(columnName, Double.parseDouble(columnValue));
-
-					/*/boolean columnIsApparatus = false;
-					for(String apparatus: apparati) {
-						if(apparatus.equalsIgnoreCase(columnName)){
-							columnIsApparatus = true;
-							if (columnValue == null || columnValue.isEmpty() || columnValue.equalsIgnoreCase("null")) {
-								columnValue = "0";
-							}
-						}
-					}*/
 				} else if (columnName.equalsIgnoreCase("ROWID")) {
 					ROWID = Integer.parseInt(columnValue);
 				} else {

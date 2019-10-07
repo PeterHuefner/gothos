@@ -375,7 +375,7 @@ public class CompetitionData {
 
 				while (teamResult.next()) {
 					gymnasts.add(
-							new Gymnast(teamResult)
+							new Gymnast(teamResult, true)
 					);
 				}
 
@@ -403,7 +403,7 @@ public class CompetitionData {
 
 					TeamGymnastApparatusInfo info = new TeamGymnastApparatusInfo();
 					info.gymnast     = gymnast.getROWID();
-					info.value       = apparatus.getValue();
+					info.value       = gymnast.getApparatusValue(apparatus.getKey());
 					info.isTeamValue = true;
 
 					apparatiValues.add(info);
@@ -587,7 +587,7 @@ public class CompetitionData {
 
 			Double sum = 0.0;
 			for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
-				sum += apparatus.getValue();
+				sum += gymnast.getApparatusValue(apparatus.getKey());
 			}
 			gymnast.setSum(sum);
 
@@ -598,6 +598,12 @@ public class CompetitionData {
 			Collections.sort(valueList, new Comparator<Double>() {
 				@Override
 				public int compare(Double o1, Double o2) {
+					if (o1 == null) {
+						o1 = 0.0;
+					}
+					if (o2 == null) {
+						o2 = 0.0;
+					}
 					return Double.compare(o1, o2) * -1;
 					//return (o1 > o2 ? 1 : (o1 < o2 ? -1 : 0));
 				}

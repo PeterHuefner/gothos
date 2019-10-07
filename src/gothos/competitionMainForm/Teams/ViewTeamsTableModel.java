@@ -60,20 +60,22 @@ public class ViewTeamsTableModel extends DataFormTableModel {
 					for (Map.Entry<String, Double> apparatus : teams.get(0).getApparatiValues().entrySet()) {
 
 						//Double apparatusValue = 0.0;
-						String apparatusValue = "-";
+						String apparatusValue = "";
 
 						if (gymnast.getApparatiValues().get(apparatus.getKey()) != null) {
 							apparatusValue = gymnast.getApparatiValues().get(apparatus.getKey()).toString();
-						}
 
-						if (thisTeam.getGymnastsApparatiInfo().containsKey(apparatus.getKey())) {
-							ArrayList<TeamGymnastApparatusInfo> infos = thisTeam.getGymnastsApparatiInfo().get(apparatus.getKey());
-							for (TeamGymnastApparatusInfo info : infos) {
-								if (info.gymnast == gymnast.getROWID() && !info.isTeamValue) {
-									apparatusValue = "-" + apparatusValue + "-";
+							if (thisTeam.getGymnastsApparatiInfo().containsKey(apparatus.getKey())) {
+								ArrayList<TeamGymnastApparatusInfo> infos = thisTeam.getGymnastsApparatiInfo().get(apparatus.getKey());
+								for (TeamGymnastApparatusInfo info : infos) {
+									if (info.gymnast == gymnast.getROWID() && !info.isTeamValue) {
+										apparatusValue = "<html><s>" + apparatusValue + "</s></html>";
+										break;
+									}
 								}
 							}
 						}
+
 
 						row.add(
 								new DataTableCell("0", "", apparatusValue, "")

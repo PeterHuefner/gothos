@@ -9,6 +9,7 @@ import gothos.PdfCore.PdfTableResult;
 import gothos.competitionMainForm.Classes.PdfClassResult;
 import gothos.competitionMainForm.Gymnast;
 import gothos.competitionMainForm.Team;
+import gothos.competitionMainForm.TeamGymnastApparatusInfo;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -130,8 +131,26 @@ public class PdfTeamResult extends PdfTableResult {
 							noBorder(gymnastRow.createCell(20 + diffSpace, gymnast.getMetaData().get("name") + (showClubs ? "<br><i>" + gymnast.getMetaData().get("club") + "</i>" : "")));
 
 							for (Map.Entry<String, Double> apparatus : team.getApparatiValues().entrySet()) {
+								String apparatusValue = "";
+								if (team.getGymnastsApparatiInfo().containsKey(apparatus.getKey())) {
+									ArrayList<TeamGymnastApparatusInfo> infos = team.getGymnastsApparatiInfo().get(apparatus.getKey());
+									for (TeamGymnastApparatusInfo info : infos) {
+										if (info.gymnast == gymnast.getROWID()) {
+											if (gymnast.getApparatiValues().get(apparatus.getKey()) != null) {
+												if (!info.isTeamValue) {
+													apparatusValue = "<i>-" + String.format("%2.3f", gymnast.getApparatiValues().get(apparatus.getKey())) + "-</i>";
+												} else {
+													apparatusValue = String.format("%2.3f", gymnast.getApparatiValues().get(apparatus.getKey()));
+												}
+											}
+
+											break;
+										}
+									}
+								}
+
 								gymnast.getApparatiValues().putIfAbsent(apparatus.getKey(), 0.0);
-								noBorder(gymnastRow.createCell(apparatiWidth, String.format("%2.3f", gymnast.getApparatiValues().get(apparatus.getKey()))));
+								noBorder(gymnastRow.createCell(apparatiWidth, apparatusValue));
 							}
 
 							noBorder(gymnastRow.createCell(7, String.format("%2.3f", gymnast.getSum())));
