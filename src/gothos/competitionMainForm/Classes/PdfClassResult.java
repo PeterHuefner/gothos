@@ -38,6 +38,11 @@ public class PdfClassResult extends PdfTableResult {
 	protected String                        classDisplayName;
 	protected CompetitionData               competitionData;
 	protected LinkedHashMap<String, String> classConfig;
+	protected Boolean                       printDValues = true;
+
+	public void setPrintDValues(Boolean printDValues) {
+		this.printDValues = printDValues;
+	}
 
 	public PdfClassResult(String className) {
 		this.className = className;
@@ -134,8 +139,17 @@ public class PdfClassResult extends PdfTableResult {
 					row.createCell(20 + diffSpace, gymnast.getMetaData().get("name") + "<br><i>" + gymnast.getMetaData().get("club") + "</i>");
 
 					for (Map.Entry<String, Double> apparatus : gymnast.getApparatiValues().entrySet()) {
-						//row.createCell(apparatiWidth, apparatus.getValue().toString());
-						row.createCell(apparatiWidth, String.format("%2.3f", apparatus.getValue()));
+						String apparatusValue = String.format("%2.3f", apparatus.getValue());
+
+						if (printDValues && gymnast.getAdditionalApparatiValues().containsKey(apparatus.getKey()) && gymnast.getAdditionalApparatiValues().get(apparatus.getKey()).containsKey("d_value")) {
+							Double dValue = gymnast.getAdditionalApparatiValues().get(apparatus.getKey()).get("d_value");
+
+							if (dValue != null && dValue > 0) {
+								apparatusValue = String.format("%2.3f", apparatus.getValue()) + " <i>[" + String.format("%2.3f", dValue) + "]</i>";
+							}
+						}
+
+						row.createCell(apparatiWidth, apparatusValue);
 					}
 
 					row.createCell(7, "<b>" + String.format("%2.3f", gymnast.getSum()) + "</b>");

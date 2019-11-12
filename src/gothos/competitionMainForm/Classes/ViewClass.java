@@ -11,18 +11,19 @@ import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 
 public class ViewClass {
-	private JButton backButton;
-	private JTable  classTable;
-	private JButton printAndPdfProtocol;
-	private JButton printCertificates;
-	private JPanel  panel;
-	private JButton printProtocol;
-	private JButton pdfProtocol;
-	private JButton printAndPdfCertificate;
-	private JButton pdfCertificate;
-    private JLabel classInfoLabel;
+	private JButton   backButton;
+	private JTable    classTable;
+	private JButton   printAndPdfProtocol;
+	private JButton   printCertificates;
+	private JPanel    panel;
+	private JButton   printProtocol;
+	private JButton   pdfProtocol;
+	private JButton   printAndPdfCertificate;
+	private JButton   pdfCertificate;
+    private JLabel    classInfoLabel;
+	private JCheckBox printDValues;
 
-    protected String className;
+	protected String className;
 	protected ViewClassTableModel tableModel;
 
 	public JPanel getPanel() {
@@ -59,6 +60,7 @@ public class ViewClass {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PdfClassResult classResult = new PdfClassResult(className);
+				classResult.setPrintDValues(printDValues.isSelected());
 				classResult.generatePdf();
 
 				classResult.print();
@@ -69,6 +71,7 @@ public class ViewClass {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PdfClassResult classResult = new PdfClassResult(className);
+				classResult.setPrintDValues(printDValues.isSelected());
 				classResult.generatePdf();
 
 				classResult.saveDialog();

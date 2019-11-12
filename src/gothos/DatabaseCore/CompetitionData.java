@@ -29,6 +29,7 @@ public class CompetitionData {
 	protected Boolean           allApparaties        = false;
 	protected ArrayList<String> apparaties           = new ArrayList<>();
 	protected Boolean           apparatiesAsCols     = false;
+	protected Boolean           allApparatiValues    = false;
 	protected Boolean           onlyTeamMemberValues = false;
 	protected String            groupBy;
 	protected String            classSql;
@@ -70,6 +71,10 @@ public class CompetitionData {
 
 	public void setApparaties(ArrayList<String> apparaties) {
 		this.apparaties = apparaties;
+	}
+
+	public void setAllApparatiValues(Boolean allApparatiValues) {
+		this.allApparatiValues = allApparatiValues;
 	}
 
 	public void setApparatiesAsCols(Boolean apparatiesAsCols) {
@@ -139,6 +144,19 @@ public class CompetitionData {
 					}
 
 					cols.append(comma + apparti);
+				}
+
+				if (allApparatiValues && DatabaseAnalyse.listApparatiInCompetition().contains(apparti)) {
+					if (cols.length() > 0) {
+						comma = ", ";
+					}
+					cols.append(comma + apparti + "_d_value");
+					comma = ", ";
+					cols.append(comma + apparti + "_e_value");
+					cols.append(comma + apparti + "_additional_value_one");
+					cols.append(comma + apparti + "_additional_value_two");
+					cols.append(comma + apparti + "_additional_value_three");
+					cols.append(comma + apparti + "_additional_value_four");
 				}
 			}
 		}
@@ -219,6 +237,7 @@ public class CompetitionData {
 		calculation = "";
 		ArrayList<Gymnast>            result      = new ArrayList<>();
 		LinkedHashMap<String, String> classConfig = this.getClassConfig(className);
+		this.setAllApparatiValues(true);
 
 		if (colums == null || colums.length == 0) {
 			useInternalColumns();

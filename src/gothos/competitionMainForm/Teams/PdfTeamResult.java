@@ -138,7 +138,7 @@ public class PdfTeamResult extends PdfTableResult {
 										if (info.gymnast == gymnast.getROWID()) {
 											if (gymnast.getApparatiValues().get(apparatus.getKey()) != null) {
 												if (!info.isTeamValue) {
-													apparatusValue = "<i>-" + String.format("%2.3f", gymnast.getApparatiValues().get(apparatus.getKey())) + "-</i>";
+													apparatusValue = "<i>[" + String.format("%2.3f", gymnast.getApparatiValues().get(apparatus.getKey())) + "]</i>";
 												} else {
 													apparatusValue = String.format("%2.3f", gymnast.getApparatiValues().get(apparatus.getKey()));
 												}

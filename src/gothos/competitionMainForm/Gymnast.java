@@ -7,55 +7,16 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.regex.Matcher;
 
 public class Gymnast {
 
-	protected Integer                       ROWID          = 0;
-	protected LinkedHashMap<String, String> metaData       = new LinkedHashMap<>();
-	protected LinkedHashMap<String, Double> apparatiValues = new LinkedHashMap<>();
-	protected Double                        sum;
-	protected Integer                       ranking;
-
-	public void setROWID(Integer ROWID) {
-		this.ROWID = ROWID;
-	}
-
-	public void setMetaData(LinkedHashMap<String, String> metaData) {
-		this.metaData = metaData;
-	}
-
-	public void setApparatiValues(LinkedHashMap<String, Double> apparatiValues) {
-		this.apparatiValues = apparatiValues;
-	}
-
-	public void setSum(Double sum) {
-		sum = Common.round(sum, 3);
-		this.sum = sum;
-	}
-
-	public void setRanking(Integer ranking) {
-		this.ranking = ranking;
-	}
-
-	public Integer getROWID() {
-		return ROWID;
-	}
-
-	public LinkedHashMap<String, String> getMetaData() {
-		return metaData;
-	}
-
-	public LinkedHashMap<String, Double> getApparatiValues() {
-		return apparatiValues;
-	}
-
-	public Double getSum() {
-		return sum;
-	}
-
-	public Integer getRanking() {
-		return ranking;
-	}
+	protected Integer                                              ROWID                    = 0;
+	protected LinkedHashMap<String, String>                        metaData                 = new LinkedHashMap<>();
+	protected LinkedHashMap<String, Double>                        apparatiValues           = new LinkedHashMap<>();
+	protected Double                                               sum;
+	protected Integer                                              ranking;
+	protected LinkedHashMap<String, LinkedHashMap<String, Double>> additionalApparatiValues = new LinkedHashMap<>();
 
 	public Gymnast() {
 
@@ -69,7 +30,52 @@ public class Gymnast {
 		loadResultSet(databaseRow, false);
 	}
 
-	private void loadResultSet (ResultSet databaseRow, boolean nullForAbsenceApparati) {
+	public Integer getROWID() {
+		return ROWID;
+	}
+
+	public void setROWID(Integer ROWID) {
+		this.ROWID = ROWID;
+	}
+
+	public LinkedHashMap<String, String> getMetaData() {
+		return metaData;
+	}
+
+	public void setMetaData(LinkedHashMap<String, String> metaData) {
+		this.metaData = metaData;
+	}
+
+	public LinkedHashMap<String, Double> getApparatiValues() {
+		return apparatiValues;
+	}
+
+	public void setApparatiValues(LinkedHashMap<String, Double> apparatiValues) {
+		this.apparatiValues = apparatiValues;
+	}
+
+	public LinkedHashMap<String, LinkedHashMap<String, Double>> getAdditionalApparatiValues() {
+		return additionalApparatiValues;
+	}
+
+	public Double getSum() {
+		return sum;
+	}
+
+	public void setSum(Double sum) {
+		sum = Common.round(sum, 3);
+		this.sum = sum;
+	}
+
+	public Integer getRanking() {
+		return ranking;
+	}
+
+	public void setRanking(Integer ranking) {
+		this.ranking = ranking;
+	}
+
+	private void loadResultSet(ResultSet databaseRow, boolean nullForAbsenceApparati) {
 		ArrayList<String> apparati = DatabaseAnalyse.listApparatiInCompetition();
 
 		try {
@@ -102,7 +108,25 @@ public class Gymnast {
 				} else if (columnName.equalsIgnoreCase("ROWID")) {
 					ROWID = Integer.parseInt(columnValue);
 				} else {
-					metaData.put(columnName, columnValue);
+					Matcher match = Common.regex("(.+)_(d_value|e_value|additional_value_one|additional_value_two|additional_value_three|additional_value_four)", columnName);
+
+					if (match.matches()) {
+						if (!additionalApparatiValues.containsKey(match.group(1))) {
+							additionalApparatiValues.put(match.group(1), new LinkedHashMap<String, Double>());
+						}
+
+						if (columnValue == null || columnValue.isEmpty() || columnValue.equalsIgnoreCase("null")) {
+							if (nullForAbsenceApparati) {
+								additionalApparatiValues.get(match.group(1)).put(match.group(2), null);
+							} else {
+								additionalApparatiValues.get(match.group(1)).put(match.group(2), 0.0);
+							}
+						} else {
+							additionalApparatiValues.get(match.group(1)).put(match.group(2), Double.parseDouble(columnValue));
+						}
+					} else {
+						metaData.put(columnName, columnValue);
+					}
 				}
 			}
 
