@@ -13,6 +13,10 @@ import gothos.competitionMainForm.CompetitionMainForm;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,17 +30,16 @@ public class SquadForm {
 	protected TableNavigator      navigator;
 	protected CompetitionData     competitionData;
 
-	private JButton   backButton;
-	private JPanel    panel;
-	private JTable    squadTable;
-	private JComboBox apparatiSelect;
-    private JLabel    squadInfoLabel;
-	private JLabel    helpTextLabel;
-	private JButton   calcValuesOuter;
-	private JButton   calcValuesInner;
-
-	final static int INNER_CALC_METHOD = 1;
-	final static int OUTER_CALC_METHOD = 2;
+	private JButton      backButton;
+	private JPanel       panel;
+	private JTable       squadTable;
+	private JComboBox    apparatiSelect;
+    private JLabel       squadInfoLabel;
+	private JLabel       helpTextLabel;
+	private JRadioButton noAutoCalc;
+	private JRadioButton innerAutoCalc;
+	private JRadioButton outerAutoCalc;
+	private JButton      setAutoCalcedAsRealButton;
 
 	public JPanel getPanel() {
 		return panel;
@@ -49,8 +52,11 @@ public class SquadForm {
         competitionData = new CompetitionData();
 
 		tableModel = new SquadFormTableModel(this.squad);
+		tableModel.setTable(squadTable);
 		squadTable.setModel(tableModel);
 		navigator = new TableNavigator(squadTable);
+
+		squadTable.addPropertyChangeListener(new EditListener());
 
 		backButton.addActionListener(new ActionListener() {
 			@Override
@@ -77,22 +83,48 @@ public class SquadForm {
 			apparatiSelect.addItem(squadName);
 		}
 
-		calcValuesOuter.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed (ActionEvent actionEvent) {
-				String selectedApparatus = apparatiSelect.getSelectedItem().toString();
-
-			}
-		});
-
-		calcValuesInner.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed (ActionEvent actionEvent) {
-				String selectedApparatus = apparatiSelect.getSelectedItem().toString();
-			}
-		});
-
 		generateStatistics();
+
+		setAutoCalcedAsRealButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tableModel.autoCalcAll();
+			}
+		});
+
+		noAutoCalc.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				innerAutoCalc.setSelected(false);
+				outerAutoCalc.setSelected(false);
+
+				tableModel.setCalcMethod(SquadFormTableModel.NO_CALC_METHOD);
+			}
+		});
+
+		innerAutoCalc.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				noAutoCalc.setSelected(false);
+				outerAutoCalc.setSelected(false);
+
+				tableModel.setCalcMethod(SquadFormTableModel.INNER_CALC_METHOD);
+				tableModel.autoCalcAll();
+			}
+		});
+
+		outerAutoCalc.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				noAutoCalc.setSelected(false);
+				innerAutoCalc.setSelected(false);
+
+				tableModel.setCalcMethod(SquadFormTableModel.OUTER_CALC_METHOD);
+				tableModel.autoCalcAll();
+			}
+		});
+
+		noAutoCalc.setSelected(true);
 	}
 
 	protected void generateStatistics() {
@@ -104,7 +136,7 @@ public class SquadForm {
         squadInfoLabel.setText("Anzahl Aktive: " + stats.getGymnastCountInCurrentQuery() + " | Anzahl Vereine: " + counts.get("club") + " | Anzahl Alterklassen: " + counts.get("class"));
     }
 
-    void calcValues (int calcMethod, String apparatus) {
+    /*void calcValues (int calcMethod, String apparatus) {
 		String sql =
 				"SELECT " +
 				"competition_" + Application.selectedCompetition + ".ROWID, " +
@@ -158,5 +190,42 @@ public class SquadForm {
 	    } catch (SQLException e) {
 	    	Common.printError(e);
 	    }
-    }
+    }*/
+
+	class EditListener implements PropertyChangeListener {
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (evt.getPropertyName().equals("tableCellEditor")) {
+				if (squadTable.isEditing()) {
+
+					if (squadTable.getEditorComponent() != null) {
+						try {
+							JTextField textField = (JTextField) squadTable.getEditorComponent();
+
+							textField.addKeyListener(new KeyListener() {
+								@Override
+								public void keyTyped(KeyEvent e) {
+								}
+
+								@Override
+								public void keyPressed(KeyEvent e) {
+								}
+
+								@Override
+								public void keyReleased(KeyEvent e) {
+									tableModel.autoCalcRow(squadTable.getEditingRow());
+								}
+							});
+
+						} catch (Exception e) {
+
+						}
+					}
+
+				} else {
+
+				}
+			}
+		}
+	}
 }

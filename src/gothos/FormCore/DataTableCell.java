@@ -63,7 +63,9 @@ public class DataTableCell {
 
 		LinkedHashMap<String, DatabaseParameter> params = new LinkedHashMap<>();
 
-		if(value.getClass() == Boolean.class || value.getClass() == Integer.class || value.getClass() == Long.class){
+		if (value == null) {
+			params.put(columnName, new DatabaseParameter(null));
+		}else if(value.getClass() == Boolean.class || value.getClass() == Integer.class || value.getClass() == Long.class){
 			params.put(columnName, new DatabaseParameter(integerValue()));
 		}else if(value.getClass() == Double.class){
 			params.put(columnName, new DatabaseParameter(doubleValue()));

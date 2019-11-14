@@ -121,4 +121,8 @@ public class Common {
 	public static Matcher regex(String regex, String test) {
 		return Pattern.compile(regex).matcher(test);
 	}
+
+	public static Double parseDouble(Object value) {
+		return Double.parseDouble(value.toString().replaceAll(",", "."));
+	}
 }
