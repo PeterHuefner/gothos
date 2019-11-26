@@ -49,9 +49,10 @@ public class SquadForm {
 
 		this.squad = squad;
 
-        competitionData = new CompetitionData();
+		competitionData = new CompetitionData();
 
 		tableModel = new SquadFormTableModel(this.squad);
+		tableModel.setSquadForm(this);
 		tableModel.setTable(squadTable);
 		squadTable.setModel(tableModel);
 		navigator = new TableNavigator(squadTable);
@@ -125,6 +126,10 @@ public class SquadForm {
 		});
 
 		noAutoCalc.setSelected(true);
+	}
+
+	public boolean isApparatiSelected() {
+		return !Common.emptyString(apparatiSelect.getSelectedItem().toString());
 	}
 
 	protected void generateStatistics() {
@@ -216,14 +221,9 @@ public class SquadForm {
 									tableModel.autoCalcRow(squadTable.getEditingRow());
 								}
 							});
-
 						} catch (Exception e) {
-
 						}
 					}
-
-				} else {
-
 				}
 			}
 		}
