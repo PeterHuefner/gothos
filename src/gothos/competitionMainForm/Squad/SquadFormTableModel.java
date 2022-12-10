@@ -123,6 +123,8 @@ public class SquadFormTableModel extends DataFormTableModel {
 
 		competitionData.setColums(cols.toArray(new String[cols.size()]));
 
+		competitionData.setOrderBy("ID ASC");
+
 		sql = competitionData.getSql();
 		parameters = competitionData.getParameters();
 
