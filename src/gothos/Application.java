@@ -4,6 +4,7 @@ import gothos.DatabaseCore.DatabaseAnalyse;
 import gothos.DatabaseCore.SqliteConnection;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.prefs.Preferences;
 
 public class Application {
@@ -29,6 +30,11 @@ public class Application {
 
 	public static boolean connectToDatabase(String file) {
 		try {
+			File f = new File(file);
+			if(!f.exists() && !f.isDirectory()) {
+				f.createNewFile();
+			}
+
 			Application.database = new SqliteConnection(file);
 			DatabaseAnalyse.checkDatabase();
 		} catch (Exception e) {
