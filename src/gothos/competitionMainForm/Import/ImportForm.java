@@ -79,7 +79,7 @@ public class ImportForm {
 		Boolean status = false;
 
 		try {
-			CSVReader reader = new CSVReader(new FileReader(csvFilePath));
+			CSVReader reader = new CSVReader(new FileReader(csvFilePath), ';');
 			fileData = reader.readAll();
 
 			if (fileData.size() > 1) {
