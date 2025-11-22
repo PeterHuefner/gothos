@@ -37,7 +37,7 @@ public class GymnastTableModel extends DataFormTableModel {
 		displayColumns = new String[]{"Startnr", "Name", "Geburtsdatum", "Altersklasse", "Verein", "Riege", "Mannschaft"};
 		searchCols = new String[]{"ID", "Name", "birthdate", "class", "club", "squad", "team"};
 		baseSql = "SELECT ROWID, " + String.join(", ", searchCols) + " FROM " + baseTable + " WHERE active = 1";
-		orderSql = " ORDER BY ID; ROWID";
+		orderSql = " ORDER BY ID, ROWID";
 		buildData(baseSql + orderSql + ";", new ArrayList<>());
 
 	}
@@ -82,7 +82,7 @@ public class GymnastTableModel extends DataFormTableModel {
 	public void deleteRows(int[] rows) {
 		Integer[] convertedRows = new Integer[rows.length];
 		for (int i = 0; i < rows.length; i++) {
-			convertedRows[i] = rows[i];
+			convertedRows[i] = (Integer) rows[i];
 		}
 		Arrays.sort(convertedRows, Collections.reverseOrder());
 
@@ -130,7 +130,7 @@ public class GymnastTableModel extends DataFormTableModel {
 		}
 
 		try {
-			newID = Integer.parseInt(maxId);
+			newID = (Integer) Integer.parseInt(maxId);
 			newID++;
 		} catch (NumberFormatException e) {
 			newID = null;

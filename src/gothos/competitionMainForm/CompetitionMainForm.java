@@ -114,17 +114,21 @@ public class CompetitionMainForm {
 			}
 		});
 
-		removeGymnast.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed (ActionEvent e) {
-				int[] selectedRows = gymnastsTable.getSelectedRows();
-				if (selectedRows.length > 0) {
-					tableModel.deleteRows(selectedRows);
-				} else {
-					Common.showMessage("Selektieren Sie zunächst einen Teilnehmer.");
-				}
-			}
-		});
+        removeGymnast.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed (ActionEvent e) {
+                int[] selectedRows = gymnastsTable.getSelectedRows();
+                if (selectedRows.length > 0) {
+                    int[] modelRows = new int[selectedRows.length];
+                    for (int i = 0; i < selectedRows.length; i++) {
+                        modelRows[i] = gymnastsTable.convertRowIndexToModel(selectedRows[i]);
+                    }
+                    tableModel.deleteRows(modelRows);
+                } else {
+                    Common.showMessage("Selektieren Sie zunächst einen Teilnehmer.");
+                }
+            }
+        });
 
 		searchButton.addActionListener(new ActionListener() {
 			@Override
