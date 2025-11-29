@@ -283,6 +283,6 @@ public class PdfSquadLists extends PdfTableResult {
 	}
 
 	public void print () {
-		this.print(PageFormat.PORTRAIT);
+		this.print(PageFormat.LANDSCAPE);
 	}
 }
